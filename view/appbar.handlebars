@@ -1,0 +1,17 @@
+    <script id="appbar-template" type="text/x-handlebars-template">
+        <div id="main-nav" class="row">
+            <!-- Left Icons -->
+            {{#each leftButtons}}
+            {{{button}}}
+            {{/each}}
+            <div class="col">&nbsp;</div>
+            <!-- Title Text-->
+            <div class="appbar-title">
+                <span id="title-text" class="bold">{{title}}</span>
+            </div>
+            <!-- Right Icons -->
+            {{#each rightButtons}}
+            {{{button}}}
+            {{/each}}
+        </div>
+    </script>

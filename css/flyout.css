@@ -1,0 +1,21 @@
+.ms-flyout{
+    position: absolute;
+    z-index: 1000;
+    width: auto;
+    height: auto;
+    top: auto;
+    left: 50%;
+    margin-left: -45%;
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
+    border-bottom-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+    overflow: hidden;
+    padding: 1rem;
+    box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.45);
+    background-color: var(--trasparent-light-bg);
+    backdrop-filter: var(--strong-blur);
+    transition: height 0.3s;
+    pointer-events: none;
+    overscroll-behavior: contain;
+}

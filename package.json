@@ -1,0 +1,27 @@
+{
+  "name": "LoL-Statistics-App",
+  "version": "1.0.0",
+  "description": "This is a simple app to view and analyse any summoner, match, champion or item of League of Legends.",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/michi174/LoL-Statistics-App.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/michi174/LoL-Statistics-App/issues"
+  },
+  "homepage": "https://github.com/michi174/LoL-Statistics-App#readme",
+  "devDependencies": {
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.10"
+  },
+  "dependencies": {
+    "lodash": "^4.17.15"
+  }
+}
