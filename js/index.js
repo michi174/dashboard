@@ -2,9 +2,9 @@ import { MyCache } from "./cache.js";
 import { Navigation } from "./navigation.js";
 import { renderTemplate } from "./render.js";
 import { AppBar, AppBarButton, MainActionButton } from "./appbar.js";
-import { Graph } from "./graph.js";
-import * as UIFlyOut from "./UIElements/flyout.js";
 import {Template} from "./template.js";
+import * as Flyout from "./UIElements/flyout.js";
+
 //import _ from 'lodash';
 
     const prodHost = "https://lolstatistics-app.herokuapp.com/";
@@ -13,6 +13,7 @@ import {Template} from "./template.js";
     //settings
 
     const templateFolder = "view";
+    const viewModelFolder = "viewmodel";
     var devMode = false;
     var locale = "de_DE";
     const cache = new MyCache
@@ -21,7 +22,6 @@ import {Template} from "./template.js";
 
     //StaticData
 
-
     //Navigation
     var navigation = new Navigation(true, true);
 
@@ -29,6 +29,69 @@ import {Template} from "./template.js";
     const searchBtn = new AppBarButton('search-icon', '#appbar-button-template', { icon: "far fa-search", position: "right", order: 0});
     const backBtn = new AppBarButton('back-icon', '#appbar-button-template', { icon: "far fa-chevron-left", position: "left", order: 0 });
     const devModeBtn = new AppBarButton('devmode-icon', '#appbar-button-template', { icon: "far fa-file-code", position: "left", order: 1 });
+
+    Handlebars.registerHelper("LoadTemplate", function(template, params){
+        return loadHB(template, params);
+    });
+
+    async function loadHBTemplateAsync(template, params){
+        console.log(template);
+        let html = "";
+
+        if(typeof template !== "undefined"){
+            let mod = await import("../"+viewModelFolder+"/"+template+".js");
+            let obj = new mod[template](params);
+            let context = obj.getContext();
+
+            console.log(context);
+            console.log(templateFolder+"/"+template+".handlebars");
+            
+            html = new Template({
+                "path":templateFolder,
+                "file": template+".handlebars",
+                "data": context,
+                "method": "return"
+            });
+
+        }
+        return "html";
+    }
+
+    function loadHB(template, params){
+        console.log(template);
+        let token = "{{"+template+"}}";
+        let _html = token;
+        let html = "";
+
+        if(typeof template !== "undefined"){
+
+            import("../"+viewModelFolder+"/"+template+".js").then(function(result){
+                let mod = result;
+                let obj = new mod[template](params);
+                let context = obj.getContext();
+
+                console.log(context);
+                console.log("context");
+    
+
+                console.log(templateFolder+"/"+template+".handlebars");
+                
+                html = new Template({
+                    "path":templateFolder,
+                    "file": template+".handlebars",
+                    "data": context,
+                    "method": "return",
+                }).then(function(result){
+                    $("div:contains("+token+")").html(result);
+                });
+
+                
+            });
+
+            return _html;
+        }
+        
+    }
 
 
     //MainActionButton
@@ -116,14 +179,9 @@ import {Template} from "./template.js";
             switchActiveCSS($('#bot-navigation-wr > .tab'), $('#bot-nav-home'), 'active');
             $(window).trigger("viewReady");
 
-            new Template({
-                "file": "flyout.handlebars",
-                "path": "view/UIElements",
-                "designMode": false,
-                "target": ".homepage-view",
-                "data": {"id":"test-flyout"},
-                "method":"append"
-            });
+            let mod = await import("../viewmodel/defaultFlyout.js");
+            let obj = new mod.defaultFlyout("testparam");
+            console.log(obj.getContext());
 
         });
 

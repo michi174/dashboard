@@ -22,7 +22,7 @@ class Template{
 
         console.log(this);
 
-        this._render();
+        return this._render();
 
 
     }
@@ -61,6 +61,9 @@ class Template{
                 case "prepend":
                     target.prepend(compiledHTML);
                     break;
+
+                case "return":
+                    break;
     
                 case "replace":
                     let obj = $(compiledHTML);
@@ -73,6 +76,7 @@ class Template{
                     break;
             }
         }
+        //console.log(compiledHTML);
         return compiledHTML;
     }
 

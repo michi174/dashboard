@@ -1,39 +1,42 @@
 import {UIElement} from "./uielement.js";
 
-(function toggleFlyOut(){ 
-    $('[ms-flyout]').click(function(){
-        let flyOutName = $(this).attr("ms-flyout");
-
-
-
-        console.log("Loading FlyOut: "+flyOutName);
-    });
-})(); 
 
 class FlyOut extends UIElement{
     constructor(options){
-        super();
-        this.template = "flyout.handlebars";
-    }
 
-    loadTemplate(){
+        options.UIHandler = "ms-flyout";
+        options.template = "flyout.handlebars";
+        options.prefix = "ms-flyout-";
         
-    }
 
-    create(){
-
-    }
-
-    destroy(){
+        super(options);
+        
+        this.prefix = "ms-flyout-";
 
     }
-
-    move(){
-
-    }
-
-
-
 }
+
+
+(function toggleFlyOut(){ 
+    $('[ms-flyout]').click(function(){
+        let flyoutName = $(this).attr("ms-flyout");
+        console.log("Loading FlyOut: "+flyoutName);
+
+        if(!$(this).hasClass("isOpen")){
+            new FlyOut({
+                "id": flyoutName,
+                "position": {
+                    "UIHandler": $(this)
+                }
+            });
+
+            console.log("Created FlyOut: "+flyoutName);
+        }
+        else{
+            $(this).removeClass("isOpen");
+            FlyOut.destroy("ms-flyout-"+flyoutName);
+        }
+    });
+})();
 
 export {};
