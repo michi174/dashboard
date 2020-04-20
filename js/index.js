@@ -4,25 +4,21 @@ import { renderTemplate } from "./render.js";
 import { AppBar, AppBarButton, MainActionButton } from "./appbar.js";
 import {Template} from "./template.js";
 import * as Flyout from "./UIElements/flyout.js";
+import * as Modal from "./UIElements/modal.js";
 
 //import _ from 'lodash';
 
     const prodHost = "https://lolstatistics-app.herokuapp.com/";
     const devHost = "http://michi-pc/API/riot_api_dev/";
+    
     var apiHost = "";
-    //settings
+    var devMode = false;
+    var locale = "de_DE";
+    var views = new Array;
 
     const templateFolder = "view";
     const viewModelFolder = "viewmodel";
-    var devMode = false;
-    var locale = "de_DE";
     const cache = new MyCache
-    var max_matches = 10;
-    var views = new Array;
-
-    //StaticData
-
-    //Navigation
     const navigation = new Navigation(true, true);
 
     //TitleBar Buttons
@@ -149,8 +145,6 @@ import * as Flyout from "./UIElements/flyout.js";
 
             let mod = await import("../viewmodel/defaultFlyout.js");
             let obj = new mod.defaultFlyout("testparam");
-            console.log(obj.getContext());
-
         });
 
         navigation.router.on('summoner/:name/:region', async function (params) {
@@ -160,78 +154,6 @@ import * as Flyout from "./UIElements/flyout.js";
             titleBar.reset();
             titleBar.addButton(backBtn);
             titleBar.addButton(searchBtn);
-
-            renderTemplate('#homepage-template', '.main-view.active');
-
-            $(window).trigger("viewReady");
-        });
-
-        navigation.router.on('matchdetails/:region/:matchId/:summoner', async function (params) {
-            console.log("------------");
-            console.log("Matchdetails");
-            console.log("------------");
-
-            switchActiveCSS($('#bot-navigation-wr > .tab'), $('#bot-nav-profile'), 'active');
-
-            let matchId = params.matchId;
-            let accountId = params.summoner;
-            let region = params.region;
-
-            let selectedSummonerAccountId = null;
-            let selectId = accountId;
-
-            let context;
-            console.log(context);
-
-            renderTemplate('#homepage-template', '.main-view.active');
-
-            titleBar.reset();
-            titleBar.addButton(backBtn);
-            titleBar.addButton(searchBtn);
-            titleBar.setTitle("Matchdetails");
-
-
-        });
-
-        navigation.router.on('champions', function () {
-            console.log("#CHAMPIONS");
-            titleBar.reset();
-            titleBar.setTitle("Guides");
-            titleBar.addTheme("dark");
-            titleBar.addButton(backBtn);
-            titleBar.addButton(searchBtn);
-
-            switchActiveCSS($('#bot-navigation-wr > .tab'), $('#bot-nav-champions'), 'active');
-
-            renderTemplate('#homepage-template', '.main-view.active');
-
-            $(window).trigger("viewReady");
-
-
-        });
-
-        navigation.router.on('champion/:champId', function (params) {
-            switchActiveCSS($('#bot-navigation-wr > .tab'), $('#bot-nav-champions'), 'active');
-
-            let championKey = params.champId;
-
-            titleBar.reset();
-            titleBar.addButton(backBtn);
-            titleBar.addButton(searchBtn);
-
-            renderTemplate('#homepage-template', '.main-view.active');
-
-            $(window).trigger('viewReady');
-
-        });
-
-        navigation.router.on('items', function () {
-            titleBar.reset();
-            titleBar.setTitle("Benchmarks");
-            titleBar.addTheme("dark");
-            titleBar.addButton(backBtn);
-
-            switchActiveCSS($('#bot-navigation-wr > .tab'), $('#bot-nav-items'), 'active');
 
             renderTemplate('#homepage-template', '.main-view.active');
 

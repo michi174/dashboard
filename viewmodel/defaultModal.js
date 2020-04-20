@@ -1,10 +1,10 @@
-export class testviewmodel{
+export class defaultModal{
     constructor(params = null){
         this.prop = "prop";        
     }
 
     async _createContext(){
-        return {"testvm": "testvm"}
+        return {};
     }
 
     async getContext(){
@@ -14,7 +14,7 @@ export class testviewmodel{
 
                 let ctx = await self._createContext();
                 resolve(ctx);
-            },500);
+            },0);            
         });        
     }
 }

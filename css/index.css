@@ -3,6 +3,7 @@
 @import 'styles.css';
 @import 'animations.css';
 @import 'flyout.css';
+@import "modal.css";
 
 
 #app-init{
@@ -410,7 +411,7 @@
     align-items: flex-end;
     justify-content: space-between;
     align-content: center;
-    z-index: 700;
+    z-index: 1100;
     border-radius: 0rem;
     opacity: 0.98;
     background-color: var(--nav-color);

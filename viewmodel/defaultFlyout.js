@@ -4,7 +4,7 @@ export class defaultFlyout{
     }
 
     async _createContext(){
-        return {"context": "testContext"}
+        return {"context": "testContext"};
     }
 
     async getContext(){

@@ -8,7 +8,6 @@ class FlyOut extends UIElement{
         options.template = "flyout.handlebars";
         options.prefix = "ms-flyout-";
         
-
         super(options);
         
         this.prefix = "ms-flyout-";

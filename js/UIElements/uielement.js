@@ -10,6 +10,7 @@ class UIElement{
         this.prefix = "ms-";
         this.referer = "";
         this.position = null;
+        this.moveToHandler = true;
 
         if(typeof options === "object"){
             for (let [prop, value] of Object.entries(options)) {
@@ -35,42 +36,17 @@ class UIElement{
 
     async createElement(){
         let element = await this.create();
-        this.move(this.calculatePosition());
+        if(this.moveToHandler){
+            this.move(this.calculatePosition());
+        }
+        
         element.addClass("isOpen");
 
     }
 
-    calculatePosition(){
-
-        let position, width, height;
-        let UIElementNewPosition = new Object;
-
-        self = this;
-
-        if(typeof this.position === "object"){
-            if(this.position.hasOwnProperty("UIHandler")){
-                let UIHandler = this.position.UIHandler;
-
-                position = UIHandler.offset();
-                width = UIHandler.outerWidth(false);
-                height = UIHandler.outerHeight(false);
-
-                UIElementNewPosition.left = position.left + width;
-                UIElementNewPosition.top = position.top;
-
-                return UIElementNewPosition;
-
-            }
-            else
-            {
-                console.log("no UIHandler received");
-            }
-        }
-        else{
-            console.log("no position object received");
-        }
-    }
-
+    /**
+     * Creates a new DOM Element into the DOM Tree.
+     */
     async create(){
         new Template({
            "path": "view/UIElements",
@@ -102,15 +78,76 @@ class UIElement{
         });
     }
 
-    static destroy(element){
+    /**
+     * Removes the given Element from the DOM Tree
+     * 
+     * @param {UIElement.id} element 
+     */
+    static destroy(element, handler=null){
+        console.log(element+" destroyed");
         $("#"+element).remove();
+        console.log("test");
     }
 
+    static getPrefix(){
+        return this.prefix;
+    }
+
+    /**
+     * Calculates the Endposition of the UIElement
+     * 
+     * It only works if the UIHandler is given in the @var position object 
+     * and the childclass hansn't @var moveToHandler set to false.
+     * 
+     * @return The absolute position of the new Element.
+     */
+    calculatePosition(){
+
+        let position, width, height;
+        let UIElementNewPosition = new Object;
+
+        self = this;
+
+        if(typeof this.position === "object"){
+            if(this.position.hasOwnProperty("UIHandler")){
+                let UIHandler = this.position.UIHandler;
+
+                position = UIHandler.offset();
+                width = UIHandler.outerWidth(false);
+                height = UIHandler.outerHeight(false);
+
+                UIElementNewPosition.left = position.left + width;
+                UIElementNewPosition.top = position.top;
+
+                return UIElementNewPosition;
+
+            }
+            else
+            {
+                console.log("no UIHandler received");
+            }
+        }
+        else{
+            console.log("no position object received");
+        }
+    }
+
+
+    /**
+     * Moves an UIElement to the given Position.
+     * 
+     * Make sure the UIElement is already part of the DOM Tree.
+     * 
+     * @param {UIElement.position} position 
+     */
     move(position){
-        let UIElement = $("#"+this.prefix + this.id);
+        if(typeof this.position === "object"){
+            if(this.position.hasOwnProperty("UIHandler")){
+                let UIElement = $("#"+this.prefix + this.id);
 
-        UIElement.css({top: position.top+"px", left: position.left+"px"});
-
+                UIElement.css({top: position.top+"px", left: position.left+"px"});
+            }
+        }
     }
 }
 
