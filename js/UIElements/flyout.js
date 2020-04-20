@@ -20,17 +20,18 @@ class FlyOut extends UIElement{
 (function toggleFlyOut(){ 
     $('[ms-flyout]').click(function(){
         let flyoutName = $(this).attr("ms-flyout");
-        console.log("Loading FlyOut: "+flyoutName);
 
         if(!$(this).hasClass("isOpen")){
+            console.log("Loading FlyOut: "+flyoutName);
             new FlyOut({
                 "id": flyoutName,
                 "position": {
                     "UIHandler": $(this)
+                },
+                "data": {
+                    "flyout": flyoutName
                 }
             });
-
-            console.log("Created FlyOut: "+flyoutName);
         }
         else{
             $(this).removeClass("isOpen");

@@ -19,7 +19,9 @@ class Template{
                 }
             }
         }
-
+        console.log("---------------");
+        console.log("Template Engine");
+        console.log("---------------");
         console.log(this);
 
         return this._render();
@@ -76,13 +78,13 @@ class Template{
                     break;
             }
         }
-        //console.log(compiledHTML);
+        console.log("[Temaplate] "+ this.file + " rendered");
         return compiledHTML;
     }
 
     _loadFile(){
 
-        console.log("Loading template: "+ this.file);
+        console.log("[Temaplate] Loading file: "+ this.file);
 
         return $.ajax({
             url: this.path+"/"+this.file,

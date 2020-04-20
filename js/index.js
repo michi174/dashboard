@@ -23,7 +23,7 @@ import * as Flyout from "./UIElements/flyout.js";
     //StaticData
 
     //Navigation
-    var navigation = new Navigation(true, true);
+    const navigation = new Navigation(true, true);
 
     //TitleBar Buttons
     const searchBtn = new AppBarButton('search-icon', '#appbar-button-template', { icon: "far fa-search", position: "right", order: 0});
@@ -31,68 +31,36 @@ import * as Flyout from "./UIElements/flyout.js";
     const devModeBtn = new AppBarButton('devmode-icon', '#appbar-button-template', { icon: "far fa-file-code", position: "left", order: 1 });
 
     Handlebars.registerHelper("LoadTemplate", function(template, params){
-        return loadHB(template, params);
-    });
-
-    async function loadHBTemplateAsync(template, params){
-        console.log(template);
-        let html = "";
-
-        if(typeof template !== "undefined"){
-            let mod = await import("../"+viewModelFolder+"/"+template+".js");
-            let obj = new mod[template](params);
-            let context = obj.getContext();
-
-            console.log(context);
-            console.log(templateFolder+"/"+template+".handlebars");
-            
-            html = new Template({
-                "path":templateFolder,
-                "file": template+".handlebars",
-                "data": context,
-                "method": "return"
-            });
-
-        }
-        return "html";
-    }
-
-    function loadHB(template, params){
-        console.log(template);
-        let token = "{{"+template+"}}";
+        let random1= (Math.random() * Math.floor(1000000)).toFixed(0);
+        let random2= (Math.random() * Math.floor(1000000)).toFixed(0);
+        let identifier = random1+'_'+template+'_'+random2;
+        let token = '<div id="'+identifier+'"></div>';
         let _html = token;
-        let html = "";
 
         if(typeof template !== "undefined"){
 
             import("../"+viewModelFolder+"/"+template+".js").then(function(result){
                 let mod = result;
                 let obj = new mod[template](params);
-                let context = obj.getContext();
+                let ctx = obj.getContext();
 
-                console.log(context);
-                console.log("context");
-    
-
-                console.log(templateFolder+"/"+template+".handlebars");
-                
-                html = new Template({
-                    "path":templateFolder,
-                    "file": template+".handlebars",
-                    "data": context,
-                    "method": "return",
-                }).then(function(result){
-                    $("div:contains("+token+")").html(result);
+                //wait for the context to load, then start the template rendering.
+                ctx.then(function(context){
+                    let html = new Template({
+                        "path":templateFolder,
+                        "file": template+".handlebars",
+                        "data": context,
+                        "method": "return",
+                    //wait for the template to be rendered and placed in DOM Tree, then replace the token with the actual content.
+                    }).then(function(result){
+                        $('#'+identifier).replaceWith(result);
+                    });
                 });
-
-                
+                //console.log(templateFolder+"/"+template+".handlebars");
             });
-
-            return _html;
+            return new Handlebars.SafeString(_html);
         }
-        
-    }
-
+    });
 
     //MainActionButton
     //const mainActionBtn = new MainActionButton("main-action-tab-button", "#mainaction-button-template", "refresh", { icon: "fas fa-sync-alt"});
@@ -562,10 +530,10 @@ import * as Flyout from "./UIElements/flyout.js";
         $('html').addClass('no-touch');
     });
 
-    $('body').click(function () {
+/*     $('body').click(function () {
         getViewportValues();
         saveScrollPosition();
-    });
+    }); */
 
     $(window).on("viewReady", function () {
         restoreScrollPosition(null, navigation.router.lastRouteResolved().url);

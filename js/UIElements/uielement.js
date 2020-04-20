@@ -3,7 +3,7 @@ import { Template } from "../template.js"
 class UIElement{
     constructor(options){
         this.id = "";
-        this.data = "";
+        this.data = {};
         this.content = "";
         this.template = "";
         this.element = "";
@@ -11,16 +11,11 @@ class UIElement{
         this.referer = "";
         this.position = null;
 
-        console.log(options);
-        console.log("----------");
-        
-
         if(typeof options === "object"){
             for (let [prop, value] of Object.entries(options)) {
                 
                 if(this.hasOwnProperty(prop)){
                     this[prop] = value;
-                    console.log(prop + " : "+ value);
                 }
             }
         }
@@ -30,10 +25,12 @@ class UIElement{
             $(this.position.UIHandler).addClass("isOpen");       
         }
         else{
-            console.error("No ID for UIElement! We didn't create it.");
+            console.warn("No ID for UIElement! We didn't create it.");
         }
 
-        
+        this.data.id = this.prefix + this.id;
+
+        console.log(this.data);
     }
 
     async createElement(){
@@ -78,7 +75,7 @@ class UIElement{
         new Template({
            "path": "view/UIElements",
            "file": this.template,
-           "data": {"id": this.prefix + this.id},
+           "data": this.data,
            "target": "body",
            "method": "append"
         });
@@ -107,7 +104,6 @@ class UIElement{
 
     static destroy(element){
         $("#"+element).remove();
-        console.log(element);
     }
 
     move(position){

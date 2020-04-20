@@ -1,11 +1,20 @@
 export class defaultFlyout{
-    constructor(params){
-        this.prop = "prop";
-        console.log(params)
-        
+    constructor(params = null){
+        this.prop = "prop";        
     }
 
-    getContext(){
-        return {"context": "testContext"};
+    async _createContext(){
+        return {"context": "testContext"}
+    }
+
+    async getContext(){
+        let self = this;
+        return new Promise(async function(resolve, reject){
+            setTimeout(async function(){
+
+                let ctx = await self._createContext();
+                resolve(ctx);
+            },0);            
+        });        
     }
 }
