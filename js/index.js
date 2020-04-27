@@ -5,6 +5,7 @@ import { AppBar, AppBarButton, MainActionButton } from "./appbar.js";
 import {Template} from "./template.js";
 import * as Flyout from "./UIElements/flyout.js";
 import * as Modal from "./UIElements/modal.js";
+import * as UIFactory from "./UIElements/uifactory.js";
 
 //import _ from 'lodash';
 
@@ -39,6 +40,8 @@ import * as Modal from "./UIElements/modal.js";
                 let mod = result;
                 let obj = new mod[template](params);
                 let ctx = obj.getContext();
+
+                console.log(mod);
 
                 //wait for the context to load, then start the template rendering.
                 ctx.then(function(context){

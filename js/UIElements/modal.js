@@ -48,4 +48,4 @@ class Modal extends UIElement{
     });
 })();
 
-export {};
+export {Modal};

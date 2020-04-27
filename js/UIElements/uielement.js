@@ -1,8 +1,10 @@
 import { Template } from "../template.js"
+import * as UIManager from "./uimanager.js"
 
 class UIElement{
     constructor(options){
         this.id = "";
+        this.unique = null;
         this.data = {};
         this.content = "";
         this.template = "";
@@ -11,6 +13,7 @@ class UIElement{
         this.referer = "";
         this.position = null;
         this.moveToHandler = true;
+        this.caller = null;
 
         if(typeof options === "object"){
             for (let [prop, value] of Object.entries(options)) {
@@ -23,7 +26,7 @@ class UIElement{
 
         if(this.id !== ""){
             this.createElement();
-            $(this.position.UIHandler).addClass("isOpen");       
+                 
         }
         else{
             console.warn("No ID for UIElement! We didn't create it.");
@@ -39,9 +42,14 @@ class UIElement{
         if(this.moveToHandler){
             this.move(this.calculatePosition());
         }
+        $(this.position.UIHandler).addClass("isOpen");  
         
         element.addClass("isOpen");
 
+    }
+
+    uniqueID(){
+        return random1= (Math.random() * Math.floor(1000000000000000000000)).toFixed(0).toString(16);
     }
 
     /**
