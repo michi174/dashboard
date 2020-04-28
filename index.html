@@ -4,7 +4,7 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <!-- Custom CSS-->
+    <!-- Custom JS load first-->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="libs/flickity.pkgd.min.js"></script>
     <script src="libs/handlebars-v4.1.0.js"></script>
@@ -12,7 +12,7 @@
     <script src="libs/progressbar.min.js" type="text/javascript" charset="UTF-8"></script>
     <script src="js/static.js" type="text/javascript" charset="UTF-8"></script>
 
-
+    <!-- Custom CSS-->
     <link rel="stylesheet" href="css/index.css">
     <link rel="stylesheet" href="css/flickity.css" media="screen">
     <link rel="stylesheet" href="media/fontawesome/css/all.css">
@@ -88,26 +88,21 @@
         <a id="bot-nav-home" href="#" class="tab text-center active" data-navigo><i class="fas fa-home"></i><div class="small margin-t-8">Home</div></a>
         <a id="bot-nav-profile" href="#" class="tab text-center" data-navigo><i class="fas fa-user-alt"></i><div class="small margin-t-8">Blog</div></a>
         <a id="bot-nav-champions" href="#" class="tab text-center right-to-mainaction" data-navigo><i class="fab fa-leanpub"></i><div class="small margin-t-8">Guides</div></a>
-        <a id="bot-nav-items" href="#" class="tab text-center" ms-modal="defaultModal" data-navigo><i class="fas fa-tachometer-fast"></i><div class="small margin-t-8">Benchmarks</div></a>
-        
+        <a id="bot-nav-items" href="#" class="tab text-center" ms-uielement  ms-uielement-type="Modal" ms-uielement-content="Simpletext..." ms-uielement-tpl="defaultModal" ms-uielement-trigger="click" ms-uielement-sticky="false" data-navigo>
+            <i class="fas fa-tachometer-fast"></i>
+            <div class="small margin-t-8">Benchmarks</div>
+        </a>
         <a id="bot-nav-tests" href="#" class="tab text-center" ms-uielement  ms-uielement-type="Modal" ms-uielement-content="Simpletext..." ms-uielement-tpl="defaultModal" ms-uielement-trigger="click" ms-uielement-sticky="false" data-navigo>
             <i class="fas fa-vial"></i>
             <div class="small margin-t-8">Tests</div>
         </a>
 
         <a id="bot-nav-spacer" href="javascript:void(0)" class="tab text-center no-view no-hover" data-navigon></a>
-        <a id="bot-nav-more" href="#" class="tab text-center" ms-flyout="defaultFlyout" data-navigo><i class="fas fa-cog"></i><div class="small margin-t-8">Settings</div></a>
+        <a id="bot-nav-more" href="#" class="tab text-center"  ms-uielement  ms-uielement-type="FlyOut" ms-uielement-content="Simpletext..." ms-uielement-tpl="defaultFlyout" ms-uielement-trigger="click" ms-uielement-sticky="false" data-navigo><i class="fas fa-cog"></i><div class="small margin-t-8">Settings</div></a>
     </div>
     <div class="overlay">&nbsp;</div>
     <div id="md-dyn-modal" class="modal"></div>
     <div id="md-nav-modal" class="modal"></div>
-
-
-    <!-- Templates-->
-    <!-- Home Template-->
-
-
-
 
     <!-- AppBar Template-->
     <script id="appbar-template" type="text/x-handlebars-template">
@@ -141,8 +136,6 @@
             <div id="ma-update-ml-btn" class="ma-btn-icon"><i class="{{icon}}"></i></div>
         </a>
     </script>
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <!--<script src="dist/app.js" charset="UTF-8"></script>-->
     <script type="module" src="js/index.js"></script>
 </body>

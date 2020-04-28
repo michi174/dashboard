@@ -1,4 +1,5 @@
 import { renderTemplate } from "./render.js";
+import {Template} from "./template.js";
 
 class AppBarButton {
     constructor(id, template, options = { icon: "", position: "right", order: 0, cssClas: "" }) {
@@ -89,7 +90,7 @@ class MainActionButton extends AppBarButton {
 
 class AppBar {
     constructor(template) {
-        this.bar = $(template);
+        this.bar = $("#main-nav");
         this.leftButtons = new Array;
         this.rightButtons = new Array;
         this.title = "";
@@ -184,20 +185,39 @@ class AppBar {
         //check if this appbar already exists
         let appBarId = $($(this.bar).html()).attr('id');
 
+        console.warn(appBarId);
+        console.log($("#" + appBarId));
+
         if ($("#" + appBarId).length > 0) {
             $("#" + appBarId).remove();
+            console.warn("appbar found");
+        }
+        else{
+            console.warn("no appbar found");
         }
 
-        renderTemplate(
-            this.bar,
-            "body",
-            {
+        new Template({
+            "path": "view",
+            "file": "appbar.handlebars",
+            "data": {
                 "title": this.title,
                 "leftButtons": this.leftButtons,
                 "rightButtons": this.rightButtons
             },
-            "prepend",
-            false);
+            "target": "body",
+            "method": "prepend"
+         });
+
+        // renderTemplate(
+        //     this.bar,
+        //     "body",
+        //     {
+        //         "title": this.title,
+        //         "leftButtons": this.leftButtons,
+        //         "rightButtons": this.rightButtons
+        //     },
+        //     "prepend",
+        //     false);
 
         this.setTheme();
 

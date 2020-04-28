@@ -3,9 +3,7 @@ import { Navigation } from "./navigation.js";
 import { renderTemplate } from "./render.js";
 import { AppBar, AppBarButton, MainActionButton } from "./appbar.js";
 import {Template} from "./template.js";
-import * as Flyout from "./UIElements/flyout.js";
-import * as Modal from "./UIElements/modal.js";
-import * as UIFactory from "./UIElements/uifactory.js";
+import UIManager from "./UIElements/uimanager.js"
 
 //import _ from 'lodash';
 
@@ -21,71 +19,32 @@ import * as UIFactory from "./UIElements/uifactory.js";
     const viewModelFolder = "viewmodel";
     const cache = new MyCache
     const navigation = new Navigation(true, true);
+    const ui = new UIManager();
+    const titleBar = new AppBar();
 
     //TitleBar Buttons
     const searchBtn = new AppBarButton('search-icon', '#appbar-button-template', { icon: "far fa-search", position: "right", order: 0});
     const backBtn = new AppBarButton('back-icon', '#appbar-button-template', { icon: "far fa-chevron-left", position: "left", order: 0 });
-    const devModeBtn = new AppBarButton('devmode-icon', '#appbar-button-template', { icon: "far fa-file-code", position: "left", order: 1 });
-
-    Handlebars.registerHelper("LoadTemplate", function(template, params){
-        let random1= (Math.random() * Math.floor(1000000)).toFixed(0);
-        let random2= (Math.random() * Math.floor(1000000)).toFixed(0);
-        let identifier = random1+'_'+template+'_'+random2;
-        let token = '<div id="'+identifier+'"></div>';
-        let _html = token;
-
-        if(typeof template !== "undefined"){
-
-            import("../"+viewModelFolder+"/"+template+".js").then(function(result){
-                let mod = result;
-                let obj = new mod[template](params);
-                let ctx = obj.getContext();
-
-                console.log(mod);
-
-                //wait for the context to load, then start the template rendering.
-                ctx.then(function(context){
-                    let html = new Template({
-                        "path":templateFolder,
-                        "file": template+".handlebars",
-                        "data": context,
-                        "method": "return",
-                    //wait for the template to be rendered and placed in DOM Tree, then replace the token with the actual content.
-                    }).then(function(result){
-                        $('#'+identifier).replaceWith(result);
-                    });
-                });
-                //console.log(templateFolder+"/"+template+".handlebars");
-            });
-            return new Handlebars.SafeString(_html);
-        }
-    });
-
-    //MainActionButton
-    //const mainActionBtn = new MainActionButton("main-action-tab-button", "#mainaction-button-template", "refresh", { icon: "fas fa-sync-alt"});
-
-    //TitleBar
-    const titleBar = new AppBar('#appbar-template');
-
-    navigation.router.hooks({
-        before: function (done, params) {
-            setDevSettings();
-            hideAllModals();
-            $('.remove-on-nav').remove();
-            $('.overlay').hide();
-
-            done();
-        },
-        after: function (params) {
-            //titleBar.addButton(devModeBtn);
-        }
-    });
+    const devModeBtn = new AppBarButton('devmode-icon', '#appbar-button-template', { icon: "far fa-file-code", position: "left", order: 1 });    
 
 
 
     async function init() {
 
         try {
+            navigation.router.hooks({
+                before: function (done, params) {
+                    setDevSettings();
+                    hideAllModals();
+                    $('.remove-on-nav').remove();
+                    $('.overlay').hide();
+        
+                    done();
+                },
+                after: function (params) {
+                    //titleBar.addButton(devModeBtn);
+                }
+            });
             //initiate the App
             //do everything inside here before we start sending the navigation trigger and rendering a view.
         }
@@ -103,7 +62,6 @@ import * as UIFactory from "./UIElements/uifactory.js";
         }
 
     }
-
 
     //Starting the app
     init().then(function () {
@@ -381,6 +339,40 @@ import * as UIFactory from "./UIElements/uifactory.js";
         $(".modal").removeClass("visible");
         toggleOverlay();
     }
+
+    Handlebars.registerHelper("LoadTemplate", function(template, params){
+        let random1= (Math.random() * Math.floor(1000000)).toFixed(0);
+        let random2= (Math.random() * Math.floor(1000000)).toFixed(0);
+        let identifier = random1+'_'+template+'_'+random2;
+        let token = '<div id="'+identifier+'"></div>';
+        let _html = token;
+
+        if(typeof template !== "undefined"){
+
+            import("../"+viewModelFolder+"/"+template+".js").then(function(result){
+                let mod = result;
+                let obj = new mod[template](params);
+                let ctx = obj.getContext();
+
+                console.log(mod);
+
+                //wait for the context to load, then start the template rendering.
+                ctx.then(function(context){
+                    let html = new Template({
+                        "path":templateFolder,
+                        "file": template+".handlebars",
+                        "data": context,
+                        "method": "return",
+                    //wait for the template to be rendered and placed in DOM Tree, then replace the token with the actual content.
+                    }).then(function(result){
+                        $('#'+identifier).replaceWith(result);
+                    });
+                });
+                //console.log(templateFolder+"/"+template+".handlebars");
+            });
+            return new Handlebars.SafeString(_html);
+        }
+    });
 
 
     /*

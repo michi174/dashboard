@@ -1,10 +1,10 @@
-export class testviewmodel{
+export class inlineModal{
     constructor(params = null){
         this.prop = "prop";        
     }
 
     async _createContext(){
-        return {"testvm": "testvm"}
+        return {}
     }
 
     async getContext(){

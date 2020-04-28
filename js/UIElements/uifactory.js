@@ -1,6 +1,6 @@
-import * as UIManager from "./uimanager.js";
+import UIManager from "./uimanager.js";
 
-class UIFactory{
+export default class UIFactory{
 
     constructor(options){
         this.type = null;
@@ -26,7 +26,7 @@ class UIFactory{
     async build(){
         if(this.type !== null && (this.template !== null || this.content !== null)){
             
-            let mod = import("./"+this.type+".js");
+            let mod = import("./"+(this.type).toLowerCase()+".js");
 
             let state = "";
             let element = null;
@@ -34,9 +34,10 @@ class UIFactory{
             let self = this;
 
             mod.then(function(Component){
+                state = "success";
                 if(Object.keys(Component).includes(self.type)){
                     element = new Component[self.type]({
-                        "template": self.template,
+                        "data": {"template": self.template},
                         "caller": self.caller,
                         "type": self.type,
                         "content": self.content,
@@ -45,7 +46,8 @@ class UIFactory{
                     });
                 }else
                 {
-                    console.log("Class "+self.type+" no found. Check uielement-type, it's case sensitive");
+                    console.log("[UIFactory] Class "+self.type+" not found. Check uielement-type, it's case sensitive");
+                    console.log(Component);
                 }
 
             });
@@ -56,28 +58,12 @@ class UIFactory{
             });
 
             mod.finally(function(){
-                console.log("module loading finished with "+state);
+                console.log("[UIFactory] module loading finished with "+state);
             });
         }
     }
 }
 
-(function call(){ 
-    $("body").on("click","[ms-uielement]", function(){
 
-        console.log("click on UIElement: "+$(this).attr("ms-uielement-type")+" "+$(this).attr("ms-uielement-tpl"));
-
-        let options = {
-            "template": $(this).attr("ms-uielement-tpl"),
-            "caller": $(this),
-            "type": $(this).attr("ms-uielement-type"),
-            "content": $(this).attr("ms-uielement-content"),
-            "trigger": $(this).attr("ms-uielement-trigger"),
-            "sticky": $(this).attr("ms-uielement-sticky")
-        };
-
-        new UIFactory(options);
-    })
-})();
 
 export {};

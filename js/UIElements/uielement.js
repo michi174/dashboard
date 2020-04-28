@@ -1,18 +1,16 @@
-import { Template } from "../template.js"
-import * as UIManager from "./uimanager.js"
+import { Template } from "../template.js";
+import UIManager from "./uimanager.js";
 
 class UIElement{
     constructor(options){
         this.id = "";
-        this.unique = null;
         this.data = {};
         this.content = "";
         this.template = "";
         this.element = "";
-        this.prefix = "ms-";
         this.referer = "";
         this.position = null;
-        this.moveToHandler = true;
+        this.moveToCaller = true;
         this.caller = null;
 
         if(typeof options === "object"){
@@ -24,32 +22,39 @@ class UIElement{
             }
         }
 
+        this.id = new UIManager().getUniqueID();
+
         if(this.id !== ""){
-            this.createElement();
-                 
+            this.createElement();                
         }
         else{
-            console.warn("No ID for UIElement! We didn't create it.");
+            console.warn("[UIElement] No ID for UIElement. Can't create it.");
         }
 
-        this.data.id = this.prefix + this.id;
-
-        console.log(this.data);
+        this.data.id = this.id;
     }
 
+    /**
+     * Creates a new UIElement and places it into the DOM Tree.
+     */
     async createElement(){
-        let element = await this.create();
-        if(this.moveToHandler){
-            this.move(this.calculatePosition());
+        try{
+            let element = await this.create();
+
+            if(this.moveToCaller){
+                this._move(this._calculatePosition());
+            }
+            element.addClass("isOpen");
+
+            this.caller.attr("ms-uielement-id", this.id);
+            this.caller.attr("ms-uielement-is-open", "true");
+
+            new UIManager().add(this);
+            
         }
-        $(this.position.UIHandler).addClass("isOpen");  
-        
-        element.addClass("isOpen");
-
-    }
-
-    uniqueID(){
-        return random1= (Math.random() * Math.floor(1000000000000000000000)).toFixed(0).toString(16);
+        catch(e){
+            console.warn(e);
+        }
     }
 
     /**
@@ -72,14 +77,14 @@ class UIElement{
 
             interval = setInterval(function(){
                 timer+=10;
-                if($("body").find("#"+self.prefix + self.id).length > 0){
+                if($("body").find("#"+self.id).length > 0){
                     clearInterval(interval);
-                    resolve($("#"+self.prefix + self.id));
+                    resolve($("#"+self.id));
                 }
                 else{
                     if(timer > 5000){
                         clearInterval(interval);
-                        reject("can't create the DOM Element");
+                        reject("can't create the DOM Element (ID: "+self.id+")");
                     }
                 }
             }, 10);
@@ -89,12 +94,9 @@ class UIElement{
     /**
      * Removes the given Element from the DOM Tree
      * 
-     * @param {UIElement.id} element 
      */
-    static destroy(element, handler=null){
-        console.log(element+" destroyed");
-        $("#"+element).remove();
-        console.log("test");
+    remove(){
+        $($("#"+this.id)).remove();
     }
 
     static getPrefix(){
@@ -105,24 +107,23 @@ class UIElement{
      * Calculates the Endposition of the UIElement
      * 
      * It only works if the UIHandler is given in the @var position object 
-     * and the childclass hansn't @var moveToHandler set to false.
+     * and the childclass hansn't @var moveToCaller set to false.
      * 
      * @return The absolute position of the new Element.
      */
-    calculatePosition(){
+    _calculatePosition(){
 
         let position, width, height;
         let UIElementNewPosition = new Object;
 
         self = this;
 
-        if(typeof this.position === "object"){
-            if(this.position.hasOwnProperty("UIHandler")){
-                let UIHandler = this.position.UIHandler;
-
-                position = UIHandler.offset();
-                width = UIHandler.outerWidth(false);
-                height = UIHandler.outerHeight(false);
+        if(this.moveToCaller){
+            if(typeof this.caller === "object" && this.caller !== null){
+                let caller = this.caller;
+                position = caller.offset();
+                width = caller.outerWidth(false);
+                height = caller.outerHeight(false);
 
                 UIElementNewPosition.left = position.left + width;
                 UIElementNewPosition.top = position.top;
@@ -130,13 +131,12 @@ class UIElement{
                 return UIElementNewPosition;
 
             }
-            else
-            {
-                console.log("no UIHandler received");
+            else{
+                console.log("[UIElement] No Caller received!")
             }
         }
         else{
-            console.log("no position object received");
+
         }
     }
 
@@ -148,11 +148,12 @@ class UIElement{
      * 
      * @param {UIElement.position} position 
      */
-    move(position){
-        if(typeof this.position === "object"){
-            if(this.position.hasOwnProperty("UIHandler")){
-                let UIElement = $("#"+this.prefix + this.id);
-
+    _move(position){
+        console.log("[UIElement] Position")
+        console.log(position);
+        if(this.moveToCaller){
+            if(typeof this.caller === "object" && this.caller !== null){
+                let UIElement = $("#"+this.id);
                 UIElement.css({top: position.top+"px", left: position.left+"px"});
             }
         }
