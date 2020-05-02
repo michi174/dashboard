@@ -10,6 +10,10 @@ export default class UIFactory{
         this.trigger = null;
         this.sticky = null;
         this.caller = null;
+        this.openDirection = null; //ltr, rtl, ttb, btt
+        this.openPositionRelativeToCaller = null; //top, bottom, right, left
+
+        this.options = options;
 
         if(typeof options === "object"){
             for (let [prop, value] of Object.entries(options)) {
@@ -37,12 +41,14 @@ export default class UIFactory{
                 state = "success";
                 if(Object.keys(Component).includes(self.type)){
                     element = new Component[self.type]({
-                        "data": {"template": self.template},
+                        "data": {"template": self.template, "content": self.content},
                         "caller": self.caller,
                         "type": self.type,
                         "content": self.content,
                         "trigger": self.trigger,
-                        "sticky": self.sticky
+                        "sticky": self.sticky,
+                        "openPositionRelativeToCaller": self.openPositionRelativeToCaller,
+                        "openDirection": self.openDirection
                     });
                 }else
                 {

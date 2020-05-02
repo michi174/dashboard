@@ -1,9 +1,9 @@
 import { MyCache } from "./cache.js";
 import { Navigation } from "./navigation.js";
-import { renderTemplate } from "./render.js";
-import { AppBar, AppBarButton, MainActionButton } from "./appbar.js";
 import {Template} from "./template.js";
 import UIManager from "./UIElements/uimanager.js"
+import AppBar from "./Appbar/appbar.js";
+import AppBarButton from "./Appbar/appbarbutton.js";
 
 //import _ from 'lodash';
 
@@ -17,20 +17,41 @@ import UIManager from "./UIElements/uimanager.js"
 
     const templateFolder = "view";
     const viewModelFolder = "viewmodel";
-    const cache = new MyCache
     const navigation = new Navigation(true, true);
     const ui = new UIManager();
-    const titleBar = new AppBar();
+    const titleBar = new AppBar("#appbar-template");
+
 
     //TitleBar Buttons
     const searchBtn = new AppBarButton('search-icon', '#appbar-button-template', { icon: "far fa-search", position: "right", order: 0});
     const backBtn = new AppBarButton('back-icon', '#appbar-button-template', { icon: "far fa-chevron-left", position: "left", order: 0 });
     const devModeBtn = new AppBarButton('devmode-icon', '#appbar-button-template', { icon: "far fa-file-code", position: "left", order: 1 });    
 
+    const ro = new ResizeObserver( entries => {
+        for (let entry of entries) {
+          const cr = entry.contentRect;
+          const jQElement = $(entry.target);
 
+          (function setNavbar(){
+                
+
+                if(jQElement.outerHeight() > jQElement.outerWidth()){
+                    $("#bot-navigation-wr > [ms-uielement]").attr("ms-uielement-position", "right");
+                }
+                else{
+                    $("#bot-navigation-wr > [ms-uielement]").attr("ms-uielement-position", "top");
+                }
+            })();
+        }
+
+        
+    });
+
+    let navbar = $("#bot-navigation-wr");
+
+    ro.observe(navbar[0]);
 
     async function init() {
-
         try {
             navigation.router.hooks({
                 before: function (done, params) {
@@ -97,15 +118,16 @@ import UIManager from "./UIElements/uimanager.js"
                 "target": ".main-view.active",
 
             })
+            
             titleBar.reset();
             titleBar.addButton(searchBtn);
             titleBar.addTheme("dark");
             titleBar.setTitle("Dashboard");
             switchActiveCSS($('#bot-navigation-wr > .tab'), $('#bot-nav-home'), 'active');
+            // titleBar.addButton(backBtn);
+            
             $(window).trigger("viewReady");
 
-            let mod = await import("../viewmodel/defaultFlyout.js");
-            let obj = new mod.defaultFlyout("testparam");
         });
 
         navigation.router.on('summoner/:name/:region', async function (params) {
@@ -115,8 +137,6 @@ import UIManager from "./UIElements/uimanager.js"
             titleBar.reset();
             titleBar.addButton(backBtn);
             titleBar.addButton(searchBtn);
-
-            renderTemplate('#homepage-template', '.main-view.active');
 
             $(window).trigger("viewReady");
         });
@@ -268,7 +288,7 @@ import UIManager from "./UIElements/uimanager.js"
     }
 
     function setDevSettings() {
-        titleBar.addButton(devModeBtn);
+        //titleBar.addButton(devModeBtn);
 
         if (devMode) {
             apiHost = devHost;
@@ -353,8 +373,6 @@ import UIManager from "./UIElements/uimanager.js"
                 let mod = result;
                 let obj = new mod[template](params);
                 let ctx = obj.getContext();
-
-                console.log(mod);
 
                 //wait for the context to load, then start the template rendering.
                 ctx.then(function(context){

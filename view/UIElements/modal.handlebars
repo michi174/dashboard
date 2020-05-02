@@ -1,7 +1,11 @@
 <div class="ms-modal-wrapper" id="{{id}}">
     <div class="ms-modal">
         <div class="ms-modal-content">
+            {{#if content}}
+            {{content}}
+            {{else}}
             {{LoadTemplate template "param"}}
+            {{/if}}
         </div>
         <div class="ms-modal-close-btn" ms-ui-referer="{{id}}"><i class="far fa-times-circle extra-large"></i></div>
     </div>

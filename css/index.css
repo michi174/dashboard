@@ -4,6 +4,7 @@
 @import 'animations.css';
 @import 'flyout.css';
 @import "modal.css";
+@import "tooltip.css";
 
 
 #app-init{

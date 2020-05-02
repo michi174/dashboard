@@ -12,6 +12,24 @@ class UIElement{
         this.position = null;
         this.moveToCaller = true;
         this.caller = null;
+        this.openDirection = "leftToRight"; //ltr, rtl, ttb, btt
+        this.openPositionRelativeToCaller = "bottom" //top, bottom, right, left
+        this.resizeObserver = null;
+
+        const openDirections = {
+            "leftToRight": {
+                "allowDirection": "x"
+            },
+            "rightToLeft": {
+                "allowDirection": "x"
+            },
+            "topToBottom": {
+                "allowDirection": "y"
+            },
+            "BottomToTop": {
+                "allowDirection": "y"
+            }
+        }
 
         if(typeof options === "object"){
             for (let [prop, value] of Object.entries(options)) {
@@ -43,8 +61,22 @@ class UIElement{
 
             if(this.moveToCaller){
                 this._move(this._calculatePosition());
+
+                //Recalculate the position if the element changes its size.
+                this.resizeObserver = new ResizeObserver( entries => {
+                    for (let entry of entries) {
+                      const cr = entry.contentRect;
+                      const jQElement = $(entry.target);
+
+                      this._move(this._calculatePosition());
+                    }
+                });
+    
+                this.resizeObserver.observe(element[0]);
             }
             element.addClass("isOpen");
+
+            element.addClass(this.openDirection);
 
             this.caller.attr("ms-uielement-id", this.id);
             this.caller.attr("ms-uielement-is-open", "true");
@@ -96,6 +128,9 @@ class UIElement{
      * 
      */
     remove(){
+        if(this.resizeObserver !== null){
+            this.resizeObserver = null;
+        }
         $($("#"+this.id)).remove();
     }
 
@@ -114,6 +149,7 @@ class UIElement{
     _calculatePosition(){
 
         let position, width, height;
+        let startTop, startLeft;
         let UIElementNewPosition = new Object;
 
         self = this;
@@ -121,12 +157,32 @@ class UIElement{
         if(this.moveToCaller){
             if(typeof this.caller === "object" && this.caller !== null){
                 let caller = this.caller;
+
                 position = caller.offset();
                 width = caller.outerWidth(false);
                 height = caller.outerHeight(false);
 
-                UIElementNewPosition.left = position.left + width;
-                UIElementNewPosition.top = position.top;
+                switch(this.openPositionRelativeToCaller){
+                    case "right":
+                        UIElementNewPosition.left = position.left + width;
+                        UIElementNewPosition.top = position.top;
+                        break;
+                    case "left":
+                        UIElementNewPosition.left = position.left;
+                        UIElementNewPosition.top = position.top;
+                        break;
+                    case "top":
+                        UIElementNewPosition.left = position.left;
+                        UIElementNewPosition.top = position.top;
+                        break;
+                    case "bottom":
+                        UIElementNewPosition.left = position.left;
+                        UIElementNewPosition.top = position.top + height;
+                        break;
+                    default:
+                        UIElementNewPosition.left = position.left;
+                        UIElementNewPosition.top = position.top;
+                }
 
                 return UIElementNewPosition;
 
@@ -136,7 +192,7 @@ class UIElement{
             }
         }
         else{
-
+            //console.log("[UIElement] No movement required")
         }
     }
 
@@ -149,12 +205,113 @@ class UIElement{
      * @param {UIElement.position} position 
      */
     _move(position){
-        console.log("[UIElement] Position")
-        console.log(position);
+        console.log("[UIElement]")
         if(this.moveToCaller){
             if(typeof this.caller === "object" && this.caller !== null){
+
                 let UIElement = $("#"+this.id);
-                UIElement.css({top: position.top+"px", left: position.left+"px"});
+
+                let clientHeight = document.documentElement.clientHeight;
+                let clientWidth = document.documentElement.clientWidth;
+
+                let callerHeight = this.caller.outerHeight();
+                let callerWidth = this.caller.outerWidth();;
+
+                
+                let callerTop = this.caller.offset().top;
+                let callerLeft = this.caller.offset().left;
+
+                let elemHeight = UIElement.outerHeight();
+                let elemWidth = UIElement.outerWidth();
+
+                let originElemTop = position.top;
+                let originElemLeft = position.left;
+
+                let newElemTop = originElemTop;
+                let newElemLeft = originElemLeft;
+
+                let callerStartY = callerTop;
+                let callerEndY = callerTop + callerHeight;
+                let callerStartX = callerLeft;
+                let callerEndX = callerLeft + callerWidth;
+
+                let lr = "left";
+                let tb = "top";
+
+
+
+                if(elemHeight + originElemTop > clientHeight){
+                    newElemTop = originElemTop - (elemHeight + originElemTop - clientHeight);
+                    console.log(`[UIElement][Position] New TOP-Position: ${newElemTop}px`);
+                    if(this.openPositionRelativeToCaller === "top"){
+                        newElemTop = originElemTop - elemHeight;
+                        console.log(`[UIElement][Position] New TOP-Position: ${newElemTop}px`);
+                    }
+                    else{
+                        console.error(this.openPositionRelativeToCaller);
+                    }
+                    console.log("[UIElement][Position] Element is too high!");
+
+                }
+
+                if(elemWidth + originElemLeft > clientWidth){
+                    console.log("[UIElement][Position] Element is too wide!");
+                    newElemLeft = originElemLeft - (elemWidth + originElemLeft - clientWidth)
+                }
+
+                
+                
+                //Do we hit the caller? That would be bad.
+
+                let elementStartY = newElemTop;
+                let elementEndY = newElemTop + elemHeight;
+                let elementStartX = newElemLeft;
+                let elementEndX = newElemLeft + elemWidth;
+
+
+                // let hitTop = false;
+                // let hitLeft = false;
+
+                // let move = false;
+
+                // //only move to top, if we hit the caller horizontal.
+                // if(elementStartX < callerEndX || elementEndX < callerEndX){
+                //     console.log(`---Hitting X---`);
+                //     console.log(`----------`);
+                //     console.log(`[UIElement][Position] elementStartX: ${elementStartX}px`);
+                //     console.log(`[UIElement][Position] callerStartX: ${callerStartX}px`);
+                //     console.log(`[UIElement][Position] elementEndX: ${elementEndX}px`);
+                //     console.log(`[UIElement][Position] callerEndX: ${callerEndX}px`);
+                //     console.log(`----------`);
+                //     console.log(`----------`);
+
+
+                //     if(elementEndY > callerStartY){
+                //         console.log(`---Hitting Y---`);
+                //         console.log(`----------`);
+                //         console.log(`[UIElement][Position] elementEndY: ${elementEndY}px`);
+                //         console.log(`[UIElement][Position] callerStartY: ${callerStartY}px`);
+                //         console.log(`----------`);
+                //         console.log(`----------`);
+
+                //         newElemTop = newElemTop - callerHeight;
+                //     }
+                // }
+
+                console.log(`[UIElement][Position] Moving UIElement`);
+                console.log(`[UIElement][Position] clientHeight: ${clientHeight}px`);
+                console.log(`[UIElement][Position] elemHeight: ${elemHeight}px`);
+                console.log(`[UIElement][Position] originElemTop: ${originElemTop}px`);
+                console.log(`[UIElement][Position] New TOP-Position: ${newElemTop}px`);
+                console.log(`-----------------------X------------------------`);
+                console.log(`[UIElement][Position] clientWidth: ${clientWidth}px`);
+                console.log(`[UIElement][Position] elemWidth: ${elemWidth}px`);
+                console.log(`[UIElement][Position] originElemLeft: ${originElemLeft}px`);
+                console.log(`[UIElement][Position] New LEFT-Position: ${newElemLeft}px`);
+
+                //UIElement.css({top: newElemTop+"px", left: newElemLeft+"px"});
+                UIElement.css(tb, newElemTop+"px");
+                UIElement.css(lr, newElemLeft+"px");
             }
         }
     }

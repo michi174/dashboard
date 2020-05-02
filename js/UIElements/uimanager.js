@@ -1,4 +1,5 @@
 import UIFactory from "./uifactory.js";
+import { Template } from "../template.js";
 
 export default class UIManager{
     constructor(){
@@ -30,12 +31,17 @@ export default class UIManager{
         let element;
 
         if(index >= 0){
+            
             element = this.elements[index];
+            let jQElement = ($("#"+element.id));
             element.caller.removeAttr("ms-uielement-id");
             element.caller.removeAttr("ms-uielement-is-open");
 
             console.log("[UIManager] removing element");
+            
+            Template.remove(Template.getGuid(jQElement));
             element.remove();
+            this.elements.splice(index, 1);
         }
 
     }
@@ -70,7 +76,7 @@ export default class UIManager{
 (function call(){ 
     $("body").on("click","[ms-uielement]", function(){
         if($(this).attr("ms-uielement-is-open") !== "true"){
-            console.log("click on UIElement: "+$(this).attr("ms-uielement-type")+" "+$(this).attr("ms-uielement-tpl"));
+            console.log("[UIMANAGER] click on UIElement: "+$(this).attr("ms-uielement-type")+" "+$(this).attr("ms-uielement-tpl"));
 
             let options = {
                 "template": $(this).attr("ms-uielement-tpl"),
@@ -78,9 +84,10 @@ export default class UIManager{
                 "type": $(this).attr("ms-uielement-type"),
                 "content": $(this).attr("ms-uielement-content"),
                 "trigger": $(this).attr("ms-uielement-trigger"),
-                "sticky": $(this).attr("ms-uielement-sticky")
+                "sticky": $(this).attr("ms-uielement-sticky"),
+                "openPositionRelativeToCaller": $(this).attr("ms-uielement-position"),
+                "openDirection": $(this).attr("ms-uielement-animation")                
             };
-    
     
             new UIFactory(options);
         }

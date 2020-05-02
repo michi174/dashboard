@@ -2,12 +2,10 @@
     display: flex;
     position: fixed;
     z-index: 1000;
-    width: calc(100% - 100px);
-    left: 100px;
+    width: calc(100%);
     justify-content: center;
     flex-direction: column;
-    height: calc(100vh - 83px);
-    top:83px;
+    height: calc(100vh);
     align-items: center;
     background-color: var(--trasparent-bg-light);
 }
