@@ -1,10 +1,15 @@
-function renderTemplate(template, target = null, data = {}, method = "default", designMode = false) {
+function renderTemplate(
+    template,
+    target = null,
+    data = {},
+    method = "default",
+    designMode = false
+) {
     let templatename = null;
 
     if (typeof template === "object") {
         templatename = $(template).attr("id");
-    }
-    else {
+    } else {
         templatename = template;
     }
 
@@ -18,17 +23,14 @@ function renderTemplate(template, target = null, data = {}, method = "default", 
 
     if (designMode === false) {
         compiledHTML = html;
-    }
-    else {
+    } else {
         compiledHTML = template;
     }
 
     if (target !== null) {
-
         target = $(target);
 
         switch (method) {
-
             case "append":
                 target.append(compiledHTML);
                 break;
@@ -39,7 +41,7 @@ function renderTemplate(template, target = null, data = {}, method = "default", 
 
             case "replace":
                 let obj = $(compiledHTML);
-                $('#' + obj.first().attr('id')).remove();
+                $("#" + obj.first().attr("id")).remove();
                 target.append(compiledHTML);
                 break;
 
@@ -52,6 +54,4 @@ function renderTemplate(template, target = null, data = {}, method = "default", 
     return compiledHTML;
 }
 
-
-
-export {renderTemplate}
+export { renderTemplate };

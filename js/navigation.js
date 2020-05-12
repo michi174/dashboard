@@ -7,12 +7,12 @@ class Navigation {
 
         this.debug = debug;
         this.router = new Navigo(null, true, "#");
-        this.navHistory = new Array;
+        this.navHistory = new Array();
         this.mainView = ".main-view.active";
         this.subView = ".main-view:not(.active)";
         this.makeViewActive = ".toActive";
         this.transition = false;
-        this.views = new Array;
+        this.views = new Array();
         this.insert = false;
 
         this.disableTransition = disableTransition;
@@ -31,31 +31,36 @@ class Navigation {
         $(window).on("navigation.start", function () {
             console.warn("navigation initiated");
         });
-        
+
         this._listenHashChange();
     }
 
     start() {
         this._debug("Navigation: start() called");
-        this._debug("Navigation: URL:"+this.getCurrentUrl());
+        this._debug("Navigation: URL:" + this.getCurrentUrl());
         this.forceTransition("none");
 
         if (this.getCurrentUrl() === "") {
             this._debug("Navigation: No location set");
             this._triggerCanRenderView();
             //$(window).trigger("hashchange");
-        }
-        else {
+        } else {
             this._unlistenHashChange();
             this._listenHashChange();
             this.navigate(this.getCurrentUrl());
             $(window).trigger("hashchange");
         }
-        
     }
 
-    navigate(url, direction = "none", transition = "swipeHorizontal", caller="function", insert = false , event = null) {
-        this.insert = insert
+    navigate(
+        url,
+        direction = "none",
+        transition = "swipeHorizontal",
+        caller = "function",
+        insert = false,
+        event = null
+    ) {
+        this.insert = insert;
         let self = this;
         let loadContent = true;
 
@@ -64,9 +69,15 @@ class Navigation {
         transition = self.transition !== false ? self.transition : transition;
 
         if (caller === "function") {
-            self.router.navigate(url, direction, transition, caller = "function", insert, event);
-        }
-        else {
+            self.router.navigate(
+                url,
+                direction,
+                transition,
+                (caller = "function"),
+                insert,
+                event
+            );
+        } else {
             $(window).trigger("navigation.start");
 
             this._debug("Navigation: navigation.start");
@@ -83,11 +94,10 @@ class Navigation {
             if (direction !== "back") {
                 self._clearContent(self.subView);
 
-                if(insert){
+                if (insert) {
                     $(this.subView).html($(this.mainView).html());
                 }
-            }
-            else {
+            } else {
                 this.insert = false;
                 //self._clearContent(self.mainView);
             }
@@ -96,7 +106,7 @@ class Navigation {
 
             let hasTransition = false;
 
-            if(!this.disableTransition){
+            if (!this.disableTransition) {
                 switch (transition) {
                     case "swipeHorizontal":
                         hasTransition = true;
@@ -111,9 +121,7 @@ class Navigation {
                 }
             }
 
-
             if (hasTransition) {
-
                 this._debug("navigation has a transition: " + transition);
 
                 $(this.subView).css("overflow", "hidden");
@@ -122,8 +130,6 @@ class Navigation {
                 let back = "";
 
                 setTimeout(() => {
-                    
-
                     if (direction === "back") {
                         back = "reverse";
                     }
@@ -132,17 +138,14 @@ class Navigation {
                     $(".main-view").removeClass(transition + "Out");
                     $(".main-view").removeClass(back);
 
-
                     $(self.mainView).addClass(transition + "Out " + back);
                     $(self.subView).addClass(transition + "In " + back);
-
 
                     $(self.mainView).off("animationend");
                     $(self.subView).off("animationend");
 
                     $(self.mainView).on("animationend", function (event) {
                         if (event.target === event.currentTarget) {
-
                             self._switchActiveView();
 
                             $(".main-view").removeClass(transition + "In");
@@ -158,8 +161,7 @@ class Navigation {
                         }
                     });
                 }, 50);
-            }
-            else {
+            } else {
                 self._switchActiveView();
                 $(self.subView).addClass("collapsed");
                 loadContent = self._replaceInactiveView(direction);
@@ -167,26 +169,27 @@ class Navigation {
                 if (loadContent) {
                     self._triggerCanRenderView();
                 }
-                
             }
 
             if (!loadContent) {
                 self._debug("Navigation: using cached view");
             }
 
-
             self._unsetForcedTransition();
-
 
             this._addHistoryElement(url);
 
             if (direction === "back") {
-                this._destroyHistoryElement(this._findHistoryElement(this.getCurrentUrl()), true);
+                this._destroyHistoryElement(
+                    this._findHistoryElement(this.getCurrentUrl()),
+                    true
+                );
                 this._addHistoryElement(url);
             }
-            
 
-            this._debug("Navigation: Historylength is: " + this.getFullHistory().length);
+            this._debug(
+                "Navigation: Historylength is: " + this.getFullHistory().length
+            );
             this._triggerNavigationDone();
             this._debug("-------------------");
         }
@@ -203,18 +206,18 @@ class Navigation {
         let deletedKeys;
         let trigger = false;
 
-        
-
-        if (self.getFullHistory().length <=1) {
+        if (self.getFullHistory().length <= 1) {
             navDirection = "forward";
-        }
-        else {
+        } else {
             if (this.getFullHistory().length > 1) {
                 this._debug(this.getFullHistory());
 
                 navDirection = "forward";
 
-                if (this.navHistory[this.navHistory.length - 2].url === currentURL) {
+                if (
+                    this.navHistory[this.navHistory.length - 2].url ===
+                    currentURL
+                ) {
                     navDirection = "back";
                 }
             }
@@ -243,7 +246,6 @@ class Navigation {
         //if (url !== "" && typeof element === "object") {
         //    element.scrollPosition.top = $(window).scrollTop();
         //    element.scrollPosition.left = $(window).scrollLeft();
-
         //    this._debug("Navigation: ScrollPosition saved");
         //    this._debug(element);
         //}
@@ -270,7 +272,7 @@ class Navigation {
     }
 
     clearHistory() {
-        this.navHistory = new Array;
+        this.navHistory = new Array();
     }
 
     _debug(message) {
@@ -288,7 +290,6 @@ class Navigation {
 
         if (direction === "back") {
             if (this.navHistory.length > 1) {
-
                 let el = this.navHistory[this.navHistory.length - 2];
                 let content = el.view;
 
@@ -298,18 +299,17 @@ class Navigation {
                     this._debug("Navigation: we've replaced the last view");
 
                     return true; //TODO: return false, for using cached view. But fix the AppBar Bug first.
-                }
-                else {
+                } else {
                     return true;
-                }                
-            }
-            else {
+                }
+            } else {
                 this._debug("no view available");
                 return true;
             }
-        }
-        else {
-            this._debug("Navigation: direction in _replaceInactiveView is: "+direction);
+        } else {
+            this._debug(
+                "Navigation: direction in _replaceInactiveView is: " + direction
+            );
             return true;
         }
     }
@@ -342,15 +342,23 @@ class Navigation {
     //This is the actual navigation
     _listenHashChange() {
         let self = this;
-        
+
         self._debug("Navigation: eventlistener (hashchange) enabled");
         console.log(window.location);
         $(window).on("hashchange", function (event) {
             event.preventDefault();
-            self._debug("------------------------------------------------------------------------------------------------------------------");
+            self._debug(
+                "------------------------------------------------------------------------------------------------------------------"
+            );
             self._debug("URL changed");
             self._debug("should navigate to:" + window.location.hash);
-            self.navigate(window.location.hash.substring(1), "none", "swipeHorizontal", "listener", self.insert);
+            self.navigate(
+                window.location.hash.substring(1),
+                "none",
+                "swipeHorizontal",
+                "listener",
+                self.insert
+            );
         });
     }
 
@@ -360,10 +368,10 @@ class Navigation {
     }
 
     _addHistoryElement(url) {
-        let element = new Object;
+        let element = new Object();
         element.url = url;
         element.view = null;
-        element.scrollPosition = new Object;
+        element.scrollPosition = new Object();
         element.scrollPosition.top = $(window).scrollTop();
         element.scrollPosition.left = $(window).scrollLeft();
         element.transition = this.transition;
@@ -381,7 +389,7 @@ class Navigation {
         console.warn("updated Element");
 
         setTimeout(() => {
-             view = $(".main-view.active").html();
+            view = $(".main-view.active").html();
 
             element.view = view;
             this.transition = element.transition;
@@ -390,14 +398,19 @@ class Navigation {
         }, 50);
     }
 
-    _destroyHistoryElement(historyElement, allAfterElement=false, reverse = false) {
+    _destroyHistoryElement(
+        historyElement,
+        allAfterElement = false,
+        reverse = false
+    ) {
         let index = -1;
         let deleteCount = 1;
 
         if (!reverse) {
-            index = this.navHistory.findIndex(element => element.url === historyElement.url ? true : false);
-        }
-        else {
+            index = this.navHistory.findIndex((element) =>
+                element.url === historyElement.url ? true : false
+            );
+        } else {
             for (let [i, value] of this.navHistory.entries()) {
                 if (value.url === historyElement.url) {
                     index = i;
@@ -406,15 +419,16 @@ class Navigation {
         }
 
         if (index >= 0) {
-
             if (allAfterElement) {
                 deleteCount = this.navHistory.length - index;
             }
 
-            this._debug("Navigation: Historyelement deleted: " + this.navHistory[index].url);
+            this._debug(
+                "Navigation: Historyelement deleted: " +
+                    this.navHistory[index].url
+            );
             this._debug("Navigation: deleting: " + deleteCount + " elements");
             this.navHistory.splice(index, deleteCount);
-
         }
     }
 
@@ -422,9 +436,10 @@ class Navigation {
         let index = -1;
 
         if (!reverse) {
-            index = this.navHistory.findIndex(element => element.url === url ? true : false);
-        }
-        else {
+            index = this.navHistory.findIndex((element) =>
+                element.url === url ? true : false
+            );
+        } else {
             for (let [i, value] of this.navHistory.entries()) {
                 if (value.url === url) {
                     index = i;
@@ -433,14 +448,20 @@ class Navigation {
         }
 
         if (index >= 0) {
-            this._debug("Navigation: Historyelement " + this.navHistory[index].url+ " found index: "+index);
+            this._debug(
+                "Navigation: Historyelement " +
+                    this.navHistory[index].url +
+                    " found index: " +
+                    index
+            );
             return this.navHistory[index];
-        }
-        else {
-            this._debug("ERROR: Navigation: Historyelement "+url+" not found!");
+        } else {
+            this._debug(
+                "ERROR: Navigation: Historyelement " + url + " not found!"
+            );
             return false;
         }
     }
 }
 
-export {Navigation}
+export { Navigation };

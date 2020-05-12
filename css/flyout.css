@@ -1,9 +1,9 @@
-.ms-flyout{
+.ms-flyout {
     position: absolute;
     z-index: 1000;
     width: auto;
     height: auto;
-    min-width: 60px;
+    min-width: 150px;
     min-height: 20px;
     border-top-left-radius: 1rem;
     border-top-right-radius: 1rem;
@@ -17,18 +17,20 @@
     transition: height, transform 0.3s;
     overscroll-behavior: contain;
     opacity: 1;
-    transform: scale(1,0);
+    transform: scale(1, 0);
     transform-origin: bottom;
 }
-.ms-flyout.isOpen{
+.ms-flyout.isOpen {
     opacity: 1;
-    transform:  scale(1,1);
-
+    transform: scale(1, 1);
 }
 
-@media screen and (min-width: 768px){
-    .ms-flyout{
+@media screen and (min-width: 768px) {
+    .ms-flyout {
         transform-origin: 0% 50%;
-        transform: scale(0,1);
+        transform: scale(0, 1);
     }
+}
+
+[ms-uielement-is-open="true"][ms-uielement-type="FlyOut"] {
 }

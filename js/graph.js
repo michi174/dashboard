@@ -1,50 +1,45 @@
-class Graph{
-
+class Graph {
     constructor() {
-        this.functions = new Array;
+        this.functions = new Array();
     }
 
-    registerFunction(name, fn){
+    registerFunction(name, fn) {
         this.functions[name] = fn;
     }
 
-    callFunction(fn, args){
-        if(typeof this[fn] === "function"){
-            console.log(fn+" is function");
-            return this[fn].apply("",args);
-        }
-        else{
-            console.log(fn+" is NOT function");
+    callFunction(fn, args) {
+        if (typeof this[fn] === "function") {
+            console.log(fn + " is function");
+            return this[fn].apply("", args);
+        } else {
+            console.log(fn + " is NOT function");
             return null;
         }
     }
-    
-    ManipulateGameTimeToLifeTime(lifeTime, matchdetailsContext){
+
+    ManipulateGameTimeToLifeTime(lifeTime, matchdetailsContext) {
         let gameTime;
         let _lifeTime = 0;
 
         gameTime = parseInt(matchdetailsContext.matchdata.gameDuration);
-        console.log("Lifetime = "+ lifeTime);
-        console.log("GameTime = "+matchdetailsContext.matchdata.gameDuration);
+        console.log("Lifetime = " + lifeTime);
+        console.log("GameTime = " + matchdetailsContext.matchdata.gameDuration);
 
-        if(lifeTime === 0){
+        if (lifeTime === 0) {
             _lifeTime = gameTime;
-        }
-        else{
+        } else {
             _lifeTime = lifeTime;
         }
-        console.log("new Lifetime = "+_lifeTime);
+        console.log("new Lifetime = " + _lifeTime);
 
         return _lifeTime;
     }
 
-    SecondsToMinutes(seconds){
-        let minutes = (parseInt(Math.floor(seconds)/60));
-        let secondsLeft = (seconds - minutes*60);
+    SecondsToMinutes(seconds) {
+        let minutes = parseInt(Math.floor(seconds) / 60);
+        let secondsLeft = seconds - minutes * 60;
 
-        return minutes+" min "+secondsLeft+" sec";
-
-        
+        return minutes + " min " + secondsLeft + " sec";
     }
 }
-export {Graph};
+export { Graph };

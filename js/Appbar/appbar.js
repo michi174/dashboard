@@ -1,11 +1,11 @@
-import {Template} from "../template.js";
+import { Template } from "../template.js";
 
 export default class AppBar {
     constructor(template) {
         console.log("[APPBAR] Initialising AppBar");
         this.bar = $(template);
-        this.leftButtons = new Array;
-        this.rightButtons = new Array;
+        this.leftButtons = new Array();
+        this.rightButtons = new Array();
         this.title = "";
         this.buttonCSSClass;
         this.theme = "";
@@ -18,17 +18,18 @@ export default class AppBar {
     }
 
     async addButton(appBarButton) {
-
-        
-
-        let index = this.leftButtons.findIndex(button => button.id === appBarButton.id);
+        let index = this.leftButtons.findIndex(
+            (button) => button.id === appBarButton.id
+        );
 
         if (index === -1) {
-            index = this.rightButtons.findIndex(button => button.id === appBarButton.id);
+            index = this.rightButtons.findIndex(
+                (button) => button.id === appBarButton.id
+            );
         }
 
         if (index < 0) {
-            let button = new Object;
+            let button = new Object();
 
             button["id"] = appBarButton.id;
             button["position"] = appBarButton.position;
@@ -48,8 +49,7 @@ export default class AppBar {
             this.leftButtons.sort(function (a, b) {
                 if (a.order > b.order) {
                     return 1;
-                }
-                else {
+                } else {
                     return -1;
                 }
             });
@@ -57,8 +57,7 @@ export default class AppBar {
             this.rightButtons.sort(function (a, b) {
                 if (a.order < b.order) {
                     return 1;
-                }
-                else {
+                } else {
                     return -1;
                 }
             });
@@ -71,14 +70,17 @@ export default class AppBar {
         let index;
 
         if (btn.position === "left") {
-            index = this.leftButtons.findIndex(button => button.id === btn.id);
+            index = this.leftButtons.findIndex(
+                (button) => button.id === btn.id
+            );
             this.leftButtons.splice(index, 1);
-        }
-        else {
-            index = this.rightButtons.findIndex(button => button.id === btn.id);
+        } else {
+            index = this.rightButtons.findIndex(
+                (button) => button.id === btn.id
+            );
             this.rightButtons.splice(index, 1);
-        }    
-        
+        }
+
         console.log("[APPBAR] removeButton");
         this.render(true);
     }
@@ -89,8 +91,8 @@ export default class AppBar {
     }
 
     reset() {
-        this.leftButtons = new Array;
-        this.rightButtons = new Array;
+        this.leftButtons = new Array();
+        this.rightButtons = new Array();
         this.title = "";
         this.theme = "";
 
@@ -103,81 +105,80 @@ export default class AppBar {
         this.render(true);
     }
 
-    remove(){
-        
-    }
+    remove() {}
 
-    _isReady(){
+    _isReady() {
         let self = this;
 
-        return new Promise(function(resolve, reject){
+        return new Promise(function (resolve, reject) {
             let timer = 0;
             let interval = 10;
             let timeout = 3000;
 
-            let watcher = setInterval(function(){
-                timer = timer+interval;
-    
-                if(self.isReady){
+            let watcher = setInterval(function () {
+                timer = timer + interval;
+
+                if (self.isReady) {
                     clearInterval(watcher);
                     console.log("[APPBAR] appbar found");
                     resolve();
                 }
-    
-                if(timer > timeout){
+
+                if (timer > timeout) {
                     clearInterval(watcher);
                     reject("Cant find Appbar");
                 }
             }, interval);
         });
-
     }
 
     async render(refresh = false) {
-
-        
         let appBarIdent = false;
 
-        if(refresh){
+        if (refresh) {
             console.log("[APPBAR] refreshing appbar");
             await this._isReady();
-            appBarIdent = $("[guid='"+this.guid+"']");
-            console.log("[APPBAR] removing Appbar "+appBarIdent.attr("id"));
+            appBarIdent = $("[guid='" + this.guid + "']");
+            console.log("[APPBAR] removing Appbar " + appBarIdent.attr("id"));
             Template.remove(Template.getGuid(appBarIdent));
             this.isReady = false;
-
-        }
-        else{
+        } else {
             console.log("[APPBAR] new appbar required");
         }
 
-
-        if(this.isRendered === false || (this.isRendered === true && refresh === true)){
-
+        if (
+            this.isRendered === false ||
+            (this.isRendered === true && refresh === true)
+        ) {
             this.isRendered = true;
 
             console.log("[APPBAR] Creating a new appbar");
-            let temp = new Template({
-                "path": "view",
-                "file": "appbar.handlebars",
-                "data": {
-                    "title": this.title,
-                    "leftButtons": this.leftButtons,
-                    "rightButtons": this.rightButtons
+            let temp = new Template(
+                {
+                    path: "view",
+                    file: "appbar.handlebars",
+                    data: {
+                        title: this.title,
+                        leftButtons: this.leftButtons,
+                        rightButtons: this.rightButtons,
                     },
-                "target": "body",
-                "method": "prepend"
-                }, true);
-    
-                temp.data.guid = temp.guid;
-                this.guid = temp.guid;
-                
+                    target: "body",
+                    method: "prepend",
+                },
+                true
+            );
+
+            temp.data.guid = temp.guid;
+            this.guid = temp.guid;
+
             temp._render();
-    
+
             let self = this;
-            
-            temp.isReady().then(function(){
-                console.log("[APPBAR] "+self.guid+" is rendered and ready in DOM.");
+
+            temp.isReady().then(function () {
+                console.log(
+                    "[APPBAR] " + self.guid + " is rendered and ready in DOM."
+                );
                 self.isReady = true;
                 self.setTheme();
             });
@@ -185,11 +186,10 @@ export default class AppBar {
     }
 
     setTheme() {
-        console.log("[APPBAR] setting theme for appbar guid: "+this.guid);
-        
-        let elem = $("[guid='"+this.guid+"']");
+        console.log("[APPBAR] setting theme for appbar guid: " + this.guid);
+
+        let elem = $("[guid='" + this.guid + "']");
         elem.addClass(this.theme);
-        
     }
 
     addTheme(theme) {

@@ -1,8 +1,7 @@
 import UIManager from "./uimanager.js";
 
-export default class UIFactory{
-
-    constructor(options){
+export default class UIFactory {
+    constructor(options) {
         this.type = null;
         this.template = null;
         this.content = null;
@@ -15,10 +14,9 @@ export default class UIFactory{
 
         this.options = options;
 
-        if(typeof options === "object"){
+        if (typeof options === "object") {
             for (let [prop, value] of Object.entries(options)) {
-                
-                if(this.hasOwnProperty(prop)){
+                if (this.hasOwnProperty(prop)) {
                     this[prop] = value;
                 }
             }
@@ -27,49 +25,57 @@ export default class UIFactory{
         }
     }
 
-    async build(){
-        if(this.type !== null && (this.template !== null || this.content !== null)){
-            
-            let mod = import("./"+(this.type).toLowerCase()+".js");
+    async build() {
+        if (
+            this.type !== null &&
+            (this.template !== null || this.content !== null)
+        ) {
+            let mod = import("./" + this.type.toLowerCase() + ".js");
 
             let state = "";
             let element = null;
 
             let self = this;
 
-            mod.then(function(Component){
+            mod.then(function (Component) {
                 state = "success";
-                if(Object.keys(Component).includes(self.type)){
+                if (Object.keys(Component).includes(self.type)) {
                     element = new Component[self.type]({
-                        "data": {"template": self.template, "content": self.content},
-                        "caller": self.caller,
-                        "type": self.type,
-                        "content": self.content,
-                        "trigger": self.trigger,
-                        "sticky": self.sticky,
-                        "openPositionRelativeToCaller": self.openPositionRelativeToCaller,
-                        "openDirection": self.openDirection
+                        data: {
+                            template: self.template,
+                            content: self.content,
+                        },
+                        caller: self.caller,
+                        type: self.type,
+                        content: self.content,
+                        trigger: self.trigger,
+                        sticky: self.sticky,
+                        openPositionRelativeToCaller:
+                            self.openPositionRelativeToCaller,
+                        openDirection: self.openDirection,
                     });
-                }else
-                {
-                    console.log("[UIFactory] Class "+self.type+" not found. Check uielement-type, it's case sensitive");
+                } else {
+                    console.log(
+                        "[UIFactory] Class " +
+                            self.type +
+                            " not found. Check uielement-type, it's case sensitive"
+                    );
                     console.log(Component);
                 }
-
             });
 
-            mod.catch(function(err){
+            mod.catch(function (err) {
                 state = "error";
                 console.error(err);
             });
 
-            mod.finally(function(){
-                console.log("[UIFactory] module loading finished with "+state);
+            mod.finally(function () {
+                console.log(
+                    "[UIFactory] module loading finished with " + state
+                );
             });
         }
     }
 }
-
-
 
 export {};

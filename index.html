@@ -1,108 +1,220 @@
-﻿<!doctype html>
+﻿<!DOCTYPE html>
 <html lang="de">
-<head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <!-- Custom JS load first-->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="libs/flickity.pkgd.min.js"></script>
-    <script src="libs/handlebars-v4.1.0.js"></script>
-    <script src="libs/navigo.js" type="text/javascript" charset="UTF-8"></script>
-    <script src="libs/progressbar.min.js" type="text/javascript" charset="UTF-8"></script>
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, shrink-to-fit=no"
+        />
+        <!-- Custom JS load first-->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="libs/flickity.pkgd.min.js"></script>
+        <script src="libs/handlebars-v4.1.0.js"></script>
+        <script
+            src="libs/navigo.js"
+            type="text/javascript"
+            charset="UTF-8"
+        ></script>
+        <script
+            src="libs/progressbar.min.js"
+            type="text/javascript"
+            charset="UTF-8"
+        ></script>
 
-    <!-- Custom CSS-->
-    <link rel="stylesheet" href="css/index.css">
-    <link rel="stylesheet" href="css/flickity.css" media="screen">
-    <link rel="stylesheet" href="media/fontawesome/css/all.css">
-    <title>Dashboard</title>
-</head>
-<body>
-    <div id="search-wr">
-        <div class="input-group">
-            <div class="input has-icon-left has-addon-right h-meduim">
-                <div class="select">
-                    <select id="region">
-                        <option value="euw">EUW</option>
-                        <option value="eune">EUNE</option>
-                        <option value="na">NA</option>
-                        <option value="kr">KR</option>
-                        <option value="jp">JP</option>
-                        <option value="lan">LAN</option>
-                        <option value="las">LAS</option>
-                        <option value="oce">OCE</option>
-                        <option value="tr">TR</option>
-                        <option value="ru">RU</option>
-                        <option value="pbe">PBE</option>
-                    </select>
-                    <i class="fas fa-globe icon is-icon-left"></i>
+        <!-- Custom CSS-->
+        <link rel="stylesheet" href="css/index.css" />
+        <link rel="stylesheet" href="css/flickity.css" media="screen" />
+        <link rel="stylesheet" href="media/fontawesome/css/all.css" />
+        <title>Dashboard</title>
+    </head>
+    <body>
+        <div id="search-wr">
+            <div class="input-group">
+                <div class="input has-icon-left has-addon-right h-meduim">
+                    <div class="select">
+                        <select id="region">
+                            <option value="euw">EUW</option>
+                            <option value="eune">EUNE</option>
+                            <option value="na">NA</option>
+                            <option value="kr">KR</option>
+                            <option value="jp">JP</option>
+                            <option value="lan">LAN</option>
+                            <option value="las">LAS</option>
+                            <option value="oce">OCE</option>
+                            <option value="tr">TR</option>
+                            <option value="ru">RU</option>
+                            <option value="pbe">PBE</option>
+                        </select>
+                        <i class="fas fa-globe icon is-icon-left"></i>
+                    </div>
+                </div>
+                <div class="input has-icon-left is-expanded">
+                    <input id="summoner-name" type="text" />
+                    <i class="fas fa-user icon is-icon-left"></i>
+                </div>
+                <div class="input has-icon has-addon-left">
+                    <a id="search-summoner" href="javascript:void('')">
+                        <i
+                            class="fas fa-search icon"
+                            style="transform: scaleX(-1);"
+                        ></i>
+                    </a>
+                </div>
+                <div class="input has-icon has-addon-left">
+                    <a id="close-search-icon" href="javascript:void('')">
+                        <i class="fas fa-times icon"></i>
+                    </a>
                 </div>
             </div>
-            <div class="input has-icon-left is-expanded">
-                <input id="summoner-name" type="text" />
-                <i class="fas fa-user icon is-icon-left"></i>
-            </div>
-            <div class="input has-icon has-addon-left">
-                <a id="search-summoner" href="javascript:void('')">
-                    <i class="fas fa-search icon" style="transform:scaleX(-1)"></i>
-                </a>
-            </div>
-            <div class="input has-icon has-addon-left">
-                <a id="close-search-icon" href="javascript:void('')">
-                    <i class="fas fa-times icon"></i>
-                </a>
-            </div>
         </div>
-    </div>
-    <div id="main-window">
-        <div class="main-view active">
-            <div id="app-init">
-                <div>
-                    <div id="app-status"></div>
-                    <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
-                    <div id="dev-init-btn">Try again</div>
+        <div id="main-window">
+            <div class="main-view active">
+                <div id="app-init">
+                    <div>
+                        <div id="app-status"></div>
+                        <div class="lds-ring">
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                        </div>
+                        <div id="dev-init-btn">Try again</div>
+                    </div>
                 </div>
 
+                <!--Insert Template-->
             </div>
-
-            <!--Insert Template-->
+            <div class="main-view"></div>
         </div>
-        <div class="main-view"></div>
-    </div>
-    <div id="favourites-wrapper" class="modal">
-        <div id="fav-tabs-container">
-            <div id="fav-tab-favourites" class="fav-tab is-narrow active"><i class="fas fa-heart"></i></div>
-            <div id="fav-tab-recent" class="fav-tab is-narrow"><i class="fas fa-history"></i></div>
-            <div id="fav-tab-seperator" class="fav-tab spread-wide no-hover">&nbsp;</div>
-            <div id="fav-tab-close" class="fav-tab is-narrow"><i class="fas fa-times"></i></div>
-        </div>
-        <div id="fav-tab-content-container">
-            <div id="fav-tab-favourites-content" class="md-tab-content fav-tab-content">
-                loading favourites...
+        <div id="favourites-wrapper" class="modal">
+            <div id="fav-tabs-container">
+                <div id="fav-tab-favourites" class="fav-tab is-narrow active">
+                    <i class="fas fa-heart"></i>
+                </div>
+                <div id="fav-tab-recent" class="fav-tab is-narrow">
+                    <i class="fas fa-history"></i>
+                </div>
+                <div
+                    id="fav-tab-seperator"
+                    class="fav-tab spread-wide no-hover"
+                >
+                    &nbsp;
+                </div>
+                <div id="fav-tab-close" class="fav-tab is-narrow">
+                    <i class="fas fa-times"></i>
+                </div>
             </div>
-            <div id="fav-tab-recent-content" class="md-tab-content fav-tab-content">recent summoners visited...</div>
+            <div id="fav-tab-content-container">
+                <div
+                    id="fav-tab-favourites-content"
+                    class="md-tab-content fav-tab-content"
+                >
+                    loading favourites...
+                </div>
+                <div
+                    id="fav-tab-recent-content"
+                    class="md-tab-content fav-tab-content"
+                >
+                    recent summoners visited...
+                </div>
+            </div>
         </div>
-    </div>
-    <div id="bot-navigation-wr">
-        <a id="bot-nav-home" href="#" class="tab text-center active" data-navigo><i class="fas fa-home"></i><div class="small margin-t-8">Home</div></a>
-        <a id="bot-nav-profile" href="#" class="tab text-center" data-navigo><i class="fas fa-user-alt"></i><div class="small margin-t-8">Blog</div></a>
-        <a id="bot-nav-champions" href="#" class="tab text-center right-to-mainaction" data-navigo><i class="fab fa-leanpub"></i><div class="small margin-t-8">Guides</div></a>
-        <a id="bot-nav-items" href="#" class="tab text-center" ms-uielement  ms-uielement-type="Modal" ms-uielement-content="Simpletext..." ms-uielement-tpl="defaultModal" ms-uielement-trigger="click" ms-uielement-sticky="false" data-navigo>
-            <i class="fas fa-tachometer-fast"></i>
-            <div class="small margin-t-8">Benchmarks</div>
-        </a>
-        <a id="bot-nav-tests" href="#" class="tab text-center" ms-uielement  ms-uielement-type="Modal" ms-uielement-tpl="defaultModal" ms-uielement-trigger="click" ms-uielement-sticky="false" data-navigo>
-            <i class="fas fa-vial"></i>
-            <div class="small margin-t-8">Tests</div>
-        </a>
+        <div id="bot-navigation-wr">
+            <a
+                id="bot-nav-home"
+                href="#"
+                class="tab text-center active"
+                data-navigo
+                ><i class="fas fa-home"></i>
+                <div class="small margin-t-8">Home</div></a
+            >
+            <a
+                href="#"
+                class="tab text-center"
+                ms-uielement
+                ms-uielement-type="FlyOut"
+                ms-uielement-content="Simpletext..."
+                ms-uielement-tpl="defaultFlyout"
+                ms-uielement-trigger="click"
+                ms-uielement-sticky="false"
+                ms-uielement-position="right"
+                ms-uielement-animation="leftToRight"
+                data-navigo
+                ><i class="fas fa-user-alt"></i>
+                <div class="small margin-t-8">Blog</div></a
+            >
+            <a
+                href="#"
+                class="tab text-center"
+                ms-uielement
+                ms-uielement-type="Modal"
+                ms-uielement-content="This is a great modal"
+                ms-uielement-tpl="defaultModal"
+                ms-uielement-trigger="click"
+                ms-uielement-sticky="false"
+                data-navigo
+                ><i class="fab fa-leanpub"></i>
+                <div class="small margin-t-8">Guides</div></a
+            >
+            <a
+                href="#"
+                class="tab text-center"
+                ms-uielement
+                ms-uielement-type="FlyOut"
+                ms-uielement-content="Simpletext..."
+                ms-uielement-tpl="defaultFlyout"
+                ms-uielement-trigger="click"
+                ms-uielement-sticky="false"
+                ms-uielement-position="right"
+                ms-uielement-animation="leftToRight"
+                data-navigo
+            >
+                <i class="fas fa-tachometer-fast"></i>
+                <div class="small margin-t-8">Benchmarks</div>
+            </a>
+            <a
+                id="bot-nav-tests"
+                href="#"
+                class="tab text-center"
+                ms-uielement
+                ms-uielement-type="Modal"
+                ms-uielement-tpl="defaultModal"
+                ms-uielement-trigger="click"
+                ms-uielement-sticky="false"
+                data-navigo
+            >
+                <i class="fas fa-vial"></i>
+                <div class="small margin-t-8">Tests</div>
+            </a>
 
-        <a id="bot-nav-spacer" href="javascript:void(0)" class="tab text-center no-view no-hover" data-navigon></a>
-        <a id="bot-nav-more" href="#" class="tab text-center"  ms-uielement  ms-uielement-type="FlyOut" ms-uielement-content="Simpletext..." ms-uielement-tpl="defaultFlyout" ms-uielement-trigger="click" ms-uielement-sticky="false" ms-uielement-position="right" ms-uielement-animation="leftToRight" ms-uielement-animation="leftToRight" data-navigo><i class="fas fa-cog"></i><div class="small margin-t-8">Settings</div></a>
-    </div>
-    <div class="overlay">&nbsp;</div>
-    <div id="md-dyn-modal" class="modal"></div>
-    <div id="md-nav-modal" class="modal"></div>
-    <!--<script src="dist/app.js" charset="UTF-8"></script>-->
-    <script type="module" src="js/index.js"></script>
-</body>
+            <a
+                id="bot-nav-spacer"
+                href="javascript:void(0)"
+                class="tab text-center no-view no-hover"
+                data-navigon
+            ></a>
+            <a
+                id="bot-nav-more"
+                href="#"
+                class="tab text-center"
+                ms-uielement
+                ms-uielement-type="FlyOut"
+                ms-uielement-content="Simpletext..."
+                ms-uielement-tpl="defaultFlyout"
+                ms-uielement-trigger="click"
+                ms-uielement-sticky="false"
+                ms-uielement-position="right"
+                ms-uielement-animation="leftToRight"
+                data-navigo
+                ><i class="fas fa-cog"></i>
+                <div class="small margin-t-8">Settings</div></a
+            >
+        </div>
+        <div class="overlay">&nbsp;</div>
+        <div id="md-dyn-modal" class="modal"></div>
+        <div id="md-nav-modal" class="modal"></div>
+        <!--<script src="dist/app.js" charset="UTF-8"></script>-->
+        <script type="module" src="js/index.js"></script>
+    </body>
 </html>

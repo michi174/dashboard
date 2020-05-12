@@ -1,5 +1,5 @@
-class Template{
-    constructor(options, retObj = false){
+class Template {
+    constructor(options, retObj = false) {
         this.guid = "";
         this.path = "";
         this.file = "";
@@ -11,41 +11,40 @@ class Template{
         this.designMode = false;
         this.renderedHTML = "";
 
-
-        if(typeof options === "object"){
+        if (typeof options === "object") {
             for (let [prop, value] of Object.entries(options)) {
-                
-                if(this.hasOwnProperty(prop)){
+                if (this.hasOwnProperty(prop)) {
                     this[prop] = value;
                 }
             }
         }
-        
-        this.guid = this.uniqueID();
-        
-        console.log("[TEMPLATE] Initialising template: "+this.file);
 
-        if(!retObj){
+        this.guid = this.uniqueID();
+
+        console.log("[TEMPLATE] Initialising template: " + this.file);
+
+        if (!retObj) {
             return this._render();
-        }
-        else{
+        } else {
             return this;
         }
     }
 
-    getGuid(){
-        console.log("returning guid:" +this.guid);
+    getGuid() {
+        console.log("returning guid:" + this.guid);
         return this.guid;
     }
 
-    async _render(){
-        console.log("[TEMPLATE] start rendering template: "+this.file);
+    async _render() {
+        console.log("[TEMPLATE] start rendering template: " + this.file);
 
         let compiledHTML;
-        let content = (this.file !== "") ? await this._loadFile() : this.html;
+        let content = this.file !== "" ? await this._loadFile() : this.html;
 
-        if(this.file !== "" && this.html !== ""){
-            console.warn("HTML is ignored because we also have a file. Give either a file or html to render!");
+        if (this.file !== "" && this.html !== "") {
+            console.warn(
+                "HTML is ignored because we also have a file. Give either a file or html to render!"
+            );
         }
 
         let compile = Handlebars.compile(content);
@@ -53,171 +52,189 @@ class Template{
 
         if (!this.designMode) {
             compiledHTML = html;
-        }
-        else {
+        } else {
             compiledHTML = content;
         }
 
-        compiledHTML = "<div tpl-guid=\""+this.guid+"\">"+compiledHTML+"</div>";
-    
-        if (this.target !== null) {
+        compiledHTML =
+            '<div tpl-guid="' + this.guid + '">' + compiledHTML + "</div>";
 
+        if (this.target !== null) {
             let target = $(this.target);
 
-
             switch (this.method) {
-
                 case "append":
                     target.append(compiledHTML);
                     break;
-    
+
                 case "prepend":
                     target.prepend(compiledHTML);
                     break;
 
+                case "after":
+                    target.after(compiledHTML);
+                    break;
+
                 case "return":
                     break;
-    
+
                 case "replace":
                     let obj = $(compiledHTML);
-                    $('#' + obj.first().attr('id')).remove();
+                    $("#" + obj.first().attr("id")).remove();
                     target.append(compiledHTML);
                     break;
-    
+
                 default:
                     target.html(compiledHTML);
                     break;
             }
         }
 
-        console.log("[TEMPLATE] rendering template '"+ this.file + "' has finished");
-        
+        console.log(
+            "[TEMPLATE] rendering template '" + this.file + "' has finished"
+        );
+
         this.renderedHTML = compiledHTML;
 
         return compiledHTML;
     }
 
-    static remove(guid){
-        $("[tpl-guid='"+guid+"']").remove()
+    static remove(guid) {
+        $("[tpl-guid='" + guid + "']").remove();
     }
 
-    static getGuid(element){
+    static getGuid(element) {
         let guid = element.closest("[tpl-guid]").attr("tpl-guid");
         return guid;
     }
 
-    static DOMReady(guid){
-        return new Promise(function(resolve, reject){
+    static DOMReady(guid) {
+        return new Promise(function (resolve, reject) {
             let timer = 0;
             let interval = 10;
             let timeout = 3000;
-            
-            if($("[tpl-guid='"+guid+"']").length === 0){
-                let int = setInterval(function(){
-                    if($("[tpl-guid='"+guid+"']").length === 0)
-                    {
-                        timer = timer+interval;
-                        if(timer >= timeout){
+
+            if ($("[tpl-guid='" + guid + "']").length === 0) {
+                let int = setInterval(function () {
+                    if ($("[tpl-guid='" + guid + "']").length === 0) {
+                        timer = timer + interval;
+                        if (timer >= timeout) {
                             clearInterval(int);
-                            console.error("[TEMPLATE] REJECTING! Not found after time: "+timer);
-                            reject("[TEMPLATE] Element "+guid+" not found.")
-                        }
-                        else{
+                            console.error(
+                                "[TEMPLATE] REJECTING! Not found after time: " +
+                                    timer
+                            );
+                            reject(
+                                "[TEMPLATE] Element " + guid + " not found."
+                            );
+                        } else {
                             //console.log("[TEMPLATE] not found after "+timer+"ms". Trying again);
                         }
-                        
-                    }else{
-                        console.log("[TEMPLATE] "+guid+" ready after "+timer+"ms");
+                    } else {
+                        console.log(
+                            "[TEMPLATE] " +
+                                guid +
+                                " ready after " +
+                                timer +
+                                "ms"
+                        );
                         clearInterval(int);
                         resolve();
-                        
                     }
-                },interval);
-            }
-            else
-            {
-                console.log("[TEMPLATE] "+guid+" ready");
+                }, interval);
+            } else {
+                console.log("[TEMPLATE] " + guid + " ready");
                 resolve();
             }
         });
     }
 
-    isReady(){
+    isReady() {
         let self = this;
 
-        return new Promise(function(resolve, reject){
+        return new Promise(function (resolve, reject) {
             let timer = 0;
             let interval = 10;
             let timeout = 3000;
-            
-            if($("[tpl-guid='"+self.guid+"']").length === 0){
-                let int = setInterval(function(){
-                    if($("[tpl-guid='"+self.guid+"']").length === 0)
-                    {
-                        timer = timer+interval;
-                        if(timer >= timeout){
+
+            if ($("[tpl-guid='" + self.guid + "']").length === 0) {
+                let int = setInterval(function () {
+                    if ($("[tpl-guid='" + self.guid + "']").length === 0) {
+                        timer = timer + interval;
+                        if (timer >= timeout) {
                             clearInterval(int);
-                            console.error("[TEMPLATE] REJECTING! Not found after time: "+timer);
-                            reject("[TEMPLATE] Element "+self.guid+" not found.")
-                        }
-                        else{
+                            console.error(
+                                "[TEMPLATE] REJECTING! Not found after time: " +
+                                    timer
+                            );
+                            reject(
+                                "[TEMPLATE] Element " +
+                                    self.guid +
+                                    " not found."
+                            );
+                        } else {
                             //console.log("[TEMPLATE] "+self.guid+" not found after "+timer+"ms. Trying again");
                         }
-                        
-                    }else{
-                        console.log("[TEMPLATE] "+self.file+" was added to DOM after "+timer+"ms");
+                    } else {
+                        console.log(
+                            "[TEMPLATE] " +
+                                self.file +
+                                " was added to DOM after " +
+                                timer +
+                                "ms"
+                        );
                         clearInterval(int);
                         resolve();
-                        
                     }
-                },interval);
-            }
-            else
-            {
-                console.log("[TEMPLATE] "+self.file+" was added to DOM instantly");
+                }, interval);
+            } else {
+                console.log(
+                    "[TEMPLATE] " + self.file + " was added to DOM instantly"
+                );
                 resolve();
             }
         });
     }
-    
-    static getUniqueID(){
-        let uid = (Math.random() * Math.floor(1000000000000000000000)).toFixed(0).toString(16);
 
-        if($("[tpl-guid='"+uid+"']").length > 0){
+    static getUniqueID() {
+        let uid = (Math.random() * Math.floor(1000000000000000000000))
+            .toFixed(0)
+            .toString(16);
+
+        if ($("[tpl-guid='" + uid + "']").length > 0) {
             Template.getUniqueID();
-        }
-        else{
+        } else {
             return uid;
         }
     }
 
-    uniqueID(){
-        let uid = (Math.random() * Math.floor(1000000000000000000000)).toFixed(0).toString(16);
+    uniqueID() {
+        let uid = (Math.random() * Math.floor(1000000000000000000000))
+            .toFixed(0)
+            .toString(16);
 
-        if($("[tpl-guid='"+uid+"']").length > 0){
+        if ($("[tpl-guid='" + uid + "']").length > 0) {
             this.uniqueID();
-        }
-        else{
+        } else {
             return uid;
         }
     }
 
-    _generateRandom(){
-        return (Math.random() * Math.floor(1000000000000000000000)).toFixed(0).toString(16)
+    _generateRandom() {
+        return (Math.random() * Math.floor(1000000000000000000000))
+            .toFixed(0)
+            .toString(16);
     }
 
-
-    _loadFile(){
-
-        console.log("[TEMPLATE] Loading file: "+ this.file);
+    _loadFile() {
+        console.log("[TEMPLATE] Loading file: " + this.file);
 
         return $.ajax({
-            url: this.path+"/"+this.file,
+            url: this.path + "/" + this.file,
             cache: false,
-            success: function(data) {
-            }               
-        });   
+            success: function (data) {},
+        });
     }
 }
 
-export {Template};
+export { Template };
