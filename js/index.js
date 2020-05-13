@@ -120,7 +120,7 @@ function startApp() {
      * When navigated to the homepage.
      */
 
-    navigation.router.on(async function () {
+    navigation.router.on("*", async function () {
         let homepage = new Template({
             file: "homepage.handlebars",
             path: "view",

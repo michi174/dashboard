@@ -1,17 +1,82 @@
-@import 'colors.css';
+@import "colors.css";
 
-html, body, div, span, applet, object, iframe,
-h1, h2, h3, h4, h5, h6, p, pre,
-a, abbr, acronym, address, big, cite, code,
-del, dfn, em, img, ins, kbd, q, s, samp,
-small, strike, strong, sub, sup, tt, var,
-b, u, i, center, ol, ul, li,
-fieldset, form, label, legend,
-table, caption, tbody, tfoot, thead, tr, th, td,
-article, aside, canvas, details, embed,
-figure, figcaption, footer, header, hgroup,
-menu, nav, output, ruby, section, summary,
-time, mark, audio, video {
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+embed,
+figure,
+figcaption,
+footer,
+header,
+hgroup,
+menu,
+nav,
+output,
+ruby,
+section,
+summary,
+time,
+mark,
+audio,
+video {
     margin: 0;
     padding: 0;
     border: 0;
@@ -22,25 +87,28 @@ time, mark, audio, video {
 }
 
 @font-face {
-    font-family: 'Roboto';
+    font-family: "Roboto";
     src: url(fonts/Roboto-Regular.ttf);
 }
 
 @font-face {
-    font-family: 'Montserrat';
+    font-family: "Montserrat";
     src: url(fonts/Montserrat-Medium.ttf);
 }
 
 @font-face {
-    font-family: 'Material Icons';
+    font-family: "Material Icons";
     font-style: normal;
     font-weight: 400;
     src: url(MaterialIcons-Regular.eot); /* For IE6-8 */
-    src: local('Material Icons'), local('MaterialIcons-Regular'), url(fonts/MaterialIcons-Regular.woff2) format('woff2'), url(fonts/MaterialIcons-Regular.woff) format('woff'), url(fonts/MaterialIcons-Regular.ttf) format('truetype');
+    src: local("Material Icons"), local("MaterialIcons-Regular"),
+        url(fonts/MaterialIcons-Regular.woff2) format("woff2"),
+        url(fonts/MaterialIcons-Regular.woff) format("woff"),
+        url(fonts/MaterialIcons-Regular.ttf) format("truetype");
 }
 
 .material-icons {
-    font-family: 'Material Icons';
+    font-family: "Material Icons";
     font-weight: normal;
     font-style: normal;
     font-size: 28px; /* Preferred icon size */
@@ -57,7 +125,7 @@ time, mark, audio, video {
     /* Support for Firefox. */
     -moz-osx-font-smoothing: grayscale;
     /* Support for IE. */
-    font-feature-settings: 'liga';
+    font-feature-settings: "liga";
 }
 
 .material-icons.md24 {
@@ -69,7 +137,6 @@ time, mark, audio, video {
     line-height: 48px;
 }
 
-
 .material-icons.accent-color {
     color: var(--accent-color);
 }
@@ -78,22 +145,21 @@ time, mark, audio, video {
     color: var(--main-color-light);
 }
 
-body 
-{
-    position:relative;
-    font-family:'Montserrat';
+body {
+    font-family: "Montserrat";
     color: #444;
     font-size: 16px;
     margin: 0 auto;
-    
 }
 
-html, body {
+html,
+body {
     height: auto;
     min-height: 100vh;
+    box-sizing: border-box;
     -ms-overflow-style: none;
     scrollbar-width: none;
-    -webkit-tap-highlight-color: rgba(0,0,0,0);
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
     -webkit-tap-highlight-color: transparent;
 }
 
@@ -101,7 +167,7 @@ body::-webkit-scrollbar {
     display: none;
 }
 
-.text-center{
+.text-center {
     text-align: center;
 }
 .text-left {
@@ -114,14 +180,14 @@ body::-webkit-scrollbar {
     text-align: justify;
 }
 
-.is-narrow{
+.is-narrow {
     flex-grow: 0 !important;
 }
-.is-wide{
+.is-wide {
     flex-grow: 1 !important;
 }
 
-.clickable-icon{
+.clickable-icon {
     padding: 0.5rem;
 }
 
@@ -132,11 +198,11 @@ body::-webkit-scrollbar {
 .extra-small {
     font-size: 8px;
 }
-.small{
+.small {
     font-size: 10px;
 }
 
-.medium{
+.medium {
     font-size: 13px !important;
 }
 
@@ -152,23 +218,23 @@ body::-webkit-scrollbar {
     font-size: 20px;
 }
 
-.bold{
-    font-weight:bold;
+.bold {
+    font-weight: bold;
 }
 
-.very-light{
+.very-light {
     color: var(--light-highlight);
 }
 
 .light {
-    color: #AFAFAF;
+    color: #afafaf;
 }
 .semilight {
     color: #777;
 }
 
-.h-small{
-    height:16px;
+.h-small {
+    height: 16px;
 }
 .h-medium {
     height: 32px;
@@ -176,76 +242,124 @@ body::-webkit-scrollbar {
 .h-large {
     height: 64px;
 }
-.h-extra-large{
+.h-extra-large {
     height: 96px;
 }
 .fullwidth {
-    width:100%;
+    width: 100%;
     background-color: #fff;
 }
 
 .red-gradient {
-    background: linear-gradient(45deg, rgb(58, 111, 126) 0%, rgb(79, 60, 154) 68%, rgb(127, 86, 120) 100%);
+    background: linear-gradient(
+        45deg,
+        rgb(58, 111, 126) 0%,
+        rgb(79, 60, 154) 68%,
+        rgb(127, 86, 120) 100%
+    );
 }
 
 .blue-gradient {
-    background: linear-gradient(90deg, rgba(61,58,126,1) 0%, rgba(32,130,187,1) 61%, rgba(0,212,255,1) 100%);
+    background: linear-gradient(
+        90deg,
+        rgba(61, 58, 126, 1) 0%,
+        rgba(32, 130, 187, 1) 61%,
+        rgba(0, 212, 255, 1) 100%
+    );
 }
 
 .green-gradient {
-    background: linear-gradient(215deg, #8dc476 0%, #00d45c 0%, #00ac8b 76.13%, #0092aa 100%, #47623b 100%);
+    background: linear-gradient(
+        215deg,
+        #8dc476 0%,
+        #00d45c 0%,
+        #00ac8b 76.13%,
+        #0092aa 100%,
+        #47623b 100%
+    );
 }
 
 .yellow-gradient {
-    background: linear-gradient(90deg, rgba(255,205,0,1) 0%, rgba(255,244,0,1) 100%);
-    color:var(--text-color-dark) !important;
+    background: linear-gradient(
+        90deg,
+        rgba(255, 205, 0, 1) 0%,
+        rgba(255, 244, 0, 1) 100%
+    );
+    color: var(--text-color-dark) !important;
 }
 
 .blue-radial-gradient {
-    background: radial-gradient(circle, rgba(31,54,122,1) 0%, rgba(32,130,187,1) 100%);
+    background: radial-gradient(
+        circle,
+        rgba(31, 54, 122, 1) 0%,
+        rgba(32, 130, 187, 1) 100%
+    );
 }
 
 .lightgrey-radial-gradient {
-    background: radial-gradient(circle, rgb(189, 188, 188) 0%, rgba(238,238,238,1) 100%);
+    background: radial-gradient(
+        circle,
+        rgb(189, 188, 188) 0%,
+        rgba(238, 238, 238, 1) 100%
+    );
 }
 
 .text-shadow-dark {
     text-shadow: 1px 1px 3px #171717;
 }
 
-.shadow-def{
-    box-shadow: #CCC 1px 1px 16px 6px;
+.shadow-def {
+    box-shadow: #ccc 1px 1px 16px 6px;
 }
 
-.container{
-    display:flex !important;
-    align-content:center;
+.container {
+    display: flex !important;
+    align-content: center;
     align-items: center;
 }
 
-.tablerow{
-    padding:0.25rem 0.5rem 0.25rem 0.5rem;
+.tablerow {
+    padding: 0.25rem 0.5rem 0.25rem 0.5rem;
 }
 .table-header {
     padding-top: 1.75rem;
     padding-left: 0.5rem;
-    color:var(--text-color-dark);
+    color: var(--text-color-dark);
 }
-    .table-header:first-child {
-        padding-top: 0;
-    }
-    .table-header > i{
-        color: rgba(210,210,210, 1);
-        width: 16px;
-        height: 16px;
-    }
+.table-header:first-child {
+    padding-top: 0;
+}
+.table-header > i {
+    color: rgba(210, 210, 210, 1);
+    width: 16px;
+    height: 16px;
+}
 .table-header-seperator {
     border: none;
     height: 1px;
-    background-color: rgba(210,210,210,0.5);
+    background-color: rgba(210, 210, 210, 0.5);
 }
 
-a .touch-list-item, a:active .touch-list-item, a:visited .touch-list-item {
+.col {
+    flex-grow: 1;
+}
+
+.spread {
+    flex-grow: 1;
+}
+
+.spread-wide {
+    flex-grow: 2;
+}
+
+.row {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+}
+
+a .touch-list-item,
+a:active .touch-list-item,
+a:visited .touch-list-item {
     color: #444;
 }
 
@@ -255,14 +369,14 @@ a .touch-list-item, a:active .touch-list-item, a:visited .touch-list-item {
     cursor: pointer;
 }
 
-    .touch-list-item > i {
-        margin-right: 0.5rem;
-        color: var(--main-color-light)!important;
-    }   
+.touch-list-item > i {
+    margin-right: 0.5rem;
+    color: var(--main-color-light) !important;
+}
 
-    .no-touch .touch-list-item:hover > i {
-        color: var(--text-accent-color)!important;
-    }
+.no-touch .touch-list-item:hover > i {
+    color: var(--text-accent-color) !important;
+}
 
 .margin-l-12 {
     margin-left: 12px;
@@ -322,7 +436,6 @@ a .touch-list-item, a:active .touch-list-item, a:visited .touch-list-item {
     margin-bottom: 12px;
 }
 
-.pull-right{
-    align-self:flex-end;
+.pull-right {
+    align-self: flex-end;
 }
-

@@ -57,7 +57,7 @@ class Template {
         }
 
         compiledHTML =
-            '<div tpl-guid="' + this.guid + '">' + compiledHTML + "</div>";
+            '<span tpl-guid="' + this.guid + '">' + compiledHTML + "</span>";
 
         if (this.target !== null) {
             let target = $(this.target);

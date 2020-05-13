@@ -90,11 +90,18 @@ class UIElement {
      * Creates a new DOM Element into the DOM Tree.
      */
     async create() {
+        let method = "append";
+
         //should we create the UI Element after the caller instead of appending it to the body?
         //it would be a big benefit if the user is scrolling. the UIElement would stick to the callers position.
 
-        // if (typeof this.caller === "object") {
-        //     this.target = this.caller[0];
+        // if (typeof this.caller === "object" && this.caller !== null) {
+
+        //     if(this.moveToCaller){
+        //         this.target = this.caller[0];
+        //         method = "after";
+        //     }
+
         // }
 
         //If activate the above code, we need to change the method of the template to "after" instead of "append".
@@ -104,7 +111,7 @@ class UIElement {
             file: this.template,
             data: this.data,
             target: this.target,
-            method: "append",
+            method: method,
         });
 
         let self = this;
@@ -207,7 +214,6 @@ class UIElement {
      * @param {UIElement.position} position
      */
     _move(position) {
-        console.log("[UIElement]");
         if (this.moveToCaller) {
             if (typeof this.caller === "object" && this.caller !== null) {
                 let UIElement = $("#" + this.id);
