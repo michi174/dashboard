@@ -11,6 +11,8 @@ export default class UIFactory {
         this.caller = null;
         this.openDirection = null; //ltr, rtl, ttb, btt
         this.openPositionRelativeToCaller = null; //top, bottom, right, left
+        this.animation = null;
+        this.align = null;
 
         this.options = options;
 
@@ -53,6 +55,8 @@ export default class UIFactory {
                         openPositionRelativeToCaller:
                             self.openPositionRelativeToCaller,
                         openDirection: self.openDirection,
+                        animation: self.animation,
+                        align: self.align,
                     });
                 } else {
                     console.log(

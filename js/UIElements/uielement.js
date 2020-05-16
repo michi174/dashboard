@@ -12,25 +12,12 @@ class UIElement {
         this.position = null;
         this.moveToCaller = true;
         this.caller = null;
-        this.openDirection = "leftToRight"; //ltr, rtl, ttb, btt
-        this.openPositionRelativeToCaller = "bottom"; //top, bottom, right, left
+        this.openDirection = "right"; //up, right, down, left
+        this.openPositionRelativeToCaller = "topRight";
         this.resizeObserver = null;
         this.target = "body";
-
-        const openDirections = {
-            leftToRight: {
-                allowDirection: "x",
-            },
-            rightToLeft: {
-                allowDirection: "x",
-            },
-            topToBottom: {
-                allowDirection: "y",
-            },
-            BottomToTop: {
-                allowDirection: "y",
-            },
-        };
+        this.animation = "";
+        this.align = "left";
 
         if (typeof options === "object") {
             for (let [prop, value] of Object.entries(options)) {
@@ -59,7 +46,7 @@ class UIElement {
             let element = await this.create();
 
             if (this.moveToCaller) {
-                this._move(this._calculatePosition());
+                this._move(this._calcStartPoint());
 
                 //Recalculate the position if the element changes its size.
                 this.resizeObserver = new ResizeObserver((entries) => {
@@ -67,14 +54,15 @@ class UIElement {
                         const cr = entry.contentRect;
                         const jQElement = $(entry.target);
 
-                        this._move(this._calculatePosition());
+                        this._move(this._calcStartPoint());
                     }
                 });
 
                 this.resizeObserver.observe(element[0]);
             }
             element.addClass("isOpen");
-
+            element.addClass("ms-ui-element");
+            element.addClass(this.animation);
             element.addClass(this.openDirection);
 
             this.caller.attr("ms-uielement-id", this.id);
@@ -160,50 +148,199 @@ class UIElement {
      *
      * @return The absolute position of the new Element.
      */
-    _calculatePosition() {
-        let position, width, height;
-        let startTop, startLeft;
+    _calcStartPoint() {
+        let position,
+            callerWidth,
+            callerHeight,
+            callerStartX,
+            callerStartY,
+            callerMiddleX,
+            callerMiddleY,
+            callerEndX,
+            callerEndY,
+            clientHeight,
+            clientWidth;
+
         let UIElementNewPosition = new Object();
 
         self = this;
 
         if (this.moveToCaller) {
             if (typeof this.caller === "object" && this.caller !== null) {
+                let UIElement = $("#" + this.id);
                 let caller = this.caller;
 
                 position = caller.offset();
-                width = caller.outerWidth(false);
-                height = caller.outerHeight(false);
+
+                callerWidth = caller.outerWidth(false);
+                callerHeight = caller.outerHeight(false);
+
+                callerStartX = position.left;
+                callerStartY = position.top;
+
+                callerEndX = callerStartX + callerWidth;
+                callerEndY = callerStartY + callerHeight;
+
+                callerMiddleX = callerStartX + callerWidth / 2;
+                callerMiddleY = callerStartY + callerHeight;
+
+                clientHeight = document.documentElement.clientHeight;
+                clientWidth = document.documentElement.clientWidth;
+
+                let callerVpPos = caller[0].getBoundingClientRect();
+
+                let elemHeight = UIElement.outerHeight();
+                let elemWidth = UIElement.outerWidth();
+
+                let leftDistance = 0;
+                let rightDistance = 0;
+                let topDistance = 0;
+                let botDistance = 0;
 
                 switch (this.openPositionRelativeToCaller) {
-                    case "right":
-                        UIElementNewPosition.left = position.left + width;
-                        UIElementNewPosition.top = position.top;
+                    case "topLeft":
+                        UIElementNewPosition.X = callerStartX;
+                        UIElementNewPosition.Y = callerStartY;
                         break;
-                    case "left":
-                        UIElementNewPosition.left = position.left;
-                        UIElementNewPosition.top = position.top;
+                    case "topCenter":
+                        UIElementNewPosition.X = callerMiddleX;
+                        UIElementNewPosition.Y = callerStartY;
+                        console.log(callerStartY);
+                        break;
+                    case "topRight":
+                        UIElementNewPosition.X = callerEndX;
+                        UIElementNewPosition.Y = callerStartY;
+                        console.log(callerStartY);
                         break;
                     case "top":
-                        UIElementNewPosition.left = position.left;
-                        UIElementNewPosition.top = position.top;
-                        break;
-                    case "bottom":
-                        UIElementNewPosition.left = position.left;
-                        UIElementNewPosition.top = position.top + height;
-                        break;
-                    default:
-                        UIElementNewPosition.left = position.left;
-                        UIElementNewPosition.top = position.top;
-                }
+                        UIElementNewPosition.Y = callerStartY;
 
-                return UIElementNewPosition;
-            } else {
-                console.log("[UIElement] No Caller received!");
+                        leftDistance = callerVpPos.left;
+                        rightDistance =
+                            clientWidth - (callerVpPos.left + callerWidth);
+
+                        if (leftDistance > rightDistance) {
+                            UIElementNewPosition.X = callerEndX;
+                            this.caller.attr(
+                                "ms-uielement-position",
+                                "topRight"
+                            );
+                            this.openPositionRelativeToCaller = "topRight";
+                        } else {
+                            UIElementNewPosition.X = callerStartX;
+                            this.caller.attr(
+                                "ms-uielement-position",
+                                "topLeft"
+                            );
+                            this.openPositionRelativeToCaller = "topLeft";
+                        }
+                        break;
+
+                    case "rightTop":
+                        UIElementNewPosition.X = callerEndX;
+                        UIElementNewPosition.Y = callerStartY;
+                        break;
+                    case "rightCenter":
+                        UIElementNewPosition.X = callerEndX;
+                        UIElementNewPosition.Y = callerMiddleY;
+                        break;
+                    case "rightBot":
+                        UIElementNewPosition.X = callerEndX;
+                        UIElementNewPosition.Y = callerEndY;
+                        break;
+                    case "right":
+                        UIElementNewPosition.X = callerEndX;
+
+                        topDistance = callerVpPos.top;
+                        botDistance =
+                            clientHeight - (callerVpPos.top + callerHeight);
+
+                        if (
+                            topDistance > botDistance ||
+                            elemHeight < botDistance
+                        ) {
+                            UIElementNewPosition.Y = callerStartY;
+                        } else {
+                            UIElementNewPosition.Y = callerEndY;
+                        }
+                        break;
+
+                    case "botLeft":
+                        UIElementNewPosition.X = callerStartX;
+                        UIElementNewPosition.Y = callerEndY;
+                        break;
+                    case "botCenter":
+                        UIElementNewPosition.X = callerMiddleX;
+                        UIElementNewPosition.Y = callerEndY;
+                        break;
+                    case "botRight":
+                        UIElementNewPosition.X = callerEndX;
+                        UIElementNewPosition.Y = callerEndY;
+                        break;
+                    case "bot":
+                        UIElementNewPosition.Y = callerEndY;
+
+                        leftDistance = callerVpPos.left;
+                        rightDistance =
+                            clientWidth - (callerVpPos.left + callerWidth);
+
+                        if (leftDistance > rightDistance) {
+                            UIElementNewPosition.X = callerEndX;
+                            this.caller.attr(
+                                "ms-uielement-position",
+                                "botRight"
+                            );
+                            this.openPositionRelativeToCaller = "botRight";
+                        } else {
+                            UIElementNewPosition.X = callerStartX;
+                            this.caller.attr(
+                                "ms-uielement-position",
+                                "botLeft"
+                            );
+                            this.openPositionRelativeToCaller = "botLeft";
+                        }
+                        break;
+
+                    case "leftTop":
+                        UIElementNewPosition.X = callerStartX;
+                        UIElementNewPosition.Y = callerStartY;
+                        break;
+                    case "leftCenter":
+                        UIElementNewPosition.X = callerStartX;
+                        UIElementNewPosition.Y = callerMiddleY;
+                        break;
+                    case "leftBot":
+                        UIElementNewPosition.X = callerStartX;
+                        UIElementNewPosition.Y = callerEndY;
+                        break;
+                    case "left":
+                        UIElementNewPosition.X = callerStartX;
+
+                        topDistance = callerVpPos.top;
+                        botDistance =
+                            clientHeight - (callerVpPos.top + callerHeight);
+
+                        if (topDistance > botDistance) {
+                            UIElementNewPosition.Y = callerStartY;
+                        } else {
+                            UIElementNewPosition.Y = callerEndY;
+                        }
+
+                        break;
+
+                    case "Y":
+                        break;
+                    case "X":
+                        break;
+
+                    default:
+                        UIElementNewPosition.X = callerStartX;
+                        UIElementNewPosition.Y = callerEndY;
+                        break;
+                }
             }
-        } else {
-            //console.log("[UIElement] No movement required")
         }
+        return UIElementNewPosition;
     }
 
     /**
@@ -213,119 +350,204 @@ class UIElement {
      *
      * @param {UIElement.position} position
      */
+
     _move(position) {
-        if (this.moveToCaller) {
-            if (typeof this.caller === "object" && this.caller !== null) {
-                let UIElement = $("#" + this.id);
+        let UIElement = $("#" + this.id);
 
-                let clientHeight = document.documentElement.clientHeight;
-                let clientWidth = document.documentElement.clientWidth;
-                let clientMiddle = clientWidth / 2;
+        let overflowOffset = 0;
 
-                let elemHeight = UIElement.outerHeight();
-                let elemWidth = UIElement.outerWidth();
+        let startX = "left";
+        let startY = "top";
 
-                let originElemTop = position.top;
-                let originElemLeft = position.left;
+        let clientHeight = document.documentElement.clientHeight;
+        let clientWidth = document.documentElement.clientWidth;
+        let clientMiddle = clientWidth / 2;
 
-                let newElemTop = originElemTop;
-                let newElemLeft = originElemLeft;
+        let elemHeight = UIElement.outerHeight();
+        let elemWidth = UIElement.outerWidth();
 
-                let callerHeight = this.caller.outerHeight();
-                let callerWidth = this.caller.outerWidth();
-                let callerTop = this.caller.offset().top;
-                let callerLeft = this.caller.offset().left;
-                let callerStartY = callerTop;
-                let callerEndY = callerTop + callerHeight;
-                let callerStartX = callerLeft;
-                let callerEndX = callerLeft + callerWidth;
-                let callerMiddle = callerStartX + callerWidth / 2;
+        let originElemX = position.X;
+        let originElemY = position.Y;
 
-                let elementStartY = newElemTop;
-                let elementEndY = newElemTop + elemHeight;
-                let elementStartX = newElemLeft;
-                let elementEndX = newElemLeft + elemWidth;
+        let callerHeight = this.caller.outerHeight();
+        let callerWidth = this.caller.outerWidth();
+        let callerStartY = this.caller.offset().top;
+        let callerStartX = this.caller.offset().left;
+        let callerEndY = callerStartY + callerHeight;
+        let callerEndX = callerStartX + callerWidth;
+        let callerMiddleX = callerStartX + callerWidth / 2;
+        let callerMiddleY = callerStartY + callerHeight / 2;
 
-                let lr = "left";
-                let tb = "top";
+        let newElemY = originElemY;
+        let newElemX = originElemX;
 
-                if (elemHeight + originElemTop > clientHeight) {
-                    newElemTop =
-                        originElemTop -
-                        (elemHeight + originElemTop - clientHeight);
-                    console.log(
-                        `[UIElement][Position] New TOP-Position: ${newElemTop}px`
-                    );
-                    if (this.openPositionRelativeToCaller === "top") {
-                        newElemTop = originElemTop - elemHeight;
-                        console.log(
-                            `[UIElement][Position] New TOP-Position: ${newElemTop}px`
-                        );
-                    } else {
-                    }
-                    console.log("[UIElement][Position] Element is too high!");
+        let elementStartY = newElemY;
+        let elementEndY = newElemY + elemHeight;
+        let elementStartX = newElemX;
+        let elementEndX = newElemX + elemWidth;
+
+        let leftDistance = 0;
+        let rightDistance = 0;
+        let align = "left";
+        let calcCallerHeight = 0;
+
+        console.log(position);
+
+        switch (this.openDirection) {
+            case "up":
+                console.log("Opening up");
+                if (elementEndX > clientWidth) {
+                    getNewElemPosX(this);
+                }
+                break;
+            case "right":
+                console.log("Opening right");
+
+                getNewElemPosY(this);
+                break;
+            case "left":
+                console.log("Opening left");
+                newElemX = clientWidth - callerEndX;
+                startX = "right";
+
+                getNewElemPosY(this);
+
+                break;
+            case "down":
+                console.log("Opening down");
+                if (elementEndX > clientWidth) {
+                    getNewElemPosX(this);
                 }
 
-                if (elemWidth + originElemLeft + 1 > clientWidth) {
-                    console.log("[UIElement][Position] Element is too wide!");
-
-                    //lets get the caller position
-                    if (callerMiddle >= clientMiddle) {
-                        lr = "right";
-                        newElemLeft = clientWidth - callerEndX;
-                    } else {
-                        // lr = "left";
-                        // newElemLeft = callerStartX;
-                    }
-
-                    //center the element if the caller is in the middle of the client
-                    if (clientMiddle - callerMiddle < callerWidth) {
-                        lr = "left";
-
-                        newElemLeft = clientMiddle - elemWidth / 2;
-                    }
+                break;
+            case "x":
+                console.log("Opening x");
+                if (elementEndX > clientWidth) {
+                    newElemX = overflowOffset;
+                    startX = "right";
                 } else {
+                    if (elementStartX < 0) {
+                        newElemX = overflowOffset;
+                        startX = "left";
+                    }
                 }
 
-                //Do we hit the clients viewport dimensions?
+                if (elementEndY > clientHeight) {
+                    newElemY = overflowOffset;
+                    startY = "bottom";
+                }
 
-                //Do we hit the caller? That would be bad.
+                break;
+            case "y":
+                console.log("Opening y");
+                console.log(position.X);
+                getNewElemPosY(this);
+                console.log(newElemX);
+                getNewElemPosX(this);
+                console.log(newElemX);
 
-                elementStartY = newElemTop;
-                elementEndY = newElemTop + elemHeight;
-                elementStartX = newElemLeft;
-                elementEndX = newElemLeft + elemWidth;
+                break;
+            default:
+                break;
+        }
 
-                console.log(`[UIElement][Position] Moving UIElement`);
-                // console.log(
-                //     `[UIElement][Position] clientHeight: ${clientHeight}px`
-                // );
-                // console.log(
-                //     `[UIElement][Position] elemHeight: ${elemHeight}px`
-                // );
-                // console.log(
-                //     `[UIElement][Position] originElemTop: ${originElemTop}px`
-                // );
-                // console.log(
-                //     `[UIElement][Position] New TOP-Position: ${newElemTop}px`
-                // );
-                // console.log(`-----------------------X------------------------`);
-                // console.log(
-                //     `[UIElement][Position] clientWidth: ${clientWidth}px`
-                // );
-                // console.log(`[UIElement][Position] elemWidth: ${elemWidth}px`);
-                // console.log(
-                //     `[UIElement][Position] originElemLeft: ${originElemLeft}px`
-                // );
-                // console.log(
-                //     `[UIElement][Position] New LEFT-Position: ${newElemLeft}px`
-                // );
+        function getNewElemPosY(self) {
+            if (elementEndY + callerHeight > clientHeight) {
+                if (self.openPositionRelativeToCaller.search(/bot/i) > -1) {
+                    calcCallerHeight = callerHeight;
+                } else if (
+                    self.openPositionRelativeToCaller.search(/top/i) > -1
+                ) {
+                    calcCallerHeight = 0;
+                }
 
-                //UIElement.css({top: newElemTop+"px", left: newElemLeft+"px"});
-                UIElement.css(tb, newElemTop + "px");
-                UIElement.css(lr, newElemLeft + "px");
+                newElemY = clientHeight - originElemY + calcCallerHeight;
+                startY = "bottom";
+            } else {
+                console.log(
+                    `Element (${elemHeight}) + ${elementStartY} = ${elementEndY} is not higher than our viewport ${clientHeight}`
+                );
+                if (self.openPositionRelativeToCaller.search(/top/i) > -1) {
+                    calcCallerHeight = callerHeight;
+                } else if (
+                    self.openPositionRelativeToCaller.search(/bot/i) > -1
+                ) {
+                    calcCallerHeight = 0;
+                }
+
+                newElemY = newElemY + calcCallerHeight;
             }
         }
+
+        function getNewElemPosX(self) {
+            if (self.openPositionRelativeToCaller.search(/left/i) > -1) {
+                align = "left";
+            } else if (
+                self.openPositionRelativeToCaller.search(/Right/i) > -1
+            ) {
+                align = "right";
+            } else if (
+                self.openPositionRelativeToCaller.search(/center/i) > -1
+            ) {
+                align = "center";
+            }
+
+            switch (align) {
+                case "left":
+                    leftDistance = callerStartX;
+                    rightDistance = clientWidth - callerStartX;
+
+                    if (leftDistance > rightDistance) {
+                        newElemX = clientWidth - callerStartX;
+                        startX = "right";
+                    } else {
+                        newElemX = callerStartX;
+                        startX = "left";
+                    }
+
+                    break;
+                case "center":
+                    leftDistance = callerMiddleX;
+                    rightDistance = clientWidth - callerMiddleX;
+
+                    if (leftDistance > rightDistance) {
+                        newElemX = clientWidth - callerMiddleX;
+                        startX = "right";
+                    } else {
+                        newElemX = callerMiddleX;
+                        startX = "left";
+                    }
+
+                    break;
+                case "right":
+                    leftDistance = callerEndX;
+                    rightDistance = clientWidth - callerEndX;
+
+                    if (leftDistance > rightDistance) {
+                        newElemX = clientWidth - callerStartX - callerWidth;
+                        startX = "right";
+                    } else {
+                        newElemX = callerStartX;
+                        startX = "left";
+                    }
+                    break;
+            }
+        }
+
+        if (startX === "left") {
+            UIElement.css("right", "auto");
+        } else {
+            UIElement.css("left", "auto");
+        }
+
+        if (startY === "top") {
+            UIElement.css("bottom", "auto");
+        } else {
+            UIElement.css("top", "auto");
+        }
+
+        UIElement.css(startY, newElemY + "px");
+        UIElement.css(startX, newElemX + "px");
     }
 }
 

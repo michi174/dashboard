@@ -5,6 +5,7 @@
 @import "flyout.css";
 @import "modal.css";
 @import "tooltip.css";
+@import "uielement.css";
 
 #app-init {
     display: flex;
@@ -57,7 +58,7 @@
     align-items: flex-end;
     justify-content: space-between;
     align-content: center;
-    z-index: 1100;
+    z-index: 999;
     border-radius: 0rem;
     background-color: var(--nav-color);
     height: 70px;
@@ -512,7 +513,7 @@
 .tab {
     position: relative;
     flex-grow: 1;
-    height: auto;
+    height: 70px;
     display: flex;
     flex-direction: column;
     justify-content: center;

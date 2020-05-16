@@ -1,5 +1,4 @@
-
-:root{
+:root {
     --nav-animation-duration: 0.2s;
 }
 
@@ -13,19 +12,19 @@
     }
 }
 
-.animate-grow-width{
-    width:0%;
-    overflow:hidden;
-    animation:grow-width 1s forwards;
-    white-space:nowrap;
+.animate-grow-width {
+    width: 0%;
+    overflow: hidden;
+    animation: grow-width 1s forwards;
+    white-space: nowrap;
 }
 
-@keyframes grow-width{
-    from{
-        width:0%;
-        opacity:0.3;
+@keyframes grow-width {
+    from {
+        width: 0%;
+        opacity: 0.3;
     }
-    to{
+    to {
         width: 100%;
         opacity: 1;
     }
@@ -70,7 +69,7 @@
 @keyframes swipeHorizontal-0to100 {
     from {
         transform: translate(20%);
-        opacity:0.8;
+        opacity: 0.8;
     }
 
     to {

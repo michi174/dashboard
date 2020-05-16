@@ -1,0 +1,27 @@
+<html>
+    <head></head>
+    <body>
+        <div id="content"></div>
+
+        <script type="text/javascript">
+            let html = "";
+            let el = document.getElementById("content");
+
+            for (i = 0; i < 10000; i++) {
+                html += "<a href=''>" + i + "</a>";
+
+                let img = document.createElement("IMG");
+                img.src =
+                    "https://le-cdn.website-editor.net/6ea9970d89384c7989013a634cb82c4d/dms3rep/multi/opt/_DSF" +
+                    i +
+                    "-1-1920w.jpg";
+                img.height = "200";
+                img.width = "200";
+
+                el.appendChild(img);
+            }
+
+            el.appendChild;
+        </script>
+    </body>
+</html>

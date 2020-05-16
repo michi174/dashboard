@@ -14,6 +14,7 @@ var apiHost = "";
 var devMode = false;
 var locale = "de_DE";
 var views = new Array();
+var mobile = false;
 
 const templateFolder = "view";
 const viewModelFolder = "viewmodel";
@@ -49,11 +50,22 @@ const ro = new ResizeObserver((entries) => {
                     "ms-uielement-position",
                     "right"
                 );
+                $("#bot-navigation-wr > [ms-uielement]").attr(
+                    "ms-uielement-open-direction",
+                    "x"
+                );
+
+                mobile = false;
             } else {
                 $("#bot-navigation-wr > [ms-uielement]").attr(
                     "ms-uielement-position",
                     "top"
                 );
+                $("#bot-navigation-wr > [ms-uielement]").attr(
+                    "ms-uielement-open-direction",
+                    "y"
+                );
+                mobile = true;
             }
         })();
     }

@@ -90,7 +90,9 @@ export default class UIManager {
                 openPositionRelativeToCaller: $(this).attr(
                     "ms-uielement-position"
                 ),
-                openDirection: $(this).attr("ms-uielement-animation"),
+                openDirection: $(this).attr("ms-uielement-open-direction"),
+                animation: $(this).attr("ms-uielement-animation"),
+                align: $(this).attr("ms-ui-element-align"),
             };
 
             new UIFactory(options);

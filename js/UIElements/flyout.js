@@ -29,8 +29,8 @@ export class FlyOut extends UIElement {
 })();
 
 (function closeAll() {
-    $("body").on("click", function (event) {
-        if (!$(event.target).closest(".ms-flyout.isOpen").length) {
+    $(window).on("click", function (event) {
+        if (!$(event.target).closest(".ms-ui-element.isOpen").length) {
             let elements = $(".ms-flyout.isOpen");
             let uim = new UIManager();
 

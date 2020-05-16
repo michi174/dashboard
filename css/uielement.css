@@ -1,0 +1,58 @@
+.ms-ui-element.isOpen.slide.x {
+    animation: slideRight var(--nav-animation-duration);
+}
+.ms-ui-element.isOpen.slide.y {
+    animation: slideUp var(--nav-animation-duration);
+}
+.ms-ui-element.isOpen.slide.up {
+    animation: slideUp var(--nav-animation-duration);
+}
+.ms-ui-element.isOpen.slide.down {
+    animation: slideDown var(--nav-animation-duration);
+}
+.ms-ui-element.isOpen.slide.left {
+    animation: slideLeft var(--nav-animation-duration);
+}
+.ms-ui-element.isOpen.slide.right {
+    animation: slideRight var(--nav-animation-duration);
+}
+
+@keyframes slideUp {
+    from {
+        transform-origin: bottom center;
+        transform: scale(1, 0);
+    }
+    to {
+        transform: scale(1, 1);
+    }
+}
+
+@keyframes slideDown {
+    from {
+        transform-origin: top;
+        transform: scale(1, 0);
+    }
+    to {
+        transform: scale(1, 1);
+    }
+}
+
+@keyframes slideRight {
+    from {
+        transform-origin: left;
+        transform: scale(0, 1);
+    }
+    to {
+        transform: scale(1, 1);
+    }
+}
+
+@keyframes slideLeft {
+    from {
+        transform-origin: right;
+        transform: scale(0, 1);
+    }
+    to {
+        transform: scale(1, 1);
+    }
+}
