@@ -189,7 +189,6 @@
     }
     .page {
         margin-top: 2rem;
-        margin-bottom: 2rem;
         border-radius: 1rem;
     }
 }
@@ -213,7 +212,7 @@
     }
 
     .view-container {
-        padding-bottom: 0;
+        padding-bottom: 0 !important;
     }
 
     .main-content-wr {
