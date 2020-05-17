@@ -1,4 +1,7 @@
 <div class="ms-flyout" id="{{id}}">
-    {{flyout}}
+    {{#if template}}
     {{LoadTemplate template "param"}}
+    {{else}}
+    {{content}}
+    {{/if}}
 </div>

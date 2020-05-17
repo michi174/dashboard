@@ -61,7 +61,7 @@ export default class AppBar {
                     return -1;
                 }
             });
-            console.log("[APPBAR] addButton");
+            //console.log("[APPBAR] addButton");
             this.render(true);
         }
     }
@@ -81,7 +81,7 @@ export default class AppBar {
             this.rightButtons.splice(index, 1);
         }
 
-        console.log("[APPBAR] removeButton");
+        //console.log("[APPBAR] removeButton");
         this.render(true);
     }
 
@@ -176,9 +176,9 @@ export default class AppBar {
             let self = this;
 
             temp.isReady().then(function () {
-                console.log(
-                    "[APPBAR] " + self.guid + " is rendered and ready in DOM."
-                );
+                // console.log(
+                //     "[APPBAR] " + self.guid + " is rendered and ready in DOM."
+                // );
                 self.isReady = true;
                 self.setTheme();
             });
@@ -186,7 +186,7 @@ export default class AppBar {
     }
 
     setTheme() {
-        console.log("[APPBAR] setting theme for appbar guid: " + this.guid);
+        // console.log("[APPBAR] setting theme for appbar guid: " + this.guid);
 
         let elem = $("[guid='" + this.guid + "']");
         elem.addClass(this.theme);

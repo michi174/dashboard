@@ -18,9 +18,12 @@ class UIElement {
         this.target = "body";
         this.animation = "";
         this.align = "left";
+        this.alignX = "left";
+        this.alignY = "bot";
         this.ignoreCallerPositionYOnCollide = true;
         this.ignoreCallerPositionXOnCollide = true;
         this.keepInViewPort = false;
+        this.observe = true;
 
         if (typeof options === "object") {
             for (let [prop, value] of Object.entries(options)) {
@@ -52,16 +55,17 @@ class UIElement {
                 this._move(this._calcStartPoint());
 
                 //Recalculate the position if the element changes its size.
-                this.resizeObserver = new ResizeObserver((entries) => {
-                    for (let entry of entries) {
-                        const cr = entry.contentRect;
-                        const jQElement = $(entry.target);
+                if (this.observe) {
+                    this.resizeObserver = new ResizeObserver((entries) => {
+                        for (let entry of entries) {
+                            const cr = entry.contentRect;
+                            const jQElement = $(entry.target);
 
-                        this._move(this._calcStartPoint());
-                    }
-                });
-
-                this.resizeObserver.observe(element[0]);
+                            this._move(this._calcStartPoint());
+                        }
+                    });
+                    this.resizeObserver.observe(element[0]);
+                }
             }
             element.addClass("isOpen");
             element.addClass("ms-ui-element");
@@ -82,20 +86,6 @@ class UIElement {
      */
     async create() {
         let method = "append";
-
-        //should we create the UI Element after the caller instead of appending it to the body?
-        //it would be a big benefit if the user is scrolling. the UIElement would stick to the callers position.
-
-        // if (typeof this.caller === "object" && this.caller !== null) {
-
-        //     if(this.moveToCaller){
-        //         this.target = this.caller[0];
-        //         method = "after";
-        //     }
-
-        // }
-
-        //If activate the above code, we need to change the method of the template to "after" instead of "append".
 
         new Template({
             path: "view/UIElements",
@@ -195,144 +185,96 @@ class UIElement {
                 let elemHeight = UIElement.outerHeight();
                 let elemWidth = UIElement.outerWidth();
 
-                let leftDistance = 0;
-                let rightDistance = 0;
-                let topDistance = 0;
-                let botDistance = 0;
+                let leftDistance = callerVpPos.left;
+                let rightDistance =
+                    clientWidth - (callerVpPos.left + callerWidth);
+                let topDistance = callerVpPos.top;
+                let botDistance =
+                    clientHeight - (callerVpPos.top + callerHeight);
 
-                switch (this.openPositionRelativeToCaller) {
-                    case "topLeft":
+                let alignX = "";
+                let alignY = "";
+
+                if (self.openPositionRelativeToCaller.search(/left/i) > -1) {
+                    alignX = "left";
+                } else if (
+                    self.openPositionRelativeToCaller.search(/right/i) > -1
+                ) {
+                    alignX = "right";
+                } else if (
+                    self.openPositionRelativeToCaller.search(/center/i) > -1
+                ) {
+                    alignX = "center";
+                }
+
+                if (self.openPositionRelativeToCaller.search(/bot/i) > -1) {
+                    alignY = "bot";
+                } else if (
+                    self.openPositionRelativeToCaller.search(/top/i) > -1
+                ) {
+                    alignY = "top";
+                } else if (
+                    self.openPositionRelativeToCaller.search(/middle/i) > -1
+                ) {
+                    alignY = "middle";
+                }
+
+                //console.log(alignX);
+                //console.log(alignY);
+
+                if (alignX === "") {
+                    if (
+                        leftDistance > rightDistance ||
+                        elemWidth < rightDistance
+                    ) {
+                        alignX = "right";
+                    } else {
+                        alignX = "left";
+                    }
+                }
+
+                if (alignY === "") {
+                    if (topDistance > botDistance || elemHeight < botDistance) {
+                        alignY = "top";
+                    } else {
+                        alignY = "bot";
+                    }
+                }
+
+                //console.log(alignX + alignY);
+
+                switch (alignX) {
+                    case "left":
                         UIElementNewPosition.X = callerStartX;
-                        UIElementNewPosition.Y = callerStartY;
                         break;
-                    case "topCenter":
+                    case "center":
                         UIElementNewPosition.X = callerMiddleX;
-                        UIElementNewPosition.Y = callerStartY;
-                        break;
-                    case "topRight":
-                        UIElementNewPosition.X = callerEndX;
-                        UIElementNewPosition.Y = callerStartY;
-                        break;
-                    case "top":
-                        UIElementNewPosition.Y = callerStartY;
-
-                        leftDistance = callerVpPos.left;
-                        rightDistance =
-                            clientWidth - (callerVpPos.left + callerWidth);
-
-                        if (leftDistance > rightDistance) {
-                            UIElementNewPosition.X = callerEndX;
-                            this.caller.attr(
-                                "ms-uielement-position",
-                                "topRight"
-                            );
-                            this.openPositionRelativeToCaller = "topRight";
-                        } else {
-                            UIElementNewPosition.X = callerStartX;
-                            this.caller.attr(
-                                "ms-uielement-position",
-                                "topLeft"
-                            );
-                            this.openPositionRelativeToCaller = "topLeft";
-                        }
-                        break;
-
-                    case "rightTop":
-                        UIElementNewPosition.X = callerEndX;
-                        UIElementNewPosition.Y = callerStartY;
-                        break;
-                    case "rightCenter":
-                        UIElementNewPosition.X = callerEndX;
-                        UIElementNewPosition.Y = callerMiddleY;
-                        break;
-                    case "rightBot":
-                        UIElementNewPosition.X = callerEndX;
-                        UIElementNewPosition.Y = callerEndY;
                         break;
                     case "right":
                         UIElementNewPosition.X = callerEndX;
-
-                        topDistance = callerVpPos.top;
-                        botDistance =
-                            clientHeight - (callerVpPos.top + callerHeight);
-
-                        if (
-                            topDistance > botDistance ||
-                            elemHeight < botDistance
-                        ) {
-                            UIElementNewPosition.Y = callerStartY;
-                            this.openPositionRelativeToCaller = "rightTop";
-                        } else {
-                            UIElementNewPosition.Y = callerEndY;
-                            this.openPositionRelativeToCaller = "rightBot";
-                        }
                         break;
-
-                    case "botLeft":
-                        UIElementNewPosition.X = callerStartX;
-                        UIElementNewPosition.Y = callerEndY;
-                        break;
-                    case "botCenter":
-                        UIElementNewPosition.X = callerMiddleX;
-                        UIElementNewPosition.Y = callerEndY;
-                        break;
-                    case "botRight":
-                        UIElementNewPosition.X = callerEndX;
-                        UIElementNewPosition.Y = callerEndY;
-                        break;
-                    case "bot":
-                        UIElementNewPosition.Y = callerEndY;
-
-                        leftDistance = callerVpPos.left;
-                        rightDistance =
-                            clientWidth - (callerVpPos.left + callerWidth);
-
-                        if (leftDistance > rightDistance) {
-                            UIElementNewPosition.X = callerEndX;
-                            this.openPositionRelativeToCaller = "botRight";
-                        } else {
-                            UIElementNewPosition.X = callerStartX;
-                            this.openPositionRelativeToCaller = "botLeft";
-                        }
-                        break;
-
-                    case "leftTop":
-                        UIElementNewPosition.X = callerStartX;
-                        UIElementNewPosition.Y = callerStartY;
-                        break;
-                    case "leftCenter":
-                        UIElementNewPosition.X = callerStartX;
-                        UIElementNewPosition.Y = callerMiddleY;
-                        break;
-                    case "leftBot":
-                        UIElementNewPosition.X = callerStartX;
-                        UIElementNewPosition.Y = callerEndY;
-                        break;
-                    case "left":
-                        UIElementNewPosition.X = callerStartX;
-
-                        topDistance = callerVpPos.top;
-                        botDistance =
-                            clientHeight - (callerVpPos.top + callerHeight);
-
-                        if (topDistance > botDistance) {
-                            UIElementNewPosition.Y = callerStartY;
-                        } else {
-                            UIElementNewPosition.Y = callerEndY;
-                        }
-
-                        break;
-
-                    case "Y":
-                        break;
-                    case "X":
-                        break;
-
                     default:
                         UIElementNewPosition.X = callerStartX;
+                }
+
+                switch (alignY) {
+                    case "top":
+                        UIElementNewPosition.Y = callerStartY;
+                        break;
+                    case "middle":
+                        UIElementNewPosition.Y = callerMiddleY;
+                        break;
+                    case "center":
                         UIElementNewPosition.Y = callerEndY;
                         break;
+                    default:
+                        UIElementNewPosition.Y = callerEndY;
                 }
+
+                this.openPositionRelativeToCaller = alignX + alignY;
+
+                this.alignX = alignX;
+                this.alignY = alignY;
             }
         }
         return UIElementNewPosition;
@@ -419,8 +361,10 @@ class UIElement {
                 break;
             case "x":
                 //console.log("Opening x");
+
                 getNewElemPosX(this);
                 getNewElemPosY(this);
+
                 break;
             case "y":
                 //console.log("Opening y");
@@ -433,7 +377,6 @@ class UIElement {
         }
 
         function getNewElemPosY(self) {
-            //console.warn(wtf);
             let distanceTop = callerMiddleY - clientScrollTop;
             let distanceBot = clientHeight + clientScrollTop - callerMiddleY;
             let distanceLeft = callerMiddleX;
@@ -441,79 +384,69 @@ class UIElement {
 
             //console.log("Open direction is: " + self.openDirection);
 
+            switch (self.alignX) {
+                case "left":
+                    distanceLeft = callerStartX;
+                    distanceRight = clientWidth - callerStartX;
+                    break;
+                case "right":
+                    distanceLeft = callerEndX;
+                    distanceRight = clientWidth - callerEndX;
+                    break;
+                case "center":
+                    distanceLeft = callerMiddleX;
+                    distanceRight = clientWidth - callerMiddleX;
+                    break;
+            }
+
             /**
              * Only if we open in Y direction
              */
-            if (
-                self.openDirection === "x" ||
-                self.openDirection === "" ||
-                self.openDirection === ""
-            ) {
+            if (self.openDirection === "x" || self.openDirection === "") {
                 //do if drection is x
                 //console.log("open in X direction");
                 //Set the vertical alignment
 
-                let horizontalAlign;
+                //console.log("left:" + distanceLeft);
+                //console.log("right: " + distanceRight);
+                //console.log("elemWidth: " + elemWidth);
 
-                if (self.openPositionRelativeToCaller.search(/left/i) > -1) {
-                    horizontalAlign = "left";
-                } else if (
-                    self.openPositionRelativeToCaller.search(/right/i) > -1
-                ) {
-                    horizontalAlign = "right";
-                } else if (
-                    self.openPositionRelativeToCaller.search(/center/i) > -1
-                ) {
-                    horizontalAlign = "center";
-                }
-
+                let horizontalAlign = self.alignX;
                 //console.log("horizontal align is: " + horizontalAlign);
-
-                /**
-                 *
-                 *---------------------------------------------------------------------------------------------------------
-                 *
-                 *
-                 */
                 //which direction we have to move?
-                if (distanceLeft > distanceRight) {
+                if (distanceLeft < distanceRight || elemWidth < distanceRight) {
                     //console.log("opening to left side");
-                    //console.log("left:" + distanceLeft);
-                    //console.log("right: " + distanceRight);
-
-                    if (self.ignoreCallerPositionXOnCollide) {
-                        if (horizontalAlign === "left") {
-                            callerOffsetX = 0;
-                        }
-                        if (horizontalAlign === "right") {
+                    switch (horizontalAlign) {
+                        case "left":
                             callerOffsetX = callerWidth;
-                        }
-                        if (horizontalAlign === "center") {
+                            break;
+                        case "right":
+                            callerOffsetX = callerWidth;
+                            break;
+                        case "center":
                             callerOffsetX = callerWidth / 2;
-                        }
-                    }
-
-                    newElemX = callerEndX - elemWidth - callerOffsetX;
-                    startX = "left";
-                } else {
-                    //console.log("opening to right side");
-                    //console.log("left:" + distanceLeft);
-                    //console.log("right: " + distanceRight);
-
-                    if (self.ignoreCallerPositionXOnCollide) {
-                        if (horizontalAlign === "left") {
-                            callerOffsetX = callerWidth;
-                        }
-                        if (horizontalAlign === "right") {
-                            callerOffsetX = callerWidth;
-                        }
-                        if (horizontalAlign === "center") {
-                            callerOffsetX = callerWidth / 2;
-                        }
+                            break;
                     }
 
                     newElemX = callerStartX + callerOffsetX;
                     startX = "left";
+                } else {
+                    if (self.ignoreCallerPositionXOnCollide) {
+                        switch (horizontalAlign) {
+                            case "left":
+                                callerOffsetX = 0;
+                                break;
+                            case "right":
+                                callerOffsetX = callerWidth;
+                                break;
+                            case "center":
+                                callerOffsetX = callerWidth / 2;
+                                break;
+                        }
+                    }
+
+                    newElemX = clientWidth - callerEndX + callerOffsetX;
+                    startX = "right";
                 }
 
                 if (self.keepInViewPort == "true") {
@@ -529,55 +462,26 @@ class UIElement {
                     }
                 }
 
-                if (newElemX < 0) {
-                    newElemX = callerEndX;
-                    self.openDirection = "right";
-                }
-            }
+                //console.log(elementStartX);
+                // if (elementStartX < 0) {
+                //     newElemX = callerEndX;
+                //     startX = "left";
+                //     alert();
+                // }
 
-            /**
-             * Only if we open in Y direction
-             */
-
-            if (
-                self.openDirection === "y" ||
-                self.openDirection === "" ||
-                self.openDirection === ""
-            ) {
                 //do if drection is y
                 //console.log("open in Y direction");
 
-                let verticalAlign = "";
+                let verticalAlign = self.alignY;
 
-                //Set the vertical alignment
-                if (self.openPositionRelativeToCaller.search(/bot/i) > -1) {
-                    verticalAlign = "bot";
-                } else if (
-                    self.openPositionRelativeToCaller.search(/top/i) > -1
-                ) {
-                    verticalAlign = "top";
-                } else if (
-                    self.openPositionRelativeToCaller.search(/middle/i) > -1
-                ) {
-                    verticalAlign = "middle";
-                }
+                if (elemHeight < distanceBot || distanceTop < distanceBot) {
+                    //console.log(`open to BOT`);
+                    //console.log(self.openPositionRelativeToCaller);
 
-                //Which direction we have to move?
-                //console.log("vertical align is: " + verticalAlign);
-                if (distanceTop > distanceBot) {
+                    newElemY = callerStartY + calcCallerHeight;
+                    startY = "top";
+                } else {
                     //console.log(`open to TOP`);
-
-                    if (self.ignoreCallerPositionYOnCollide) {
-                        if (verticalAlign === "top") {
-                            calcCallerHeight = 0;
-                        }
-                        if (verticalAlign === "bot") {
-                            calcCallerHeight = callerHeight;
-                        }
-                        if (verticalAlign === "middle") {
-                            calcCallerHeight = callerHeight / 2;
-                        }
-                    }
 
                     newElemY = callerStartY - elemHeight - calcCallerHeight;
                     startY = "top";
@@ -587,36 +491,39 @@ class UIElement {
                         newElemY + elemHeight >
                         clientHeight + clientScrollTop
                     ) {
-                        if (
-                            self.openPositionRelativeToCaller.search(/top/i) >
-                            -1
-                        ) {
-                            calcCallerHeight = 0;
-                        } else if (
-                            self.openPositionRelativeToCaller.search(/bot/i) >
-                            -1
-                        ) {
-                            calcCallerHeight = 0;
-                        }
-
                         console.warn("overflowing top!");
                         //console.warn("open bot");
-                        newElemY = callerStartY + calcCallerHeight;
+                        newElemY = callerStartY;
                         startY = "top";
                     }
-                } else {
+                }
+            }
+
+            /**
+             * Only if we open in Y direction
+             */
+
+            if (self.openDirection === "y" || self.openDirection === "") {
+                //do if drection is y
+                //console.log("open in Y direction");
+
+                let verticalAlign = self.alignY;
+
+                if (elemHeight < distanceBot || distanceTop < distanceBot) {
                     //console.log(`open to BOT`);
                     //console.log(self.openPositionRelativeToCaller);
 
                     if (self.ignoreCallerPositionYOnCollide) {
-                        if (verticalAlign === "top") {
-                            calcCallerHeight = callerHeight;
-                        }
-                        if (verticalAlign === "bot") {
-                            calcCallerHeight = 0;
-                        }
-                        if (verticalAlign === "middle") {
-                            calcCallerHeight = callerHeight / 2;
+                        switch (verticalAlign) {
+                            case "top":
+                                calcCallerHeight = callerHeight;
+                                break;
+                            case "bot":
+                                calcCallerHeight = 0;
+                                break;
+                            case "middle":
+                                calcCallerHeight = callerHeight / 2;
+                                break;
                         }
                     }
 
@@ -628,34 +535,57 @@ class UIElement {
                             callerStartY + calcCallerHeight
                         } from ${startY}`
                     );*/
+                } else {
+                    //console.log(`open to TOP`);
+
+                    if (self.ignoreCallerPositionYOnCollide) {
+                        switch (verticalAlign) {
+                            case "top":
+                                calcCallerHeight = 0;
+                                break;
+                            case "bot":
+                                calcCallerHeight = callerHeight;
+                                break;
+                            case "middle":
+                                calcCallerHeight = callerHeight / 2;
+                                break;
+                        }
+                    }
+
+                    newElemY = callerStartY - elemHeight - calcCallerHeight;
+                    startY = "top";
+
+                    //If we open to top, but we are bigger than the viewport, we need to open it bot anyways.
+                    if (
+                        newElemY + elemHeight >
+                        clientHeight + clientScrollTop
+                    ) {
+                        console.warn("overflowing top!");
+                        //console.warn("open bot");
+                        newElemY = callerStartY;
+                        startY = "top";
+                    }
                 }
             }
         }
 
         function getNewElemPosX(self) {
-            if (self.openPositionRelativeToCaller.search(/left/i) > -1) {
-                align = "left";
-            } else if (
-                self.openPositionRelativeToCaller.search(/Right/i) > -1
-            ) {
-                align = "right";
-            } else if (
-                self.openPositionRelativeToCaller.search(/center/i) > -1
-            ) {
-                align = "center";
-            }
+            align = self.alignX;
 
             switch (align) {
                 case "left":
                     leftDistance = callerStartX;
                     rightDistance = clientWidth - callerStartX;
 
-                    if (leftDistance > rightDistance) {
-                        newElemX = clientWidth - callerStartX;
-                        startX = "right";
-                    } else {
+                    if (
+                        elemWidth < rightDistance ||
+                        leftDistance < rightDistance
+                    ) {
                         newElemX = callerStartX;
                         startX = "left";
+                    } else {
+                        newElemX = clientWidth - callerStartX;
+                        startX = "right";
                     }
 
                     break;
@@ -663,12 +593,18 @@ class UIElement {
                     leftDistance = callerMiddleX;
                     rightDistance = clientWidth - callerMiddleX;
 
-                    if (leftDistance > rightDistance) {
-                        newElemX = clientWidth - callerMiddleX;
-                        startX = "right";
-                    } else {
+                    if (
+                        elemWidth < rightDistance ||
+                        leftDistance < rightDistance
+                    ) {
+                        //console.log("open to right");
                         newElemX = callerMiddleX;
                         startX = "left";
+                    } else {
+                        //console.log("open to left");
+                        newElemX = clientWidth - callerMiddleX;
+
+                        startX = "right";
                     }
 
                     break;
@@ -676,12 +612,15 @@ class UIElement {
                     leftDistance = callerEndX;
                     rightDistance = clientWidth - callerEndX;
 
-                    if (leftDistance > rightDistance) {
-                        newElemX = clientWidth - callerEndX;
-                        startX = "right";
-                    } else {
+                    if (
+                        elemWidth < rightDistance ||
+                        leftDistance < rightDistance
+                    ) {
                         newElemX = callerEndX;
                         startX = "left";
+                    } else {
+                        newElemX = clientWidth - callerEndX;
+                        startX = "right";
                     }
                     break;
             }

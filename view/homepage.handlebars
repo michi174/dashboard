@@ -16,19 +16,21 @@
         <span ms-uielement ms-uielement-type="FlyOut" ms-uielement-content="Simpletext..."
             ms-uielement-tpl="defaultFlyout" ms-uielement-trigger="click" ms-uielement-sticky="false"
             ms-uielement-position="rightTop" ms-uielement-open-direction="right" ms-uielement-animation="slide">
-            Open a Flyout</span><br><br>
+            Open a Flyout (Template)</span><br><br>
+        <span ms-uielement ms-uielement-type="FlyOut" ms-uielement-content="Simpletext..." ms-uielement-tpl=""
+            ms-uielement-trigger="click" ms-uielement-sticky="false" ms-uielement-position="rightTop"
+            ms-uielement-open-direction="right" ms-uielement-animation="slide">
+            Open a Flyout (Text)</span><br><br>
         <span ms-uielement ms-uielement-type="Modal" ms-uielement-content="This is a great modal"
             ms-uielement-trigger="click" ms-uielement-sticky="false">
-            Open a Modal</span><br><br>
+            Open a Modal (Text)</span><br><br>
+        <span ms-uielement ms-uielement-type="Modal" ms-uielement-tpl="testviewmodel" ms-uielement-trigger="click"
+            ms-uielement-sticky="false">
+            Open a Modal (Template)</span><br><br>
         <span ms-uielement ms-uielement-type="Tooltip" ms-uielement-content="This is a great tooltip"
-            ms-uielement-trigger="click" ms-uielement-sticky="false" ms-uielement-position="left">
+            ms-uielement-trigger="click" ms-uielement-sticky="false" ms-uielement-position="left"
+            ms-uielement-open-direction="y">
             Open a Tooltip</span><br><br>
-        <div style="display: flex; width:100%; justify-content:flex-start">
-            <span ms-uielement ms-uielement-type="FlyOut" ms-uielement-content="Simpletext..."
-                ms-uielement-tpl="defaultFlyout" ms-uielement-trigger="click" ms-uielement-sticky="false"
-                ms-uielement-position="rightTop" ms-uielement-open-direction="right" ms-uielement-animation="slide">
-                Open a Flyout</span><br><br>
-        </div>
         <hr>
         <div style="display: flex; width:100%; justify-content:flex-start">
             <span ms-uielement ms-uielement-type="FlyOut" ms-uielement-content="Simpletext..."
@@ -178,6 +180,28 @@
                 ms-uielement-position="topCenter" ms-uielement-open-direction="y" ms-uielement-animation="slide"
                 ms-ui-element-align="left">
                 Open a Flyout Y, topCenter</span><br><br>
+        </div>
+        <hr>
+        <div style="display: flex; width:100%; justify-content:flex-start;">
+            <span ms-uielement ms-uielement-type="FlyOut" ms-uielement-content="Simpletext..."
+                ms-uielement-tpl="defaultFlyout" ms-uielement-trigger="click" ms-uielement-sticky="false"
+                ms-uielement-position="botLeft" ms-uielement-open-direction="down" ms-uielement-animation="slide"
+                ms-ui-element-align="left">
+                Open a Flyout down, botLeft</span><br><br>
+        </div>
+        <div style="display: flex; width:100%; justify-content:center;">
+            <span ms-uielement ms-uielement-type="FlyOut" ms-uielement-content="Simpletext..."
+                ms-uielement-tpl="defaultFlyout" ms-uielement-trigger="click" ms-uielement-sticky="false"
+                ms-uielement-position="botCenter" ms-uielement-open-direction="down" ms-uielement-animation="slide"
+                ms-ui-element-align="left">
+                Open a Flyout down, botCenter</span><br><br>
+        </div>
+        <div style="display: flex; width:100%; justify-content:flex-end;">
+            <span ms-uielement ms-uielement-type="FlyOut" ms-uielement-content="Simpletext..."
+                ms-uielement-tpl="defaultFlyout" ms-uielement-trigger="click" ms-uielement-sticky="false"
+                ms-uielement-position="topCenter" ms-uielement-open-direction="down" ms-uielement-animation="slide"
+                ms-ui-element-align="left">
+                Open a Flyout down, topCenter</span><br><br>
         </div>
     </div>
 </div>

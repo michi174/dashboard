@@ -393,14 +393,16 @@ Handlebars.registerHelper("LoadTemplate", function (template, params) {
                         data: context,
                         method: "return",
                         //wait for the template to be rendered and placed in DOM Tree, then replace the token with the actual content.
-                    }).then(function (result) {
-                        $("#" + identifier).replaceWith(result);
-                    });
+                    })
+                        .then(function (result) {
+                            $("#" + identifier).replaceWith(result);
+                        })
+                        .catch(function (e) {});
                 });
                 //console.log(templateFolder+"/"+template+".handlebars");
             })
             .catch(function (e) {
-                console.warn(`Can't fetch the requested viewModel`);
+                console.warn(`Can't fetch the requested viewModel ${template}`);
                 console.warn(e);
             });
         return new Handlebars.SafeString(_html);
