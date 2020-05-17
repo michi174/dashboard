@@ -93,6 +93,7 @@ export default class UIManager {
                 openDirection: $(this).attr("ms-uielement-open-direction"),
                 animation: $(this).attr("ms-uielement-animation"),
                 align: $(this).attr("ms-ui-element-align"),
+                keepInViewPort: $(this).attr("ms-uielement-keepinviewport"),
             };
 
             new UIFactory(options);

@@ -13,6 +13,7 @@ export default class UIFactory {
         this.openPositionRelativeToCaller = null; //top, bottom, right, left
         this.animation = null;
         this.align = null;
+        this.keepInViewPort = false;
 
         this.options = options;
 
@@ -57,6 +58,7 @@ export default class UIFactory {
                         openDirection: self.openDirection,
                         animation: self.animation,
                         align: self.align,
+                        keepInViewPort: self.keepInViewPort,
                     });
                 } else {
                     console.log(
