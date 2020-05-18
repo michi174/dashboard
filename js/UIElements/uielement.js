@@ -8,21 +8,21 @@ class UIElement {
         this.content = "";
         this.template = "";
         this.element = "";
-        this.referer = "";
-        this.position = null;
-        this.moveToCaller = true;
         this.caller = null;
-        this.openDirection = "right"; //up, right, down, left
+        this.attach = true;
+        this.openDirection = "right"; //up, right, down, left, x, y
         this.openPositionRelativeToCaller = "topRight";
+        this.elementAlignX = "left";
+        this.elementAlignY = "top";
         this.resizeObserver = null;
         this.target = "body";
         this.animation = "";
-        this.align = "left";
         this.alignX = "left";
         this.alignY = "bot";
         this.ignoreCallerPositionYOnCollide = true;
         this.ignoreCallerPositionXOnCollide = true;
-        this.keepInViewPort = false;
+        this.keepInViewPortX = false;
+        this.keepInViewPortY = false;
         this.observe = true;
 
         if (typeof options === "object") {
@@ -34,14 +34,15 @@ class UIElement {
         }
 
         this.id = new UIManager().getUniqueID();
+        this.data.id = this.id;
 
         if (this.id !== "") {
-            this.createElement();
+            this.createElement().then(function (element) {});
         } else {
             console.warn("[UIElement] No ID for UIElement. Can't create it.");
         }
 
-        this.data.id = this.id;
+        console.log(this);
     }
 
     /**
@@ -51,7 +52,13 @@ class UIElement {
         try {
             let element = await this.create();
 
-            if (this.moveToCaller) {
+            let self = this;
+
+            // element.on("ms.uielement.content.changed", function () {
+            //     self._move(self._calcStartPoint());
+            // });
+
+            if (this.attach) {
                 this._move(this._calcStartPoint());
 
                 //Recalculate the position if the element changes its size.
@@ -67,15 +74,28 @@ class UIElement {
                     this.resizeObserver.observe(element[0]);
                 }
             }
+
             element.addClass("isOpen");
             element.addClass("ms-ui-element");
             element.addClass(this.animation);
             element.addClass(this.openDirection);
 
-            this.caller.attr("ms-uielement-id", this.id);
-            this.caller.attr("ms-uielement-is-open", "true");
+            if (this.caller) {
+                this.caller.attr("ms-uielement-id", this.id);
+                this.caller.attr("ms-uielement-is-open", "true");
+            }
+
+            if (this.animation) {
+                element.on("animationend", function () {
+                    element.trigger("ms.uielement.ready");
+                });
+            } else {
+                element.trigger("ms.uielement.ready");
+            }
 
             new UIManager().add(this);
+            this.element = element;
+            return this.element;
         } catch (e) {
             console.warn(e);
         }
@@ -100,21 +120,27 @@ class UIElement {
         return new Promise(function (resolve, reject) {
             let interval;
             let timer = 0;
+            let step = 1;
 
             interval = setInterval(function () {
-                timer += 10;
+                timer += step;
                 if ($("body").find("#" + self.id).length > 0) {
+                    let UIElement = $("#" + self.id);
+
+                    UIElement.on("ms.tpl.content.added", function () {
+                        UIElement.trigger("ms.uielement.content.changed");
+                    });
+
+                    UIElement.trigger("ms.uielement.dom.ready");
                     clearInterval(interval);
                     resolve($("#" + self.id));
                 } else {
                     if (timer > 5000) {
                         clearInterval(interval);
-                        reject(
-                            "can't create the DOM Element (ID: " + self.id + ")"
-                        );
+                        reject("can't create the DOM Element (ID: " + self.id + ")");
                     }
                 }
-            }, 10);
+            }, step);
         });
     }
 
@@ -158,7 +184,7 @@ class UIElement {
 
         self = this;
 
-        if (this.moveToCaller) {
+        if (this.attach) {
             if (typeof this.caller === "object" && this.caller !== null) {
                 let UIElement = $("#" + this.id);
                 let caller = this.caller;
@@ -186,36 +212,26 @@ class UIElement {
                 let elemWidth = UIElement.outerWidth();
 
                 let leftDistance = callerVpPos.left;
-                let rightDistance =
-                    clientWidth - (callerVpPos.left + callerWidth);
+                let rightDistance = clientWidth - (callerVpPos.left + callerWidth);
                 let topDistance = callerVpPos.top;
-                let botDistance =
-                    clientHeight - (callerVpPos.top + callerHeight);
+                let botDistance = clientHeight - (callerVpPos.top + callerHeight);
 
                 let alignX = "";
                 let alignY = "";
 
                 if (self.openPositionRelativeToCaller.search(/left/i) > -1) {
                     alignX = "left";
-                } else if (
-                    self.openPositionRelativeToCaller.search(/right/i) > -1
-                ) {
+                } else if (self.openPositionRelativeToCaller.search(/right/i) > -1) {
                     alignX = "right";
-                } else if (
-                    self.openPositionRelativeToCaller.search(/center/i) > -1
-                ) {
+                } else if (self.openPositionRelativeToCaller.search(/center/i) > -1) {
                     alignX = "center";
                 }
 
                 if (self.openPositionRelativeToCaller.search(/bot/i) > -1) {
                     alignY = "bot";
-                } else if (
-                    self.openPositionRelativeToCaller.search(/top/i) > -1
-                ) {
+                } else if (self.openPositionRelativeToCaller.search(/top/i) > -1) {
                     alignY = "top";
-                } else if (
-                    self.openPositionRelativeToCaller.search(/middle/i) > -1
-                ) {
+                } else if (self.openPositionRelativeToCaller.search(/middle/i) > -1) {
                     alignY = "middle";
                 }
 
@@ -223,10 +239,7 @@ class UIElement {
                 //console.log(alignY);
 
                 if (alignX === "") {
-                    if (
-                        leftDistance > rightDistance ||
-                        elemWidth < rightDistance
-                    ) {
+                    if (leftDistance > rightDistance || elemWidth < rightDistance) {
                         alignX = "right";
                     } else {
                         alignX = "left";
@@ -449,7 +462,7 @@ class UIElement {
                     startX = "right";
                 }
 
-                if (self.keepInViewPort == "true") {
+                if (self.keepInViewPortY == "true") {
                     if (elementEndY > clientHeight + clientScrollTop) {
                         //console.log(`${elementEndY}  > ${clientHeight}`);
                         /*console.log(
@@ -487,10 +500,7 @@ class UIElement {
                     startY = "top";
 
                     //If we open to top, but we are bigger than the viewport, we need to open it bot anyways.
-                    if (
-                        newElemY + elemHeight >
-                        clientHeight + clientScrollTop
-                    ) {
+                    if (newElemY + elemHeight > clientHeight + clientScrollTop) {
                         console.warn("overflowing top!");
                         //console.warn("open bot");
                         newElemY = callerStartY;
@@ -556,10 +566,7 @@ class UIElement {
                     startY = "top";
 
                     //If we open to top, but we are bigger than the viewport, we need to open it bot anyways.
-                    if (
-                        newElemY + elemHeight >
-                        clientHeight + clientScrollTop
-                    ) {
+                    if (newElemY + elemHeight > clientHeight + clientScrollTop) {
                         console.warn("overflowing top!");
                         //console.warn("open bot");
                         newElemY = callerStartY;
@@ -577,10 +584,7 @@ class UIElement {
                     leftDistance = callerStartX;
                     rightDistance = clientWidth - callerStartX;
 
-                    if (
-                        elemWidth < rightDistance ||
-                        leftDistance < rightDistance
-                    ) {
+                    if (elemWidth < rightDistance || leftDistance < rightDistance) {
                         newElemX = callerStartX;
                         startX = "left";
                     } else {
@@ -593,10 +597,7 @@ class UIElement {
                     leftDistance = callerMiddleX;
                     rightDistance = clientWidth - callerMiddleX;
 
-                    if (
-                        elemWidth < rightDistance ||
-                        leftDistance < rightDistance
-                    ) {
+                    if (elemWidth < rightDistance || leftDistance < rightDistance) {
                         //console.log("open to right");
                         newElemX = callerMiddleX;
                         startX = "left";
@@ -612,10 +613,7 @@ class UIElement {
                     leftDistance = callerEndX;
                     rightDistance = clientWidth - callerEndX;
 
-                    if (
-                        elemWidth < rightDistance ||
-                        leftDistance < rightDistance
-                    ) {
+                    if (elemWidth < rightDistance || leftDistance < rightDistance) {
                         newElemX = callerEndX;
                         startX = "left";
                     } else {

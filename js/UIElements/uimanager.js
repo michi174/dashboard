@@ -30,8 +30,11 @@ export default class UIManager {
         if (index >= 0) {
             element = this.elements[index];
             let jQElement = $("#" + element.id);
-            element.caller.removeAttr("ms-uielement-id");
-            element.caller.removeAttr("ms-uielement-is-open");
+
+            if (element.caller) {
+                element.caller.removeAttr("ms-uielement-id");
+                element.caller.removeAttr("ms-uielement-is-open");
+            }
 
             console.log("[UIManager] removing element");
 
@@ -43,9 +46,7 @@ export default class UIManager {
 
     find(uid) {
         if (this.elements.length > 0) {
-            let index = this.elements.findIndex(
-                (element) => element.id === uid
-            );
+            let index = this.elements.findIndex((element) => element.id === uid);
             return index;
         } else {
             return -1;
@@ -64,9 +65,7 @@ export default class UIManager {
     }
 
     _generateRandom() {
-        return (Math.random() * Math.floor(1000000000000000000000))
-            .toFixed(0)
-            .toString(16);
+        return (Math.random() * Math.floor(1000000000000000000000)).toFixed(0).toString(16);
     }
 }
 
@@ -81,19 +80,18 @@ export default class UIManager {
             );
 
             let options = {
-                template: $(this).attr("ms-uielement-tpl"),
-                caller: $(this),
-                type: $(this).attr("ms-uielement-type"),
-                content: $(this).attr("ms-uielement-content"),
-                trigger: $(this).attr("ms-uielement-trigger"),
-                sticky: $(this).attr("ms-uielement-sticky"),
-                openPositionRelativeToCaller: $(this).attr(
-                    "ms-uielement-position"
-                ),
-                openDirection: $(this).attr("ms-uielement-open-direction"),
-                animation: $(this).attr("ms-uielement-animation"),
-                align: $(this).attr("ms-ui-element-align"),
-                keepInViewPort: $(this).attr("ms-uielement-keepinviewport"),
+                template: $(this).attr("ms-uielement-tpl") || "",
+                caller: $(this) || null,
+                type: $(this).attr("ms-uielement-type") || "",
+                content: $(this).attr("ms-uielement-content") || "",
+                trigger: $(this).attr("ms-uielement-trigger") || "",
+                sticky: $(this).attr("ms-uielement-sticky") || "",
+                openPositionRelativeToCaller: $(this).attr("ms-uielement-position") || "",
+                openDirection: $(this).attr("ms-uielement-open-direction") || "",
+                animation: $(this).attr("ms-uielement-animation") || "",
+                align: $(this).attr("ms-ui-element-align") || "",
+                keepInViewPortX: $(this).attr("ms-uielement-keepinviewport-x") || false,
+                keepInViewPortY: $(this).attr("ms-uielement-keepinviewport-y") || false,
             };
 
             new UIFactory(options);

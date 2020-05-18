@@ -4,6 +4,8 @@ import { Template } from "./template.js";
 import UIManager from "./UIElements/uimanager.js";
 import AppBar from "./Appbar/appbar.js";
 import AppBarButton from "./Appbar/appbarbutton.js";
+import { Tooltip } from "./UIElements/tooltip.js";
+import { Notification } from "./UIElements/notification.js";
 
 //import _ from 'lodash';
 
@@ -46,25 +48,13 @@ const ro = new ResizeObserver((entries) => {
 
         (function setNavbar() {
             if (jQElement.outerHeight() > jQElement.outerWidth()) {
-                $("#bot-navigation-wr > [ms-uielement]").attr(
-                    "ms-uielement-position",
-                    "right"
-                );
-                $("#bot-navigation-wr > [ms-uielement]").attr(
-                    "ms-uielement-open-direction",
-                    "x"
-                );
+                $("#bot-navigation-wr > [ms-uielement]").attr("ms-uielement-position", "right");
+                $("#bot-navigation-wr > [ms-uielement]").attr("ms-uielement-open-direction", "x");
 
                 mobile = false;
             } else {
-                $("#bot-navigation-wr > [ms-uielement]").attr(
-                    "ms-uielement-position",
-                    "top"
-                );
-                $("#bot-navigation-wr > [ms-uielement]").attr(
-                    "ms-uielement-open-direction",
-                    "y"
-                );
+                $("#bot-navigation-wr > [ms-uielement]").attr("ms-uielement-position", "top");
+                $("#bot-navigation-wr > [ms-uielement]").attr("ms-uielement-open-direction", "y");
                 mobile = true;
             }
         })();
@@ -95,12 +85,10 @@ async function init() {
     } catch (e) {
         let message = "Sorry, something went wrong.<br><br>";
 
-        message +=
-            "It seems, there's no connection to our servers. Please check your connection.<br><br>";
+        message += "It seems, there's no connection to our servers. Please check your connection.<br><br>";
 
         if (devMode) {
-            message +=
-                "This app is in development mode.<br>Try switching to production mode could help.";
+            message += "This app is in development mode.<br>Try switching to production mode could help.";
         }
         $("#app-status").html(message);
 
@@ -133,6 +121,12 @@ function startApp() {
      */
 
     navigation.router.on("*", async function () {
+        let testNotification = new Notification({
+            content: "testTT",
+            data: { content: "testNotification" },
+            attach: false,
+        });
+
         let homepage = new Template({
             file: "homepage.handlebars",
             path: "view",
@@ -143,11 +137,7 @@ function startApp() {
         titleBar.addButton(searchBtn);
         titleBar.addTheme("dark");
         titleBar.setTitle("Dashboard");
-        switchActiveCSS(
-            $("#bot-navigation-wr > .tab"),
-            $("#bot-nav-home"),
-            "active"
-        );
+        switchActiveCSS($("#bot-navigation-wr > .tab"), $("#bot-nav-home"), "active");
         // titleBar.addButton(backBtn);
 
         $(window).trigger("viewReady");
@@ -249,19 +239,14 @@ function saveScrollPosition(element = null) {
         element = $(element);
     }
 
-    let url =
-        navigation.router.lastRouteResolved() !== null
-            ? navigation.router.lastRouteResolved().url
-            : "index";
+    let url = navigation.router.lastRouteResolved() !== null ? navigation.router.lastRouteResolved().url : "index";
 
     if (typeof element !== "undefined" && url !== "") {
         scrollObject.url = url;
         scrollObject.scrollPosTop = element.scrollTop();
         scrollObject.scrollPosLeft = element.scrollLeft();
 
-        let index = views.findIndex(
-            (needle) => needle.url === scrollObject.url
-        );
+        let index = views.findIndex((needle) => needle.url === scrollObject.url);
 
         if (index > -1) {
             views[index] = scrollObject;
@@ -289,10 +274,7 @@ function restoreScrollPosition(element = null, url) {
 }
 
 function getViewportValues() {
-    let url =
-        navigation.router.lastRouteResolved() !== null
-            ? navigation.router.lastRouteResolved().url
-            : "index";
+    let url = navigation.router.lastRouteResolved() !== null ? navigation.router.lastRouteResolved().url : "index";
     console.groupCollapsed("Viewport");
     console.log("current view: " + url);
     console.log("window width: " + $(window).width());
@@ -395,7 +377,27 @@ Handlebars.registerHelper("LoadTemplate", function (template, params) {
                         //wait for the template to be rendered and placed in DOM Tree, then replace the token with the actual content.
                     })
                         .then(function (result) {
-                            $("#" + identifier).replaceWith(result);
+                            let newElem = $(result);
+
+                            $("#" + identifier).replaceWith(newElem[0].outerHTML);
+                            let guid = newElem.attr("tpl-guid");
+
+                            let timer = 0;
+                            let step = 10;
+                            let timeOut = 3000;
+
+                            let interval = setInterval(function () {
+                                if ($("[tpl-guid='" + guid + "']").length > 0) {
+                                    clearInterval(interval);
+                                    $("[tpl-guid='" + guid + "']").trigger("ms.tpl.content.added");
+                                } else {
+                                    timer += step;
+                                    if (timer >= timeOut) {
+                                        clearInterval(interval);
+                                        console.warn("can't replace inline template");
+                                    }
+                                }
+                            }, step);
                         })
                         .catch(function (e) {});
                 });
@@ -430,9 +432,7 @@ $("#close-search-icon").click(function () {
     $("#search-wr").toggleClass("visible");
 });
 
-$(".main-view.active").on("keypress", "#home-search-summoner-name", function (
-    e
-) {
+$(".main-view.active").on("keypress", "#home-search-summoner-name", function (e) {
     let key = e.which;
     if (key === 13) {
         $("#home-search-btn").click();
@@ -441,11 +441,7 @@ $(".main-view.active").on("keypress", "#home-search-summoner-name", function (
 });
 
 $("#bot-navigation-wr .tab:not(.no-view)").click(function () {
-    switchActiveCSS(
-        $("#bot-navigation-wr .tab:not(.no-view)"),
-        $(this),
-        "active"
-    );
+    switchActiveCSS($("#bot-navigation-wr .tab:not(.no-view)"), $(this), "active");
     $(".modal").removeClass("visible");
     $(".overlay").hide();
 });

@@ -1,9 +1,9 @@
-.ms-modal-wrapper {
+.ms-notification-wrapper {
     display: flex;
     position: fixed;
-    z-index: 1000;
+
     width: calc(100%);
-    justify-content: center;
+    justify-content: flex-end;
     flex-direction: column;
     height: calc(100vh);
     align-items: center;
@@ -12,10 +12,15 @@
     overscroll-behavior: contain;
 }
 
-.ms-modal {
+.ms-notification {
+    position: fixed;
+    bottom: 0px;
+    left: 0;
+    right: 0;
+    display: flex;
+    z-index: 1000;
     max-width: 80%;
     min-width: 100px;
-    min-height: 60px;
     border-top-left-radius: 1rem;
     border-top-right-radius: 1rem;
     border-bottom-left-radius: 1rem;
@@ -23,35 +28,35 @@
     overflow: hidden;
     padding: 1rem;
     box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.45);
-    background-color: var(--light-bg-color);
+    background-color: var(--main-color);
     backdrop-filter: var(--strong-blur);
-    transition: transform 0.3s;
     overscroll-behavior: contain;
     opacity: 0;
-    transform: scale3d(0, 0, 0);
+    margin: auto;
+    margin-bottom: 6rem;
+    color: var(--text-color);
 }
 @media screen and (min-width: 768px) {
-    .ms-modal {
+    .ms-notification {
+        margin-bottom: 1rem;
         max-width: 584px;
     }
 }
 
-.ms-modal-wrapper.isOpen > .ms-modal {
-    opacity: 1;
-    transform: scale3d(1, 1, 1);
+.ms-notification.isOpen {
+    opacity: 0.8;
 }
 
-.ms-modal-content {
-    margin-top: 2rem;
+.ms-notification-content {
+    flex-grow: 1;
 }
 
-.ms-modal-close-btn {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
+.ms-ui-close-btn {
+    flex-grow: 0;
+    margin-left: 1rem;
 }
 
-.ms-modal-close-btn:hover {
+.ms-ui-close-btn:hover {
     color: var(--accent-color);
     cursor: pointer;
 }

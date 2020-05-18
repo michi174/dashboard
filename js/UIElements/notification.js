@@ -1,17 +1,17 @@
 import { UIElement } from "./uielement.js";
 import UIManager from "./uimanager.js";
 
-export class Modal extends UIElement {
+export class Notification extends UIElement {
     constructor(options) {
-        options.template = "modal.handlebars";
+        options.template = "notification.handlebars";
         options.attach = false;
 
         super(options);
     }
 }
 
-(function closeModal() {
-    $("body").on("click", ".ms-modal-close-btn", function () {
+(function close() {
+    $("body").on("click", ".ms-ui-close-btn", function () {
         let uid = $(this).attr("ms-ui-referer");
         new UIManager().remove(uid);
     });

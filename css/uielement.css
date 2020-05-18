@@ -1,3 +1,6 @@
+.ms-ui-element.isOpen.slide {
+    animation: slide var(--nav-animation-duration);
+}
 .ms-ui-element.isOpen.slide.x {
     animation: slideRight var(--nav-animation-duration);
 }
@@ -20,6 +23,15 @@
 @keyframes slideUp {
     from {
         transform-origin: bottom center;
+        transform: scale(1, 0);
+    }
+    to {
+        transform: scale(1, 1);
+    }
+}
+
+@keyframes slide {
+    from {
         transform: scale(1, 0);
     }
     to {

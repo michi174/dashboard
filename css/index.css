@@ -6,6 +6,7 @@
 @import "modal.css";
 @import "tooltip.css";
 @import "uielement.css";
+@import "notification.css";
 
 #app-init {
     display: flex;
