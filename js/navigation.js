@@ -6,7 +6,10 @@ class Navigation {
         var self = this;
 
         this.debug = debug;
-        this.router = new Navigo(null, true, "#");
+        this.useHashNavigation = true;
+        this.router = !this.useHashNavigation
+            ? new Navigo(window.location.protocol + "//" + window.location.host + "/")
+            : new Navigo(null, true, "#");
         this.navHistory = new Array();
         this.mainView = ".main-view.active";
         this.subView = ".main-view:not(.active)";
@@ -14,7 +17,6 @@ class Navigation {
         this.transition = false;
         this.views = new Array();
         this.insert = false;
-
         this.disableTransition = disableTransition;
 
         $(window).on("canRenderView", function () {
@@ -424,27 +426,32 @@ class Navigation {
 
     getViewName() {
         let url = this.router.lastRouteResolved().url;
+        if (!this.useHashNavigation) {
+            url = url.substring(1);
+        }
         let view = url.split("/")[0];
-
         return view;
     }
 
     getAction() {
         let params = this.getParams();
-
         return params.action || "";
     }
 
     getQuery() {
         let query = this.router.lastRouteResolved().query;
-
         return query;
     }
 
     getParams() {
         let url = this.router.lastRouteResolved().url;
+        if (!this.useHashNavigation) {
+            url = url.substring(1);
+        }
         let urlParamsArray = url.split("/");
         urlParamsArray.shift();
+        //console.log(urlParamsArray);
+
         let query = this.getQuery();
 
         if (urlParamsArray[urlParamsArray.length - 1] === "") {

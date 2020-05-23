@@ -6,14 +6,23 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <!-- Custom JS load first-->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-        <script src="libs/flickity.pkgd.min.js"></script>
-        <script src="libs/handlebars-v4.1.0.js"></script>
-        <script src="libs/navigo.js" type="text/javascript" charset="UTF-8"></script>
+        <base href="" />
+        <script>
+            let base = document.getElementsByTagName("base");
+            let url = window.location.protocol + "//" + window.location.host + "/";
+
+            console.log(url);
+            base[0].setAttribute("href", url);
+        </script>
+
+        <script src="/libs/flickity.pkgd.min.js"></script>
+        <script src="/libs/handlebars-v4.1.0.js"></script>
+        <script src="/libs/navigo.js" type="text/javascript" charset="UTF-8"></script>
 
         <!-- Custom CSS-->
-        <link rel="stylesheet" href="css/index.css" />
-        <link rel="stylesheet" href="css/flickity.css" media="screen" />
-        <link rel="stylesheet" href="media/fontawesome/css/all.css" />
+        <link rel="stylesheet" href="/css/index.css" />
+        <link rel="stylesheet" href="/css/flickity.css" media="screen" />
+        <link rel="stylesheet" href="/media/fontawesome/css/all.css" />
         <title>Dashboard</title>
     </head>
     <body>
@@ -163,6 +172,6 @@
         <div id="md-dyn-modal" class="modal"></div>
         <div id="md-nav-modal" class="modal"></div>
         <!--<script src="dist/app.js" charset="UTF-8"></script>-->
-        <script type="module" src="js/index.js"></script>
+        <script type="module" src="/js/index.js"></script>
     </body>
 </html>

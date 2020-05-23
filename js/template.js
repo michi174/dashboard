@@ -42,9 +42,7 @@ class Template {
         let content = this.file !== "" ? await this._loadFile() : this.html;
 
         if (this.file !== "" && this.html !== "") {
-            console.warn(
-                "HTML is ignored because we also have a file. Give either a file or html to render!"
-            );
+            console.warn("HTML is ignored because we also have a file. Give either a file or html to render!");
         }
 
         let compile = Handlebars.compile(content);
@@ -56,8 +54,7 @@ class Template {
             compiledHTML = content;
         }
 
-        compiledHTML =
-            '<span tpl-guid="' + this.guid + '">' + compiledHTML + "</span>";
+        compiledHTML = '<span tpl-guid="' + this.guid + '">' + compiledHTML + "</span>";
 
         if (this.target !== null) {
             let target = $(this.target);
@@ -90,9 +87,7 @@ class Template {
             }
         }
 
-        console.log(
-            "[TEMPLATE] rendering template '" + this.file + "' has finished"
-        );
+        console.log("[TEMPLATE] rendering template '" + this.file + "' has finished");
 
         this.renderedHTML = compiledHTML;
 
@@ -120,24 +115,13 @@ class Template {
                         timer = timer + interval;
                         if (timer >= timeout) {
                             clearInterval(int);
-                            console.error(
-                                "[TEMPLATE] REJECTING! Not found after time: " +
-                                    timer
-                            );
-                            reject(
-                                "[TEMPLATE] Element " + guid + " not found."
-                            );
+                            console.error("[TEMPLATE] REJECTING! Not found after time: " + timer);
+                            reject("[TEMPLATE] Element " + guid + " not found.");
                         } else {
                             //console.log("[TEMPLATE] not found after "+timer+"ms". Trying again);
                         }
                     } else {
-                        console.log(
-                            "[TEMPLATE] " +
-                                guid +
-                                " ready after " +
-                                timer +
-                                "ms"
-                        );
+                        console.log("[TEMPLATE] " + guid + " ready after " + timer + "ms");
                         clearInterval(int);
                         resolve();
                     }
@@ -163,43 +147,26 @@ class Template {
                         timer = timer + interval;
                         if (timer >= timeout) {
                             clearInterval(int);
-                            console.error(
-                                "[TEMPLATE] REJECTING! Not found after time: " +
-                                    timer
-                            );
-                            reject(
-                                "[TEMPLATE] Element " +
-                                    self.guid +
-                                    " not found."
-                            );
+                            console.error("[TEMPLATE] REJECTING! Not found after time: " + timer);
+                            reject("[TEMPLATE] Element " + self.guid + " not found.");
                         } else {
                             //console.log("[TEMPLATE] "+self.guid+" not found after "+timer+"ms. Trying again");
                         }
                     } else {
-                        console.log(
-                            "[TEMPLATE] " +
-                                self.file +
-                                " was added to DOM after " +
-                                timer +
-                                "ms"
-                        );
+                        console.log("[TEMPLATE] " + self.file + " was added to DOM after " + timer + "ms");
                         clearInterval(int);
                         resolve();
                     }
                 }, interval);
             } else {
-                console.log(
-                    "[TEMPLATE] " + self.file + " was added to DOM instantly"
-                );
+                console.log("[TEMPLATE] " + self.file + " was added to DOM instantly");
                 resolve();
             }
         });
     }
 
     static getUniqueID() {
-        let uid = (Math.random() * Math.floor(1000000000000000000000))
-            .toFixed(0)
-            .toString(16);
+        let uid = (Math.random() * Math.floor(1000000000000000000000)).toFixed(0).toString(16);
 
         if ($("[tpl-guid='" + uid + "']").length > 0) {
             Template.getUniqueID();
@@ -209,9 +176,7 @@ class Template {
     }
 
     uniqueID() {
-        let uid = (Math.random() * Math.floor(1000000000000000000000))
-            .toFixed(0)
-            .toString(16);
+        let uid = (Math.random() * Math.floor(1000000000000000000000)).toFixed(0).toString(16);
 
         if ($("[tpl-guid='" + uid + "']").length > 0) {
             this.uniqueID();
@@ -221,16 +186,14 @@ class Template {
     }
 
     _generateRandom() {
-        return (Math.random() * Math.floor(1000000000000000000000))
-            .toFixed(0)
-            .toString(16);
+        return (Math.random() * Math.floor(1000000000000000000000)).toFixed(0).toString(16);
     }
 
     _loadFile() {
         console.log("[TEMPLATE] Loading file: " + this.file);
 
         return $.ajax({
-            url: this.path + "/" + this.file,
+            url: "/" + this.path + "/" + this.file,
             cache: false,
             success: function (data) {},
         });
