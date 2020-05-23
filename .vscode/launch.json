@@ -6,7 +6,6 @@
     "configurations": [
         {
             "name": "Attach to Edge",
-            "port": 9222,
             "request": "attach",
             "type": "pwa-msedge",
             "url": "http://dashboard.localhost",
@@ -15,15 +14,15 @@
         {
             "type": "edge",
             "request": "launch",
-            "name": "Edge mit \"localhost\" starten",
+            "name": "Localhost (Edge)",
             "url": "http://dashboard.localhost",
             "webRoot": "${workspaceFolder}"
         },
         {
-            "name": "Launch Microsoft Edge and open the Elements tool",
+            "type": "edge",
             "request": "launch",
-            "type": "vscode-edge-devtools.debug",
-            "url": "http://dashboard.localhost",
+            "name": "Liveserver (Edge)",
+            "url": "http://127.0.0.1:5500",
             "webRoot": "${workspaceFolder}"
         }
     ]

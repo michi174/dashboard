@@ -6,11 +6,14 @@ import AppBar from "./Appbar/appbar.js";
 import AppBarButton from "./Appbar/appbarbutton.js";
 import { Tooltip } from "./UIElements/tooltip.js";
 import { Notification } from "./UIElements/notification.js";
+import FrontController from "./frontcontroller/frontcontroller.js";
 
 //import _ from 'lodash';
 
 const prodHost = "https://lolstatistics-app.herokuapp.com/";
 const devHost = "http://michi-pc/API/riot_api_dev/";
+
+document.documentElement.classList.add("light");
 
 var apiHost = "";
 var devMode = false;
@@ -121,6 +124,12 @@ function startApp() {
      */
 
     navigation.router.on("*", async function () {
+        let viewName = navigation.getViewName();
+        let params = navigation.getParams();
+        let action = navigation.getAction();
+
+        new FrontController(viewName, action, params);
+
         let testNotification = new Notification({
             content: "testTT",
             data: { content: "testNotification" },

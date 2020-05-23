@@ -161,7 +161,7 @@
 }
 
 .page {
-    background-color: #fff;
+    background-color: var(--background-color);
     padding: 2rem;
 }
 

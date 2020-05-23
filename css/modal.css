@@ -8,6 +8,7 @@
     height: calc(100vh);
     align-items: center;
     background-color: var(--trasparent-bg-light);
+    backdrop-filter: var(--very-light-blur);
     top: 0;
     overscroll-behavior: contain;
 }
@@ -25,10 +26,8 @@
     box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.45);
     background-color: var(--light-bg-color);
     backdrop-filter: var(--strong-blur);
-    transition: transform 0.3s;
     overscroll-behavior: contain;
     opacity: 0;
-    transform: scale3d(0, 0, 0);
 }
 @media screen and (min-width: 768px) {
     .ms-modal {
@@ -38,7 +37,6 @@
 
 .ms-modal-wrapper.isOpen > .ms-modal {
     opacity: 1;
-    transform: scale3d(1, 1, 1);
 }
 
 .ms-modal-content {
@@ -47,8 +45,9 @@
 
 .ms-modal-close-btn {
     position: absolute;
-    top: 1rem;
+    top: 0.75rem;
     right: 1rem;
+    color: #929292;
 }
 
 .ms-modal-close-btn:hover {

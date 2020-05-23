@@ -20,21 +20,27 @@
     animation: slideRight var(--nav-animation-duration);
 }
 
-@keyframes slideUp {
+.ms-ui-element.isOpen.fadeIn {
+    animation: fadeIn var(--nav-animation-duration);
+}
+
+@keyframes slide {
     from {
-        transform-origin: bottom center;
-        transform: scale(1, 0);
+        transform-origin: left;
+        transform: scale(0, 0);
     }
     to {
         transform: scale(1, 1);
     }
 }
 
-@keyframes slide {
+@keyframes slideUp {
     from {
+        transform-origin: bottom center;
         transform: scale(1, 0);
     }
     to {
+        transform-origin: bottom center;
         transform: scale(1, 1);
     }
 }
@@ -45,6 +51,7 @@
         transform: scale(1, 0);
     }
     to {
+        transform-origin: top;
         transform: scale(1, 1);
     }
 }
@@ -55,6 +62,7 @@
         transform: scale(0, 1);
     }
     to {
+        transform-origin: left;
         transform: scale(1, 1);
     }
 }
@@ -65,6 +73,16 @@
         transform: scale(0, 1);
     }
     to {
+        transform-origin: right;
         transform: scale(1, 1);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
     }
 }

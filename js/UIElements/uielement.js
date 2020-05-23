@@ -24,6 +24,7 @@ class UIElement {
         this.keepInViewPortX = false;
         this.keepInViewPortY = false;
         this.observe = true;
+        this.animationDirection = this.openDirection;
 
         if (typeof options === "object") {
             for (let [prop, value] of Object.entries(options)) {
@@ -42,7 +43,7 @@ class UIElement {
             console.warn("[UIElement] No ID for UIElement. Can't create it.");
         }
 
-        console.log(this);
+        //console.log(this);
     }
 
     /**
@@ -428,7 +429,7 @@ class UIElement {
                 //console.log("horizontal align is: " + horizontalAlign);
                 //which direction we have to move?
                 if (distanceLeft < distanceRight || elemWidth < distanceRight) {
-                    //console.log("opening to left side");
+                    //console.log("opening to right side");
                     switch (horizontalAlign) {
                         case "left":
                             callerOffsetX = callerWidth;
@@ -444,6 +445,7 @@ class UIElement {
                     newElemX = callerStartX + callerOffsetX;
                     startX = "left";
                 } else {
+                    //console.log("opening to left side");
                     if (self.ignoreCallerPositionXOnCollide) {
                         switch (horizontalAlign) {
                             case "left":

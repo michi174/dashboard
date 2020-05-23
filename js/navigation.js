@@ -69,14 +69,7 @@ class Navigation {
         transition = self.transition !== false ? self.transition : transition;
 
         if (caller === "function") {
-            self.router.navigate(
-                url,
-                direction,
-                transition,
-                (caller = "function"),
-                insert,
-                event
-            );
+            self.router.navigate(url, direction, transition, (caller = "function"), insert, event);
         } else {
             $(window).trigger("navigation.start");
 
@@ -180,16 +173,11 @@ class Navigation {
             this._addHistoryElement(url);
 
             if (direction === "back") {
-                this._destroyHistoryElement(
-                    this._findHistoryElement(this.getCurrentUrl()),
-                    true
-                );
+                this._destroyHistoryElement(this._findHistoryElement(this.getCurrentUrl()), true);
                 this._addHistoryElement(url);
             }
 
-            this._debug(
-                "Navigation: Historylength is: " + this.getFullHistory().length
-            );
+            this._debug("Navigation: Historylength is: " + this.getFullHistory().length);
             this._triggerNavigationDone();
             this._debug("-------------------");
         }
@@ -214,10 +202,7 @@ class Navigation {
 
                 navDirection = "forward";
 
-                if (
-                    this.navHistory[this.navHistory.length - 2].url ===
-                    currentURL
-                ) {
+                if (this.navHistory[this.navHistory.length - 2].url === currentURL) {
                     navDirection = "back";
                 }
             }
@@ -307,9 +292,7 @@ class Navigation {
                 return true;
             }
         } else {
-            this._debug(
-                "Navigation: direction in _replaceInactiveView is: " + direction
-            );
+            this._debug("Navigation: direction in _replaceInactiveView is: " + direction);
             return true;
         }
     }
@@ -352,13 +335,7 @@ class Navigation {
             );
             self._debug("URL changed");
             self._debug("should navigate to:" + window.location.hash);
-            self.navigate(
-                window.location.hash.substring(1),
-                "none",
-                "swipeHorizontal",
-                "listener",
-                self.insert
-            );
+            self.navigate(window.location.hash.substring(1), "none", "swipeHorizontal", "listener", self.insert);
         });
     }
 
@@ -398,18 +375,12 @@ class Navigation {
         }, 50);
     }
 
-    _destroyHistoryElement(
-        historyElement,
-        allAfterElement = false,
-        reverse = false
-    ) {
+    _destroyHistoryElement(historyElement, allAfterElement = false, reverse = false) {
         let index = -1;
         let deleteCount = 1;
 
         if (!reverse) {
-            index = this.navHistory.findIndex((element) =>
-                element.url === historyElement.url ? true : false
-            );
+            index = this.navHistory.findIndex((element) => (element.url === historyElement.url ? true : false));
         } else {
             for (let [i, value] of this.navHistory.entries()) {
                 if (value.url === historyElement.url) {
@@ -423,10 +394,7 @@ class Navigation {
                 deleteCount = this.navHistory.length - index;
             }
 
-            this._debug(
-                "Navigation: Historyelement deleted: " +
-                    this.navHistory[index].url
-            );
+            this._debug("Navigation: Historyelement deleted: " + this.navHistory[index].url);
             this._debug("Navigation: deleting: " + deleteCount + " elements");
             this.navHistory.splice(index, deleteCount);
         }
@@ -436,9 +404,7 @@ class Navigation {
         let index = -1;
 
         if (!reverse) {
-            index = this.navHistory.findIndex((element) =>
-                element.url === url ? true : false
-            );
+            index = this.navHistory.findIndex((element) => (element.url === url ? true : false));
         } else {
             for (let [i, value] of this.navHistory.entries()) {
                 if (value.url === url) {
@@ -448,19 +414,64 @@ class Navigation {
         }
 
         if (index >= 0) {
-            this._debug(
-                "Navigation: Historyelement " +
-                    this.navHistory[index].url +
-                    " found index: " +
-                    index
-            );
+            this._debug("Navigation: Historyelement " + this.navHistory[index].url + " found index: " + index);
             return this.navHistory[index];
         } else {
-            this._debug(
-                "ERROR: Navigation: Historyelement " + url + " not found!"
-            );
+            this._debug("ERROR: Navigation: Historyelement " + url + " not found!");
             return false;
         }
+    }
+
+    getViewName() {
+        let url = this.router.lastRouteResolved().url;
+        let view = url.split("/")[0];
+
+        return view;
+    }
+
+    getAction() {
+        let params = this.getParams();
+
+        return params.action || "";
+    }
+
+    getQuery() {
+        let query = this.router.lastRouteResolved().query;
+
+        return query;
+    }
+
+    getParams() {
+        let url = this.router.lastRouteResolved().url;
+        let urlParamsArray = url.split("/");
+        urlParamsArray.shift();
+        let query = this.getQuery();
+
+        if (urlParamsArray[urlParamsArray.length - 1] === "") {
+            urlParamsArray.pop();
+        }
+
+        let queryParamsArray = query.split("&");
+        let queryParamsObject = new Object();
+        queryParamsObject.__param = new Array();
+
+        if (urlParamsArray.length > 0) {
+            queryParamsObject.__param = urlParamsArray;
+        }
+
+        if (queryParamsArray.length > 0) {
+            queryParamsArray.forEach(function (value) {
+                if (value.split("=").length > 1) {
+                    let prop = value.split("=")[0];
+                    let val = value.split("=")[1];
+                    queryParamsObject[prop] = val;
+                } else {
+                    queryParamsObject.__param.push(value.split("=")[0]);
+                }
+            });
+        }
+
+        return queryParamsObject;
     }
 }
 

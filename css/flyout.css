@@ -17,3 +17,17 @@
     opacity: 1;
     animation-timing-function: linear;
 }
+
+/* [ms-uielement-type="FlyOut"]::after {
+    font-family: "Font Awesome 5 Pro";
+    font-weight: 900;
+    content: "\f0de";
+    position: absolute;
+    right: 6px;
+    transform: translate(50%);
+    transform: rotate(90deg);
+}
+
+[ms-uielement-type="FlyOut"] {
+    position: relative;
+} */
