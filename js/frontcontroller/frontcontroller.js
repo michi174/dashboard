@@ -5,6 +5,12 @@ export default class FrontController {
     static get HOMEPAGE() {
         return "Homepage";
     }
+    static get DEFAULT_ACTION() {
+        return "default";
+    }
+    static set HOMEPAGE(value) {
+        throw new Error(`can't set value (${value}) of private property HOMEPAGE`);
+    }
     static get NOT_FOUND() {
         return "404_notfound";
     }
@@ -20,45 +26,59 @@ export default class FrontController {
         } = {})
     ) {
         this.viewModelName = viewModelName || FrontController.HOMEPAGE;
-        this.action = action;
+        this.action = action || FrontController.DEFAULT_ACTION;
         this.params = params;
+
+        Object.defineProperty(this, "test", {
+            value: "testVal",
+            writeable: false,
+        });
 
         // console.log(FrontController.DEBUG_PREFIX + this._getViewModelPath());
         // console.log(FrontController.DEBUG_PREFIX + "view: " + this.viewModelName);
         // console.log(FrontController.DEBUG_PREFIX + "action: " + this.action);
         // console.log(FrontController.DEBUG_PREFIX + "params:");
-        // console.log(this.params);
-        // console.log(this._loadViewModel());
+        //console.log(this.params);
+
+        try {
+            this.run();
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
+    async run() {
+        //load the VM
+        let viewModel = await this._loadViewModel();
+
+        console.log(viewModel);
+
+        //if the VM has the requested action, run it
+        if (typeof viewModel[this.action] === "function") {
+            viewModel[this.action]();
+        } else {
+            throw new Error(`Faulty action "${this.action}" in viewModel "${this.viewModelName}"`);
+        }
     }
 
     async _loadViewModel() {
-        let self = this;
-        let state = "error";
-
-        let module, viewModelObject;
+        let module;
 
         console.log(FrontController.DEBUG_PREFIX);
 
         try {
             module = await import("/" + this._getViewModelPath());
 
-            console.log(typeof module);
-
-            console.log(Object.hasOwnProperty("default", module));
-            console.log();
-
-            state = "success";
-
             if (typeof module["default"]) return new module.default(this.params);
             if (typeof module[this.viewModelName]) return new module[this.viewModelName](this.params);
         } catch (e) {
             console.error(FrontController.DEBUG_PREFIX + FrontController.NOT_FOUND);
             console.error(e);
-            state = "error";
         }
 
         console.error(
-            `[Frontcontroller] Can't load module "${this.viewModelName}". Either it doesn't provide a default export or the name is misspelled.`
+            `[Frontcontroller] Can't load module "${this.viewModelName}". Either it doesn't provide a default export or the name is misspelled.
+            Check the import header as well.`
         );
 
         return null;
@@ -71,7 +91,7 @@ export default class FrontController {
     _getViewModelPath() {
         let fileName = this.viewModelName.toLowerCase();
         let folder = `viewmodel/${fileName}`;
-        let path = `${folder}/${fileName}.js`;
+        let path = `${folder}/${fileName}.vm.js`;
 
         return path;
     }
