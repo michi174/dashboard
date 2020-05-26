@@ -1,7 +1,6 @@
-import { Template } from "../template.js";
+import Template from "../template.js";
 import UIManager from "./uimanager.js";
-import detectElementOverflow from "../../libs/elementOverflow.js";
-class UIElement {
+export default class UIElement {
     constructor(options) {
         this.id = "";
         this.data = {};

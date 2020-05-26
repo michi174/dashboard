@@ -1,5 +1,5 @@
 import UIFactory from "./uifactory.js";
-import { Template } from "../template.js";
+import Template from "../template.js";
 
 export default class UIManager {
     constructor() {

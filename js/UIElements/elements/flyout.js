@@ -1,7 +1,7 @@
-import { UIElement } from "./uielement.js";
-import UIManager from "./uimanager.js";
+import UIElement from "../uielement.js";
+import UIManager from "../uimanager.js";
 
-export class FlyOut extends UIElement {
+export default class FlyOut extends UIElement {
     constructor(options) {
         options.template = "flyout.handlebars";
         super(options);
@@ -41,3 +41,5 @@ export class FlyOut extends UIElement {
         }
     });
 })();
+
+export { FlyOut };

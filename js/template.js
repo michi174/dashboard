@@ -1,4 +1,4 @@
-class Template {
+export default class Template {
     constructor(options, retObj = false) {
         this.guid = "";
         this.path = "";
@@ -192,10 +192,20 @@ class Template {
     _loadFile() {
         console.log("[TEMPLATE] Loading file: " + this.file);
 
+        return Template.loadFile(this.path, this.file);
+    }
+
+    static loadFile(path, file, extension = "") {
+        console.log("[TEMPLATE] Loading file: " + file);
+
         return $.ajax({
-            url: "/" + this.path + "/" + this.file,
+            url: "" + path + "/" + file + extension,
             cache: false,
             success: function (data) {},
+            error: function (error) {
+                console.error("Error loading file: " + url);
+                return "";
+            },
         });
     }
 }

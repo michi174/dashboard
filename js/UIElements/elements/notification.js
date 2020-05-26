@@ -1,7 +1,7 @@
-import { UIElement } from "./uielement.js";
-import UIManager from "./uimanager.js";
+import UIElement from "../uielement.js";
+import UIManager from "../uimanager.js";
 
-export class Notification extends UIElement {
+export default class Notification extends UIElement {
     constructor(options) {
         options.template = "notification.handlebars";
         options.attach = false;
@@ -16,3 +16,5 @@ export class Notification extends UIElement {
         new UIManager().remove(uid);
     });
 })();
+
+export { Notification };

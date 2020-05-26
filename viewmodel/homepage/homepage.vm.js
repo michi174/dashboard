@@ -1,13 +1,16 @@
-import ViewModel from "../viewmodel.js";
+import ViewModel from "../../js/viewmodel/viewmodel.js";
 
 export default class Homepage extends ViewModel {
-    constructor() {
-        super();
+    constructor(params) {
+        super(params);
     }
 
     default() {
-        this.createView();
+        let view = this.createView();
+        view.setDataContext({});
         console.log("[Homepage VM] yes, we loaded the default action");
+
+        this.ready();
     }
 }
 

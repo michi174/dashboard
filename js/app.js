@@ -6,9 +6,9 @@ export default class App {
             return instance;
         }
 
-        const VERSION = 0.1;
+        this.sessionCache;
+        this.cache;
+
         this.constructor.instance = this;
     }
-
-    getInstance() {}
 }

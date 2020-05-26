@@ -1,7 +1,7 @@
-import { UIElement } from "./uielement.js";
-import UIManager from "./uimanager.js";
+import UIElement from "../uielement.js";
+import UIManager from "../uimanager.js";
 
-export class Modal extends UIElement {
+export default class Modal extends UIElement {
     constructor(options) {
         options.template = "modal.handlebars";
         options.attach = false;
@@ -16,3 +16,4 @@ export class Modal extends UIElement {
         new UIManager().remove(uid);
     });
 })();
+export { Modal };

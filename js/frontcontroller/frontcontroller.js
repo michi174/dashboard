@@ -54,11 +54,14 @@ export default class FrontController {
         console.log(viewModel);
 
         //if the VM has the requested action, run it
-        if (typeof viewModel[this.action] === "function") {
-            viewModel[this.action]();
-        } else {
-            throw new Error(`Faulty action "${this.action}" in viewModel "${this.viewModelName}"`);
+        if (typeof viewModel[this.action] !== "function") {
+            this.action = FrontController.DEFAULT_ACTION;
+            console.warn(
+                FrontController.DEBUG_PREFIX + "invalid action. running the default action for this viewmodel"
+            );
         }
+
+        viewModel[this.action]();
     }
 
     async _loadViewModel() {

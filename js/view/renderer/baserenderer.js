@@ -7,7 +7,14 @@ export default class BaseRenderer {
         console.log("[BaseRenderer] created a new renderer.");
     }
 
-    render(template, context = {}) {
+    get fileExtension() {
+        throw new Error("Can't get an abstract property. Overriding is required in renderer: " + this.constructor.name);
+    }
+    set fileExtension(value) {
+        throw new Error("Can't set a value of an abstract property. Overriding is required.");
+    }
+
+    async render(template, context = {}) {
         throw new Error("Can't call an abstract method. Overriding is required.");
     }
 }

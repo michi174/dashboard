@@ -18,14 +18,10 @@ export default class AppBar {
     }
 
     async addButton(appBarButton) {
-        let index = this.leftButtons.findIndex(
-            (button) => button.id === appBarButton.id
-        );
+        let index = this.leftButtons.findIndex((button) => button.id === appBarButton.id);
 
         if (index === -1) {
-            index = this.rightButtons.findIndex(
-                (button) => button.id === appBarButton.id
-            );
+            index = this.rightButtons.findIndex((button) => button.id === appBarButton.id);
         }
 
         if (index < 0) {
@@ -70,14 +66,10 @@ export default class AppBar {
         let index;
 
         if (btn.position === "left") {
-            index = this.leftButtons.findIndex(
-                (button) => button.id === btn.id
-            );
+            index = this.leftButtons.findIndex((button) => button.id === btn.id);
             this.leftButtons.splice(index, 1);
         } else {
-            index = this.rightButtons.findIndex(
-                (button) => button.id === btn.id
-            );
+            index = this.rightButtons.findIndex((button) => button.id === btn.id);
             this.rightButtons.splice(index, 1);
         }
 
@@ -146,16 +138,13 @@ export default class AppBar {
             console.log("[APPBAR] new appbar required");
         }
 
-        if (
-            this.isRendered === false ||
-            (this.isRendered === true && refresh === true)
-        ) {
+        if (this.isRendered === false || (this.isRendered === true && refresh === true)) {
             this.isRendered = true;
 
             console.log("[APPBAR] Creating a new appbar");
             let temp = new Template(
                 {
-                    path: "view",
+                    path: "view/appbar",
                     file: "appbar.handlebars",
                     data: {
                         title: this.title,

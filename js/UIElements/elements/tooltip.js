@@ -1,7 +1,7 @@
-import { UIElement } from "./uielement.js";
-import UIManager from "./uimanager.js";
+import UIElement from "../uielement.js";
+import UIManager from "../uimanager.js";
 
-export class Tooltip extends UIElement {
+export default class Tooltip extends UIElement {
     constructor(options) {
         options.template = "tooltip.handlebars";
         super(options);
@@ -27,3 +27,5 @@ export class Tooltip extends UIElement {
         }
     });
 })();
+
+export { Tooltip };

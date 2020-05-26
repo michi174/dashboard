@@ -1,11 +1,10 @@
 import { MyCache } from "./cache.js";
 import { Navigation } from "./navigation.js";
-import { Template } from "./template.js";
-import UIManager from "./UIElements/uimanager.js";
-import AppBar from "./Appbar/appbar.js";
-import AppBarButton from "./Appbar/appbarbutton.js";
-import { Tooltip } from "./UIElements/tooltip.js";
-import { Notification } from "./UIElements/notification.js";
+import Template from "./template.js";
+import UIManager from "./uielements/uimanager.js";
+import AppBar from "./appbar/appbar.js";
+import AppBarButton from "./appbar/appbarbutton.js";
+import Notification from "./uielements/elements/notification.js";
 import FrontController from "./frontcontroller/frontcontroller.js";
 
 //import _ from 'lodash';
@@ -134,12 +133,6 @@ function startApp() {
             content: "testTT",
             data: { content: "testNotification" },
             attach: false,
-        });
-
-        let homepage = new Template({
-            file: "homepage.handlebars",
-            path: "view",
-            target: ".main-view.active",
         });
 
         titleBar.reset();
@@ -366,7 +359,15 @@ Handlebars.registerHelper("LoadTemplate", function (template, params) {
     let random1 = (Math.random() * Math.floor(1000000)).toFixed(0);
     let random2 = (Math.random() * Math.floor(1000000)).toFixed(0);
     let identifier = random1 + "_" + template + "_" + random2;
-    let token = '<div id="' + identifier + '"></div>';
+    let token = `
+    <div id="${identifier}">
+        <div class="lds-ring small">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>`;
     let _html = token;
 
     if (typeof template !== "undefined") {

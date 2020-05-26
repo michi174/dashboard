@@ -30,11 +30,8 @@ export default class UIFactory {
     }
 
     async build() {
-        if (
-            this.type !== null &&
-            (this.template !== null || this.content !== null)
-        ) {
-            let mod = import("./" + this.type.toLowerCase() + ".js");
+        if (this.type !== null && (this.template !== null || this.content !== null)) {
+            let mod = import("./elements/" + this.type.toLowerCase() + ".js");
 
             let state = "";
             let element = null;
@@ -54,8 +51,7 @@ export default class UIFactory {
                         content: self.content,
                         trigger: self.trigger,
                         sticky: self.sticky,
-                        openPositionRelativeToCaller:
-                            self.openPositionRelativeToCaller,
+                        openPositionRelativeToCaller: self.openPositionRelativeToCaller,
                         openDirection: self.openDirection,
                         animation: self.animation,
                         align: self.align,
@@ -64,9 +60,7 @@ export default class UIFactory {
                     });
                 } else {
                     console.log(
-                        "[UIFactory] Class " +
-                            self.type +
-                            " not found. Check uielement-type, it's case sensitive"
+                        "[UIFactory] Class " + self.type + " not found. Check uielement-type, it's case sensitive"
                     );
                     console.log(Component);
                 }
@@ -78,9 +72,7 @@ export default class UIFactory {
             });
 
             mod.finally(function () {
-                console.log(
-                    "[UIFactory] module loading finished with " + state
-                );
+                console.log("[UIFactory] module loading finished with " + state);
             });
         }
     }

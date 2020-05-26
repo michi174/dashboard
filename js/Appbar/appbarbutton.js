@@ -1,11 +1,7 @@
 import { Template } from "../template.js";
 
 export default class AppBarButton {
-    constructor(
-        id,
-        template,
-        options = { icon: "", position: "right", order: 0, cssClas: "" }
-    ) {
+    constructor(id, template, options = { icon: "", position: "right", order: 0, cssClas: "" }) {
         this.id = id;
         this.button = $(template);
         this.icon = "";
@@ -37,7 +33,7 @@ export default class AppBarButton {
 
         let temp = new Template(
             {
-                path: "view",
+                path: "view/appbar",
                 file: "appbarbutton.handlebars",
                 data: {
                     id: this.id,
