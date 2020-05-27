@@ -16,6 +16,7 @@ export default class ViewModel {
         this.view = null;
         this.viewModel = this.constructor.name.toLowerCase();
         this.params = params;
+        this.createView();
     }
 
     /**

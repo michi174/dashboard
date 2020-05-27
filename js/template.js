@@ -202,9 +202,9 @@ export default class Template {
             url: "" + path + "/" + file + extension,
             cache: false,
             success: function (data) {},
-            error: function (error) {
-                console.error("Error loading file: " + url);
-                return "";
+            error: function (e) {
+                console.error("Error loading file: " + "" + path + "/" + file + extension);
+                throw new Error(e);
             },
         });
     }

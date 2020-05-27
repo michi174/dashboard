@@ -34,12 +34,6 @@ export default class FrontController {
             writeable: false,
         });
 
-        // console.log(FrontController.DEBUG_PREFIX + this._getViewModelPath());
-        // console.log(FrontController.DEBUG_PREFIX + "view: " + this.viewModelName);
-        // console.log(FrontController.DEBUG_PREFIX + "action: " + this.action);
-        // console.log(FrontController.DEBUG_PREFIX + "params:");
-        //console.log(this.params);
-
         try {
             this.run();
         } catch (e) {
@@ -61,7 +55,8 @@ export default class FrontController {
             );
         }
 
-        viewModel[this.action]();
+        await viewModel[this.action]();
+        await viewModel.ready();
     }
 
     async _loadViewModel() {

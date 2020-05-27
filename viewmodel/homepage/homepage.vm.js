@@ -6,11 +6,10 @@ export default class Homepage extends ViewModel {
     }
 
     default() {
-        let view = this.createView();
-        view.setDataContext({});
+        this.view.setDataContext({});
         console.log("[Homepage VM] yes, we loaded the default action");
 
-        this.ready();
+        //this.ready();
     }
 }
 

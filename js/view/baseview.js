@@ -84,11 +84,16 @@ export default class BaseView {
             console.warn("[BaseView] set the renderer to default because we didn't get it from you");
         }
 
-        await this.loadFile();
-        this.renderedContent = await this.renderer.render(this.content, this.context);
-        this.isRendered = true;
-        if (insert) {
-            this.insert();
+        try {
+            await this.loadFile();
+        } catch (e) {
+            console.warn(e);
+        } finally {
+            this.renderedContent = await this.renderer.render(this.content, this.context);
+            this.isRendered = true;
+            if (insert) {
+                this.insert();
+            }
         }
     }
 
@@ -140,7 +145,7 @@ export default class BaseView {
     }
 
     insert() {
-        console.log("inserting content to DOM");
+        console.log("[BaseView] inserting content to DOM");
         if (this.isRendered) {
             this.DOMTarget.html(this.renderedContent);
         } else {
@@ -159,19 +164,25 @@ export default class BaseView {
     async loadFile() {
         let fullpath = "/" + this.templatePath + "/" + this.templateFile + this.renderer.fileExtension;
 
-        let content = await Template.loadFile(this.templatePath, this.templateFile, this.renderer.fileExtension);
+        try {
+            let content = await Template.loadFile(this.templatePath, this.templateFile, this.renderer.fileExtension);
 
-        //console.log(content);
+            if (content) {
+                let $content = $(content);
 
-        //console.log(`[BaseView] Loading file: ${fullpath}`);
-
-        //FIX: We need a propper way to recognize if a file was not found!. My server sends the index.html if we don't find the right file
-        if (content) {
-            this.content += content;
-            return content;
-        } else {
-            this.content += "";
-            return "";
+                if ($content.length === 1) {
+                    this.content += content;
+                    return content;
+                } else {
+                    throw new Error(
+                        `The received template is not valid. Check if the templatefile "${fullpath}" even exists`
+                    );
+                }
+            } else {
+                return "";
+            }
+        } catch (e) {
+            console.warn(e);
         }
     }
 }
