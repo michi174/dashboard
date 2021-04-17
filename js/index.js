@@ -1,16 +1,18 @@
 import { MyCache } from "./cache.js";
-import { Navigation } from "./navigation.js";
+
 import Template from "./template.js";
 import UIManager from "./uielements/uimanager.js";
 import AppBar from "./appbar/appbar.js";
 import AppBarButton from "./appbar/appbarbutton.js";
 import Notification from "./uielements/elements/notification.js";
 import FrontController from "./frontcontroller/frontcontroller.js";
+import App from "../js/app.js";
+import Helpers from "./helpers.js";
 
 //import _ from 'lodash';
 
 const prodHost = "https://lolstatistics-app.herokuapp.com/";
-const devHost = "http://michi-pc/API/riot_api_dev/";
+const devHost = "http://blogapi.localhost/";
 
 document.documentElement.classList.add("light");
 
@@ -20,30 +22,15 @@ var locale = "de_DE";
 var views = new Array();
 var mobile = false;
 
+const app = new App();
 const templateFolder = "view";
 const viewModelFolder = "viewmodel";
-const navigation = new Navigation(true, true);
+const navigation = app.navigation;
 const ui = new UIManager();
-const titleBar = new AppBar("#appbar-template");
 
-//TitleBar Buttons
-const searchBtn = new AppBarButton("search-icon", "#appbar-button-template", {
-    icon: "far fa-search",
-    position: "right",
-    order: 0,
-});
-const backBtn = new AppBarButton("back-icon", "#appbar-button-template", {
-    icon: "far fa-chevron-left",
-    position: "left",
-    order: 0,
-});
-const devModeBtn = new AppBarButton("devmode-icon", "#appbar-button-template", {
-    icon: "far fa-file-code",
-    position: "left",
-    order: 1,
-});
+app.apiHost = devHost;
 
-const ro = new ResizeObserver((entries) => {
+const ro = new ResizeObserver(entries => {
     for (let entry of entries) {
         const cr = entry.contentRect;
         const jQElement = $(entry.target);
@@ -80,7 +67,7 @@ async function init() {
             },
             after: function (params) {
                 //titleBar.addButton(devModeBtn);
-            },
+            }
         });
         //initiate the App
         //do everything inside here before we start sending the navigation trigger and rendering a view.
@@ -129,29 +116,12 @@ function startApp() {
 
         new FrontController(viewName, action, params);
 
-        let testNotification = new Notification({
-            content: "testTT",
-            data: { content: "testNotification" },
-            attach: false,
-        });
-
-        titleBar.reset();
-        titleBar.addButton(searchBtn);
-        titleBar.addTheme("dark");
-        titleBar.setTitle("Dashboard");
+        //titleBar.reset();
+        //titleBar.addButton(searchBtn);
+        //titleBar.addTheme("dark");
+        //titleBar.setTitle("Dashboard");
         switchActiveCSS($("#bot-navigation-wr > .tab"), $("#bot-nav-home"), "active");
         // titleBar.addButton(backBtn);
-
-        $(window).trigger("viewReady");
-    });
-
-    navigation.router.on("summoner/:name/:region", async function (params) {
-        let sum_name = params.name.replace(/ /g, "");
-        let region = params.region.toLowerCase();
-
-        titleBar.reset();
-        titleBar.addButton(backBtn);
-        titleBar.addButton(searchBtn);
 
         $(window).trigger("viewReady");
     });
@@ -218,7 +188,7 @@ function loadTemplate(filename) {
         cache: false,
         success: function (data) {
             console.log(data);
-        },
+        }
     });
 }
 
@@ -248,7 +218,7 @@ function saveScrollPosition(element = null) {
         scrollObject.scrollPosTop = element.scrollTop();
         scrollObject.scrollPosLeft = element.scrollLeft();
 
-        let index = views.findIndex((needle) => needle.url === scrollObject.url);
+        let index = views.findIndex(needle => needle.url === scrollObject.url);
 
         if (index > -1) {
             views[index] = scrollObject;
@@ -266,7 +236,7 @@ function restoreScrollPosition(element = null, url) {
     }
 
     if (typeof element !== "undefined" && url !== "" && url !== null) {
-        let index = views.findIndex((needle) => needle.url === url);
+        let index = views.findIndex(needle => needle.url === url);
 
         if (index > -1) {
             element.scrollLeft(views[index].scrollPosLeft);
@@ -355,7 +325,7 @@ function hideAllModals() {
     toggleOverlay();
 }
 
-Handlebars.registerHelper("LoadTemplate", function (template, params) {
+Handlebars.registerHelper("LoadTemplate", function (template, params, customFolder = "", obj) {
     let random1 = (Math.random() * Math.floor(1000000)).toFixed(0);
     let random2 = (Math.random() * Math.floor(1000000)).toFixed(0);
     let identifier = random1 + "_" + template + "_" + random2;
@@ -370,20 +340,33 @@ Handlebars.registerHelper("LoadTemplate", function (template, params) {
     </div>`;
     let _html = token;
 
+    let _customFolder = "";
+
+    if (typeof customFolder !== "object") {
+        _customFolder = "/" + customFolder;
+    }
+
+    let path = "../" + viewModelFolder + _customFolder + "/" + template + ".js";
+    //console.log("/" + customFolder);
+
+    console.log(path);
+
     if (typeof template !== "undefined") {
-        import("../" + viewModelFolder + "/" + template + ".js")
+        import(path)
             .then(function (result) {
                 let mod = result;
+
                 let obj = new mod[template](params);
+
                 let ctx = obj.getContext();
 
                 //wait for the context to load, then start the template rendering.
                 ctx.then(function (context) {
                     let html = new Template({
-                        path: templateFolder,
+                        path: templateFolder + _customFolder,
                         file: template + ".handlebars",
                         data: context,
-                        method: "return",
+                        method: "return"
                         //wait for the template to be rendered and placed in DOM Tree, then replace the token with the actual content.
                     })
                         .then(function (result) {
@@ -419,6 +402,51 @@ Handlebars.registerHelper("LoadTemplate", function (template, params) {
             });
         return new Handlebars.SafeString(_html);
     }
+});
+
+Handlebars.registerHelper("limit", function (context, start, num, obj) {
+    console.log(context);
+    console.log(start);
+    console.log(num);
+
+    if (start > 0) {
+        context.splice(0, start - 1);
+    }
+
+    context.splice(num, context.length - num);
+
+    console.log(context);
+
+    return context;
+});
+
+Handlebars.registerHelper("dateToMoment", function (date) {
+    return moment(date).fromNow();
+});
+
+Handlebars.registerHelper("UserIdToName", function (id) {
+    helper = new Helpers();
+    helper
+        .getJson(app.apiHost + "v1/user/byid/" + id)
+        .then(function (result) {
+            let userdata = result;
+        })
+        .catch(function (e) {
+            console.error(e);
+        });
+});
+
+Handlebars.registerHelper("eachWithLimit", function (context, start, num, options) {
+    let fn = options.fn;
+    let ret = "";
+    for (let i = 0, j = context.length; i < j; i++) {
+        if (i >= start) {
+            if (num - 1 >= i) {
+                ret = ret + options.fn(context[i]);
+            }
+        }
+    }
+    return ret;
 });
 
 /*

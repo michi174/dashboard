@@ -1,0 +1,15 @@
+<div class="homepage-view view-container responsive">
+    <div class="page">
+        <div class="article-wrapper">
+            {{#eachWithLimit entries 0 2}}
+            {{LoadTemplate "article" this "benchmarks"}}
+            {{/eachWithLimit}}
+        </div>
+        <div class="articlelist-wrapper">
+            <div style="margin-left:1rem; margin-bottom:2rem;" class="bold">Recent Benchmarks</div>
+            {{#eachWithLimit entries 2 10}}
+            {{LoadTemplate "listarticle" this "benchmarks"}}
+            {{/eachWithLimit}}
+        </div>
+    </div>
+</div>

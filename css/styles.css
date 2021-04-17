@@ -95,6 +95,15 @@ a {
     color: var(--text-accent-color);
 }
 
+.heading2{
+    margin-bottom: 1rem;
+    font-weight: 900;
+}
+.heading1{
+    margin-bottom: 1rem;
+    font-weight: 900;
+}
+
 @font-face {
     font-family: "Roboto";
     src: url(fonts/Roboto-Regular.ttf);
@@ -223,6 +232,10 @@ body::-webkit-scrollbar {
 
 .extra-large {
     font-size: 20px;
+}
+
+.xx-large {
+    font-size: 28px;
 }
 
 .bold {

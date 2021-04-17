@@ -382,7 +382,7 @@ class Navigation {
         let deleteCount = 1;
 
         if (!reverse) {
-            index = this.navHistory.findIndex((element) => (element.url === historyElement.url ? true : false));
+            index = this.navHistory.findIndex(element => (element.url === historyElement.url ? true : false));
         } else {
             for (let [i, value] of this.navHistory.entries()) {
                 if (value.url === historyElement.url) {
@@ -406,7 +406,7 @@ class Navigation {
         let index = -1;
 
         if (!reverse) {
-            index = this.navHistory.findIndex((element) => (element.url === url ? true : false));
+            index = this.navHistory.findIndex(element => (element.url === url ? true : false));
         } else {
             for (let [i, value] of this.navHistory.entries()) {
                 if (value.url === url) {

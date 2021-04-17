@@ -1,3 +1,5 @@
+import App from "../app.js";
+
 export default class FrontController {
     static get DEBUG_PREFIX() {
         return "[Frontcontroller] ";
@@ -22,7 +24,7 @@ export default class FrontController {
         viewModelName,
         action = "",
         params = ({
-            __param: [],
+            __param: []
         } = {})
     ) {
         this.viewModelName = viewModelName || FrontController.HOMEPAGE;
@@ -31,7 +33,7 @@ export default class FrontController {
 
         Object.defineProperty(this, "test", {
             value: "testVal",
-            writeable: false,
+            writeable: false
         });
 
         try {
@@ -39,6 +41,8 @@ export default class FrontController {
         } catch (e) {
             console.error(e);
         }
+
+        this.app = new App();
     }
 
     async run() {
@@ -72,6 +76,7 @@ export default class FrontController {
         } catch (e) {
             console.error(FrontController.DEBUG_PREFIX + FrontController.NOT_FOUND);
             console.error(e);
+            this.app.navigation.router.navigate("#");
         }
 
         console.error(
@@ -80,10 +85,6 @@ export default class FrontController {
         );
 
         return null;
-
-        // import("../../" + this._getViewModelPath()).then(function (module) {
-        //     let viewModelObject = new module.default(self.params);
-        // });
     }
 
     _getViewModelPath() {

@@ -47,16 +47,31 @@
     opacity: 1;
 }
 
+.ms-notification.error {
+    opacity: 1;
+    background-color: var(--accent-color-dark);
+}
+
 .ms-notification-content {
     flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
 }
 
 .ms-ui-close-btn {
     flex-grow: 0;
     margin-left: 1rem;
+    border-radius: 0.25rem;
+    text-align: center;
 }
 
 .ms-ui-close-btn:hover {
-    color: var(--accent-color);
+    color: var(--accent-color-light);
     cursor: pointer;
+}
+
+.ms-ui-close-btn:active {
+    color: var(--accent-color);
+    transform: scale(0.9);
 }

@@ -1,5 +1,6 @@
 import BaseView from "../view/baseview.js";
 import HTML from "../view/html.js";
+import App from "../../js/app.js";
 
 export default class ViewModel {
     static get DEFAULT_VIEW_PATH() {
@@ -7,6 +8,7 @@ export default class ViewModel {
     }
 
     constructor(params = {}) {
+        this.app = new App();
         if (new.target === ViewModel) {
             throw new Error("Can't create instance of an abstract class");
         }

@@ -8,7 +8,6 @@
     height: calc(100vh);
     align-items: center;
     background-color: var(--trasparent-bg-light);
-    backdrop-filter: var(--very-light-blur);
     top: 0;
     overscroll-behavior: contain;
 }
@@ -24,7 +23,7 @@
     overflow: hidden;
     padding: 1rem;
     box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.45);
-    background-color: var(--light-bg-color);
+    background-color: var(--trasparent-light-bg) !important;
     backdrop-filter: var(--strong-blur);
     overscroll-behavior: contain;
     opacity: 0;
