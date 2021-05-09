@@ -11,7 +11,7 @@ export default class Helpers {
             if (!result.ok) {
                 throw new Error(result.status + " - " + result.statusText);
             }
-            console.error("fetching URL: " + url);
+            console.log("fetching URL: " + url);
             let data = await result.json();
 
             return data;

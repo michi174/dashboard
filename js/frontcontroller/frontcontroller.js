@@ -23,6 +23,7 @@ export default class FrontController {
     constructor(
         viewModelName,
         action = "",
+        onlyViewModel = false,
         params = ({
             __param: []
         } = {})
@@ -30,6 +31,15 @@ export default class FrontController {
         this.viewModelName = viewModelName || FrontController.HOMEPAGE;
         this.action = action || FrontController.DEFAULT_ACTION;
         this.params = params;
+        this.onlyViewModel = onlyViewModel;
+
+        if (!viewModelName) {
+            console.log(
+                "[FrontController] got no ViewModel as parameter, using the default one: " + FrontController.HOMEPAGE
+            );
+        } else {
+            console.log("[FrontController] using the given ViewModel " + viewModelName);
+        }
 
         Object.defineProperty(this, "test", {
             value: "testVal",
@@ -51,16 +61,19 @@ export default class FrontController {
 
         console.log(viewModel);
 
-        //if the VM has the requested action, run it
-        if (typeof viewModel[this.action] !== "function") {
-            this.action = FrontController.DEFAULT_ACTION;
-            console.warn(
-                FrontController.DEBUG_PREFIX + "invalid action. running the default action for this viewmodel"
-            );
-        }
+        await viewModel.onLoad();
 
-        await viewModel[this.action]();
-        await viewModel.ready();
+        if (!this.onlyViewModel) {
+            //if the VM has the requested action, run it
+            if (typeof viewModel[this.action] !== "function") {
+                this.action = FrontController.DEFAULT_ACTION;
+                console.warn(
+                    FrontController.DEBUG_PREFIX + "invalid action. running the default action for this viewmodel"
+                );
+            }
+            await viewModel[this.action]();
+            await viewModel.ready();
+        }
     }
 
     async _loadViewModel() {

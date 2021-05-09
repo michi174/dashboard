@@ -5,7 +5,6 @@ import App from "../../js/app.js";
 export default class Benchmark extends ViewModel {
     constructor(params) {
         super(params);
-        this.app.setTitle("Benchmark");
         this.id = this.params.__param[0];
     }
 
@@ -19,7 +18,7 @@ export default class Benchmark extends ViewModel {
                 let userdata = await helper.getUserDataById(ctx.createUserId);
                 ctx.fullname = userdata.firstname + " " + userdata.lastname;
             } catch (e) {
-                this.app.navigation.router.navigate("404");
+                //this.app.navigation.router.navigate("404");
                 console.error(e);
                 console.log(ctx);
             }
@@ -27,6 +26,10 @@ export default class Benchmark extends ViewModel {
 
         this.view.setDataContext(ctx);
         console.log("[Benchmark VM] yes, we loaded the default action");
+    }
+
+    async onLoad() {
+        this.app.setTitle("Benchmark");
     }
 }
 

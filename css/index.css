@@ -21,10 +21,9 @@
     text-align: center;
 }
 
-.appbar-title {
-    position: absolute;
-    padding: 0.5rem;
-}
+
+
+
 
 #main-nav {
     width: 100%;
@@ -38,6 +37,7 @@
     color: #fff;
     z-index: 400;
 }
+
 #main-nav.dark {
     background-color: var(--nav-color);
     box-shadow: 0 1px 8px rgba(0, 0, 0, 0.45);
@@ -46,6 +46,21 @@
 #main-nav:first-child {
     padding-left: 0;
     padding-right: 0;
+}
+
+.appbar-title {
+    position: absolute;
+    padding: 0.5rem;
+}
+
+.appbar-left-btns, .appbar-right-btns{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#main-nav-search-box::placeholder{
+    color:red !important;
 }
 
 #bot-navigation-wr {
@@ -362,7 +377,7 @@
     font-family: Montserrat;
     box-sizing: border-box;
     font-size: 16px;
-    font-weight: bold;
+    font-weight: 100;
     background-color: rgba(0, 0, 0, 0);
     display: flex;
     text-decoration: none;
@@ -370,10 +385,16 @@
     outline: none;
 }
 
+
+
 .input input {
     width: 100%;
     margin-left: 2px;
     height: 100%;
+}
+
+.input input::placeholder{
+    color:white;
 }
 
 .input .select {
@@ -648,6 +669,7 @@ ul.list {
     padding-bottom: 2rem;
     padding-left: 1.25rem;
     padding-right: 1.25rem;
+    border-radius: 0%;
 }
 .no-touch .clickable-icon:hover {
     background-color: var(--trasparent-light-bg-extra-light);

@@ -203,10 +203,6 @@ body::-webkit-scrollbar {
     flex-grow: 1 !important;
 }
 
-.clickable-icon {
-    padding: 0.5rem;
-}
-
 .tiny {
     font-size: 8px;
 }

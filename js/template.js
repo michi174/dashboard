@@ -190,8 +190,6 @@ export default class Template {
     }
 
     _loadFile() {
-        console.log("[TEMPLATE] Loading file: " + this.file);
-
         return Template.loadFile(this.path, this.file);
     }
 
@@ -205,7 +203,7 @@ export default class Template {
             error: function (e) {
                 console.error("Error loading file: " + "" + path + "/" + file + extension);
                 throw new Error(e);
-            },
+            }
         });
     }
 }

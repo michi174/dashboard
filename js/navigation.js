@@ -1,8 +1,10 @@
+import AppBarButton from "./appbar/appbarbutton.js";
+
 class Navigation {
     constructor(debug = false, disableTransition = false) {
-        this._debug("-------------------");
-        this._debug("Navigation");
-        this._debug("-------------------");
+        console.log("-------------------");
+        console.log("Navigation");
+        console.log("-------------------");
         var self = this;
 
         this.debug = debug;
@@ -18,11 +20,23 @@ class Navigation {
         this.views = new Array();
         this.insert = false;
         this.disableTransition = disableTransition;
+        this.viewReplacedWithCache = false;
+
+        this.backBtn = new AppBarButton("back-icon", "#appbar-button-template", {
+            icon: "far fa-chevron-left",
+            position: "left",
+            order: 0
+        });
 
         $(window).on("canRenderView", function () {
-            self._debug("Navigation: start rendering");
+            if (self.viewReplacedWithCache) {
+                self._debug("[Navigation] running viewModel's onLoad(), cached view found - no rendering needed.");
+            } else {
+                self._debug("[Navigation] start rendering, no cached view found");
+            }
+
             self.router.resume();
-            self.router.resolve(self.getCurrentUrl());
+            self.router.resolve();
             self.router.pause();
         });
 
@@ -31,19 +45,20 @@ class Navigation {
         });
 
         $(window).on("navigation.start", function () {
-            console.warn("navigation initiated");
+            console.warn("[Navigation]navigation initiated");
         });
 
         this._listenHashChange();
     }
 
     start() {
-        this._debug("Navigation: start() called");
-        this._debug("Navigation: URL:" + this.getCurrentUrl());
+        console.log("[Navigation] start() called");
+        console.log("[Navigation] URL:" + this.getCurrentUrl());
         this.forceTransition("none");
 
         if (this.getCurrentUrl() === "") {
-            this._debug("Navigation: No location set");
+            console.log("[Navigation] No location set");
+            this._addHistoryElement("");
             this._triggerCanRenderView();
             //$(window).trigger("hashchange");
         } else {
@@ -52,6 +67,10 @@ class Navigation {
             this.navigate(this.getCurrentUrl());
             $(window).trigger("hashchange");
         }
+    }
+
+    getHistoryDepth() {
+        return this.navHistory.length;
     }
 
     navigate(
@@ -75,16 +94,38 @@ class Navigation {
         } else {
             $(window).trigger("navigation.start");
 
-            this._debug("Navigation: navigation.start");
-            this._debug("Navigation: target URL is: " + url);
-            this._debug("Navigation: caller is: " + caller);
+            console.log("[Navigation] navigation.start");
+            console.log("[Navigation] target URL is: " + url);
+            console.log("[Navigation] caller is: " + caller);
 
             if (direction === "none") {
-                this._debug("Navigation: requesting direction");
+                console.log("[Navigation] requesting direction");
                 direction = this._getNavDirection();
             }
 
-            this._debug("Navigation: direction is: " + direction);
+            console.log("[Navigation] direction is: " + direction);
+
+            if (direction !== "back") {
+                if (this.navHistory.length > 0) {
+                    console.log(
+                        `[Navigation] here we have to save the current view content for ${
+                            this.router.lastRouteResolved().url
+                        }`
+                    );
+                    console.log($(this.mainView).html());
+                    console.log(
+                        `[Navigation] updating viewcache for ${this.navHistory[this.navHistory.length - 1].url}`
+                    );
+                    this.navHistory[this.navHistory.length - 1].view = $(this.mainView).html();
+                } else {
+                    console.log(`[Navigation] We don't have a navHistory yet `);
+                }
+            } else {
+                console.log(`[Navigation] We don't need to update viewcache, because we are navigating back`);
+            }
+
+            console.log(`[Navigation] Current navHistroy: `);
+            console.log(this.navHistory);
 
             if (direction !== "back") {
                 self._clearContent(self.subView);
@@ -111,13 +152,13 @@ class Navigation {
                         break;
                     default:
                         hasTransition = false;
-                        this._debug("no transition found");
+                        console.log("no transition found");
                         break;
                 }
             }
 
             if (hasTransition) {
-                this._debug("navigation has a transition: " + transition);
+                console.log("navigation has a transition: " + transition);
 
                 $(this.subView).css("overflow", "hidden");
                 $(this.mainView).css("overflow", "hidden");
@@ -167,26 +208,33 @@ class Navigation {
             }
 
             if (!loadContent) {
-                self._debug("Navigation: using cached view");
+                console.log("[Navigation] using cached view");
             }
 
             self._unsetForcedTransition();
 
-            this._addHistoryElement(url);
+            if (direction !== "back") {
+                this._addHistoryElement(url);
+            }
 
             if (direction === "back") {
                 this._destroyHistoryElement(this._findHistoryElement(this.getCurrentUrl()), true);
                 this._addHistoryElement(url);
             }
 
-            this._debug("Navigation: Historylength is: " + this.getFullHistory().length);
+            console.log("[Navigation] Historylength is: " + this.getFullHistory().length);
             this._triggerNavigationDone();
-            this._debug("-------------------");
+            console.log("-------------------");
         }
     }
 
     _clearContent(view) {
         $(view).empty();
+    }
+
+    _setCachedView(state) {
+        console.log("[Navigation] cachedView set to " + state);
+        this.viewReplacedWithCache = state;
     }
 
     _getNavDirection() {
@@ -200,7 +248,7 @@ class Navigation {
             navDirection = "forward";
         } else {
             if (this.getFullHistory().length > 1) {
-                this._debug(this.getFullHistory());
+                console.log(this.getFullHistory());
 
                 navDirection = "forward";
 
@@ -233,8 +281,8 @@ class Navigation {
         //if (url !== "" && typeof element === "object") {
         //    element.scrollPosition.top = $(window).scrollTop();
         //    element.scrollPosition.left = $(window).scrollLeft();
-        //    this._debug("Navigation: ScrollPosition saved");
-        //    this._debug(element);
+        //    console.log("[Navigation] ScrollPosition saved");
+        //    console.log(element);
         //}
     }
 
@@ -254,12 +302,13 @@ class Navigation {
         let element = this._findHistoryElement(url);
 
         if (typeof element === "object") {
-            this._updateHistoryElementView(element);
+            //this._updateHistoryElementView(element);
         }
     }
 
     clearHistory() {
         this.navHistory = new Array();
+        this._onHistoryUpdated();
     }
 
     _debug(message) {
@@ -275,39 +324,53 @@ class Navigation {
     _replaceInactiveView(direction) {
         let dbg_msg = "";
 
+        //setTimeout(() => {}, 100);
+
         if (direction === "back") {
-            if (this.navHistory.length > 1) {
-                let el = this.navHistory[this.navHistory.length - 2];
+            if (this.navHistory.length > 2) {
+                let el = this.navHistory[this.navHistory.length - 3];
+                console.log(
+                    `[Navigation] we need to replace the content of the inactive view with the content of ${el.url}`
+                );
+
+                console.log(`[Navigation] our history length is ${this.navHistory.length}`);
+
                 let content = el.view;
 
-                if (content !== "") {
-                    $(this.subView).html(content);
-                    //$(this.subView).scrollTop($(this.subView).attr("data-scroll"));
-                    this._debug("Navigation: we've replaced the last view");
+                //console.log(el.view);
 
-                    return true; //TODO: return false, for using cached view. But fix the AppBar Bug first.
-                } else {
-                    return true;
-                }
+                $(this.subView).html(content);
+                //$(this.subView).scrollTop($(this.subView).attr("data-scroll"));
+                console.log("[Navigation] we've replaced the last view");
+
+                //TODO: return true, for using cached view.
+                //But we need to fix the bug caching the wrong view for the history elements first.
+                //We should chase a view right before we change it, so we don't distract the user
+                //with wrong scroll positions if he decides to navigate backwards.
+                this._setCachedView(true);
+
+                return true;
             } else {
-                this._debug("no view available");
+                console.log("no view available");
+                //this._setCachedView(false);
                 return true;
             }
         } else {
-            this._debug("Navigation: direction in _replaceInactiveView is: " + direction);
+            this._setCachedView(false);
+            console.log("[Navigation] direction in _replaceInactiveView is: " + direction);
             return true;
         }
     }
 
     _triggerNavigationDone() {
-        this._debug("Navigation: navigation.done");
+        console.log("[Navigation] navigation.done");
         $(window).trigger("navigation.done");
     }
 
     _triggerCanRenderView() {
         self = this;
 
-        self._debug("Navigation: can_render_view");
+        console.log("[Navigation] can_render_view");
         setTimeout(function () {
             $(self.subView).css("overflow", "scroll");
             $(self.mainView).css("overflow", "scroll");
@@ -328,7 +391,7 @@ class Navigation {
     _listenHashChange() {
         let self = this;
 
-        self._debug("Navigation: eventlistener (hashchange) enabled");
+        self._debug("[Navigation] eventlistener (hashchange) enabled");
         console.log(window.location);
         $(window).on("hashchange", function (event) {
             event.preventDefault();
@@ -342,39 +405,57 @@ class Navigation {
     }
 
     _unlistenHashChange() {
-        this._debug("Navigation: Eventlistener off");
+        console.log("[Navigation] Eventlistener off");
         $(window).off("hashchange");
+    }
+
+    _onHistoryUpdated() {
+        //console.error(typeof this.app.appBar === "object");
+        //return 0;
+        if (typeof app.appBar === "object") {
+            if (this.getHistoryDepth() > 1) {
+                app.appBar.addButton(this.backBtn);
+                //console.error("Navigation add button");
+                //console.log("history length: " + this.getHistoryDepth());
+                //console.log(app);
+            } else {
+                app.appBar.removeButton(this.backBtn);
+                //console.error("Navigation Remove button");
+            }
+        }
     }
 
     _addHistoryElement(url) {
         let element = new Object();
         element.url = url;
-        element.view = null;
+        element.view = "";
         element.scrollPosition = new Object();
         element.scrollPosition.top = $(window).scrollTop();
         element.scrollPosition.left = $(window).scrollLeft();
         element.transition = this.transition;
 
-        this._updateHistoryElementView(element, $(this.mainView).html());
+        //this._updateHistoryElementView(element, $(this.mainView).html());
 
         this.navHistory.push(element);
-        this._debug("Navigation: Historyelement added: " + element.url);
+        console.log("[Navigation] Historyelement added: " + element.url);
+        this._onHistoryUpdated();
     }
 
-    _updateHistoryElementView(element, nonsense = null) {
+    async _updateHistoryElementView(element, nonsense = null) {
+        return;
         let view = null;
-        this._debug("Navigation: element.view has been updated");
 
-        console.warn("updated Element");
-
+        console.log(`[Navigation] element.view of ${element.url} is updating`);
         setTimeout(() => {
             view = $(".main-view.active").html();
 
             element.view = view;
             this.transition = element.transition;
-            this._debug(element);
-            this._debug(this.navHistory);
+            console.log(element);
+            console.log(this.navHistory);
         }, 50);
+
+        console.log(`[Navigation] element.view of ${element.url} has been updated`);
     }
 
     _destroyHistoryElement(historyElement, allAfterElement = false, reverse = false) {
@@ -396,10 +477,11 @@ class Navigation {
                 deleteCount = this.navHistory.length - index;
             }
 
-            this._debug("Navigation: Historyelement deleted: " + this.navHistory[index].url);
-            this._debug("Navigation: deleting: " + deleteCount + " elements");
+            console.log("[Navigation] Historyelement deleted: " + this.navHistory[index].url);
+            console.log("[Navigation] deleting: " + deleteCount + " elements");
             this.navHistory.splice(index, deleteCount);
         }
+        this._onHistoryUpdated();
     }
 
     _findHistoryElement(url, reverse = true) {
@@ -416,10 +498,10 @@ class Navigation {
         }
 
         if (index >= 0) {
-            this._debug("Navigation: Historyelement " + this.navHistory[index].url + " found index: " + index);
+            console.log("[Navigation] Historyelement " + this.navHistory[index].url + " found index: " + index);
             return this.navHistory[index];
         } else {
-            this._debug("ERROR: Navigation: Historyelement " + url + " not found!");
+            console.log("ERROR: [Navigation] Historyelement " + url + " not found!");
             return false;
         }
     }
@@ -429,8 +511,17 @@ class Navigation {
         if (!this.useHashNavigation) {
             url = url.substring(1);
         }
-        let view = url.split("/")[0];
-        return view;
+
+        let view = url.split("/");
+        let res;
+
+        res = view.filter(item => item !== "");
+
+        if (res.length > 0) {
+            return res[0];
+        } else {
+            return "";
+        }
     }
 
     getAction() {
@@ -445,12 +536,14 @@ class Navigation {
 
     getParams() {
         let url = this.router.lastRouteResolved().url;
+
         if (!this.useHashNavigation) {
             url = url.substring(1);
         }
         let urlParamsArray = url.split("/");
+        urlParamsArray = urlParamsArray.filter(item => item !== "");
+
         urlParamsArray.shift();
-        //console.log(urlParamsArray);
 
         let query = this.getQuery();
 
@@ -468,12 +561,14 @@ class Navigation {
 
         if (queryParamsArray.length > 0) {
             queryParamsArray.forEach(function (value) {
-                if (value.split("=").length > 1) {
-                    let prop = value.split("=")[0];
-                    let val = value.split("=")[1];
-                    queryParamsObject[prop] = val;
-                } else {
-                    queryParamsObject.__param.push(value.split("=")[0]);
+                if (value !== "") {
+                    if (value.split("=").length > 1) {
+                        let prop = value.split("=")[0];
+                        let val = value.split("=")[1];
+                        queryParamsObject[prop] = val;
+                    } else {
+                        queryParamsObject.__param.push(value.split("=")[0]);
+                    }
                 }
             });
         }

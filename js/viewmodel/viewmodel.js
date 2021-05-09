@@ -28,6 +28,10 @@ export default class ViewModel {
         throw new Error("Can't call an abstract method. Overriding is required.");
     }
 
+    async onLoad() {
+        throw new Error("Can't call an abstract method. Overriding is required.");
+    }
+
     /**
      * Creates a view for the ViewModel.
      */

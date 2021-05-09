@@ -28,6 +28,8 @@ const viewModelFolder = "viewmodel";
 const navigation = app.navigation;
 const ui = new UIManager();
 
+window.app = app;
+
 app.apiHost = devHost;
 
 const ro = new ResizeObserver(entries => {
@@ -114,7 +116,7 @@ function startApp() {
         let params = navigation.getParams();
         let action = navigation.getAction();
 
-        new FrontController(viewName, action, params);
+        new FrontController(viewName, action, app.navigation.viewReplacedWithCache, params);
 
         //titleBar.reset();
         //titleBar.addButton(searchBtn);
@@ -349,7 +351,7 @@ Handlebars.registerHelper("LoadTemplate", function (template, params, customFold
     let path = "../" + viewModelFolder + _customFolder + "/" + template + ".js";
     //console.log("/" + customFolder);
 
-    console.log(path);
+    //console.log(path);
 
     if (typeof template !== "undefined") {
         import(path)

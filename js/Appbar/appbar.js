@@ -18,10 +18,10 @@ export default class AppBar {
     }
 
     async addButton(appBarButton) {
-        let index = this.leftButtons.findIndex((button) => button.id === appBarButton.id);
+        let index = this.leftButtons.findIndex(button => button.id === appBarButton.id);
 
         if (index === -1) {
-            index = this.rightButtons.findIndex((button) => button.id === appBarButton.id);
+            index = this.rightButtons.findIndex(button => button.id === appBarButton.id);
         }
 
         if (index < 0) {
@@ -58,7 +58,30 @@ export default class AppBar {
                 }
             });
             //console.log("[APPBAR] addButton");
-            this.render(true);
+
+            $(".appbar-" + button.position + "-btns").html("");
+
+            if (button.position === "left") {
+                for (let btn of this.leftButtons) {
+                    console.log(btn.id);
+                }
+            }
+
+            if (button.position === "right") {
+                for (let btn of this.rightButtons) {
+                    console.log(btn.id);
+                    $(".appbar-" + button.position + "-btns").prepend(btn.button);
+                }
+            }
+
+            if (button.position === "left") {
+                for (let btn of this.leftButtons) {
+                    console.log(btn.id);
+                    $(".appbar-" + button.position + "-btns").prepend(btn.button);
+                }
+            }
+
+            //this.render(true);
         }
     }
 
@@ -66,15 +89,16 @@ export default class AppBar {
         let index;
 
         if (btn.position === "left") {
-            index = this.leftButtons.findIndex((button) => button.id === btn.id);
+            index = this.leftButtons.findIndex(button => button.id === btn.id);
             this.leftButtons.splice(index, 1);
         } else {
-            index = this.rightButtons.findIndex((button) => button.id === btn.id);
+            index = this.rightButtons.findIndex(button => button.id === btn.id);
             this.rightButtons.splice(index, 1);
         }
+        console.log("[APPBAR] .appbar-" + btn.position + "-btns #" + btn.id);
+        $(".appbar-" + btn.position + "-btns #" + btn.id).remove();
 
-        //console.log("[APPBAR] removeButton");
-        this.render(true);
+        //this.render(true);
     }
 
     replaceButton(BtnToReplace, newBtn) {
@@ -94,7 +118,9 @@ export default class AppBar {
 
     setTitle(title) {
         this.title = title;
-        this.render(true);
+        let barTitle = $("[guid='" + this.guid + "'] > .appbar-title >.appbar-title-text");
+        barTitle.html(title);
+        //bar.this.render(true);
     }
 
     remove() {}
@@ -149,10 +175,10 @@ export default class AppBar {
                     data: {
                         title: this.title,
                         leftButtons: this.leftButtons,
-                        rightButtons: this.rightButtons,
+                        rightButtons: this.rightButtons
                     },
                     target: "body",
-                    method: "prepend",
+                    method: "prepend"
                 },
                 true
             );
@@ -174,14 +200,16 @@ export default class AppBar {
         }
     }
 
-    setTheme() {
-        // console.log("[APPBAR] setting theme for appbar guid: " + this.guid);
+    setTheme(theme = this.theme) {
+        //console.log("[APPBAR] setting theme " + theme + " for appbar guid: " + this.guid);
 
-        let elem = $("[guid='" + this.guid + "']");
-        elem.addClass(this.theme);
+        let bar = $("[guid='" + this.guid + "']");
+        bar.removeClass(this.theme);
+        this.theme = theme;
+        bar.addClass(theme);
     }
 
     addTheme(theme) {
-        this.theme = theme;
+        this.setTheme(theme);
     }
 }

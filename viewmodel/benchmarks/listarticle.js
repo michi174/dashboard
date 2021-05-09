@@ -20,7 +20,6 @@ export class listarticle {
     async getContext() {
         let rndTime = (Math.random() * Math.floor(1000)).toFixed(0);
         rndTime = 0; // <--------- comment it if we need to test a rnd server loadtime!
-        console.log(rndTime);
         let self = this;
         return new Promise(async function (resolve, reject) {
             setTimeout(async function () {

@@ -10,12 +10,13 @@ export default class Benchmarks extends ViewModel {
     async default() {
         let helper = new Helpers();
         let ctx = await helper.getJson("http://blogapi.localhost/v1/cms/entry/entrylist/");
-        console.error(ctx);
         this.view.setDataContext({ entries: ctx });
         console.log("[Benchmarks VM] yes, we loaded the default action");
     }
 
     async detail() {}
+
+    async onLoad() {}
 }
 
 export { Benchmarks };

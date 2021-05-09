@@ -29,7 +29,7 @@ export default class App {
 
     init() {
         this.appBar.reset();
-        this.appBar.addTheme("dark");
+        this.appBar.setTheme("dark");
         this.appBar.setTitle("Dashboards");
         this.createButtons();
         this.navigation = new Navigation(true, true);
@@ -46,11 +46,7 @@ export default class App {
             position: "right",
             order: 0
         });
-        let backBtn = new AppBarButton("back-icon", "#appbar-button-template", {
-            icon: "far fa-chevron-left",
-            position: "left",
-            order: 0
-        });
+
         let devModeBtn = new AppBarButton("devmode-icon", "#appbar-button-template", {
             icon: "far fa-file-code",
             position: "left",

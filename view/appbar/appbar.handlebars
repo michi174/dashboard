@@ -1,15 +1,18 @@
 <div id="main-nav" class="row" guid="{{guid}}">
     <!-- Left Icons -->
-    {{#each leftButtons}}
-    {{{button}}}
-    {{/each}}
+    <div class="appbar-left-btns">
+        {{#each leftButtons}}
+        {{{button}}}
+        {{/each}}
+    </div>
+
     <div class="col">&nbsp;</div>
     <!-- Title Text-->
     <div class="appbar-title">
-        <span id="title-text" class="bold">{{title}}</span>
+        <span class="appbar-title-text bold">{{title}}</span>
     </div>
     <!-- Right Icons -->
-    {{#each rightButtons}}
-    {{{button}}}
-    {{/each}}
+    <div class="appbar-right-btns">
+        {{#each rightButtons}} {{{button}}} {{/each}}
+    </div>
 </div>
