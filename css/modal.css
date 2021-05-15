@@ -42,14 +42,3 @@
     margin-top: 2rem;
 }
 
-.ms-modal-close-btn {
-    position: absolute;
-    top: 0.75rem;
-    right: 1rem;
-    color: #929292;
-}
-
-.ms-modal-close-btn:hover {
-    color: var(--accent-color);
-    cursor: pointer;
-}

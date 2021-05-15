@@ -4,6 +4,12 @@ import UIManager from "../uimanager.js";
 export default class Tooltip extends UIElement {
     constructor(options) {
         options.template = "tooltip.handlebars";
+        if (options.ownXPosition === "") {
+            options.ownXPosition = "center";
+        }
+        if (options.openPositionRelativeToCaller === "") {
+            options.openPositionRelativeToCaller = "center";
+        }
         super(options);
     }
 }

@@ -204,6 +204,7 @@
     }
     .page {
         margin-top: 2rem;
+        margin-bottom: 2rem;
         border-radius: 1rem;
         padding: 2rem !important;
     }

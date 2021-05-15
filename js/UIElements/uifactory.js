@@ -15,6 +15,8 @@ export default class UIFactory {
         this.align = null;
         this.keepInViewPortY = false;
         this.keepInViewPortX = false;
+        this.ownXPosition = "left";
+        this.openIndicator = false;
 
         this.options = options;
 
@@ -44,7 +46,7 @@ export default class UIFactory {
                     element = new Component[self.type]({
                         data: {
                             template: self.template,
-                            content: self.content,
+                            content: self.content
                         },
                         caller: self.caller,
                         type: self.type,
@@ -57,6 +59,8 @@ export default class UIFactory {
                         align: self.align,
                         keepInViewPortY: self.keepInViewPortY,
                         keepInViewPortX: self.keepInViewPortX,
+                        ownXPosition: self.ownXPosition,
+                        openIndicator: self.openIndicator
                     });
                 } else {
                     console.log(
@@ -64,6 +68,7 @@ export default class UIFactory {
                     );
                     console.log(Component);
                 }
+                console.log(Component);
             });
 
             mod.catch(function (err) {

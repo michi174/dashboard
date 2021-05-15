@@ -4,9 +4,11 @@
             <div class="heading2 xx-large">{{title}}</div>
             <div>{{subtitle}}</div><br>
             <div class="small"><span ms-uielement ms-uielement-type="Tooltip" ms-uielement-content="{{createDateTime}}"
-                    ms-uielement-trigger="click" ms-uielement-sticky="false" ms-uielement-position="left"
-                    ms-uielement-animation="slide" ms-uielement-open-direction="top">{{dateToMoment
-                    createDateTime}}</span> by {{fullname}}</div><br>
+                    ms-uielement-trigger="click" ms-uielement-sticky="false" ms-uielement-position="botcenter"
+                    ms-uielement-open-direction="y" ms-uielement-own-x-pos="center" ms-uielement-open-indicator="true">{{dateToMoment
+                    createDateTime}}</span> <span ms-uielement ms-uielement-type="Tooltip" ms-uielement-content="{{createDateTime}}"
+                    ms-uielement-trigger="click" ms-uielement-sticky="false" ms-uielement-position="topcenter"
+                    ms-uielement-open-direction="up" ms-uielement-own-x-pos="center" ms-uielement-open-indicator="true">{{createDateTime}}</span> by {{fullname}}</div><br>
             <img src=" media/cms/images/{{headerimage}}" style="width: 100%; margin-bottom:2rem; border-radius:4px">
             <p style="white-space: pre-line;">{{content}}</p>
         </div>

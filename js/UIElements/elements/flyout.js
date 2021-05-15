@@ -21,7 +21,6 @@ export default class FlyOut extends UIElement {
         let deleteElements = el.get().reverse();
 
         for (let i = 0; i < deleteElements.length; i++) {
-            console.log();
             let uid = $($(deleteElements[i])).attr("id");
             uim.remove(uid);
         }
@@ -29,8 +28,9 @@ export default class FlyOut extends UIElement {
 })();
 
 (function closeAll() {
+    console.log("closing all");
     $(window).on("click", function (event) {
-        if (!$(event.target).closest(".ms-ui-element.isOpen").length) {
+        if (!$(event.target).closest(".ms-flyout.isOpen").length) {
             let elements = $(".ms-flyout.isOpen");
             let uim = new UIManager();
 

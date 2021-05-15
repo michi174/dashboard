@@ -10,10 +10,11 @@ export default class Modal extends UIElement {
     }
 }
 
-(function closeModal() {
-    $("body").on("click", ".ms-modal-close-btn", function () {
+(function close() {
+    $("body").on("click", ".ms-ui-close-btn", function () {
         let uid = $(this).attr("ms-ui-referer");
         new UIManager().remove(uid);
     });
 })();
+
 export { Modal };

@@ -46,7 +46,7 @@ export default class UIManager {
 
     find(uid) {
         if (this.elements.length > 0) {
-            let index = this.elements.findIndex((element) => element.id === uid);
+            let index = this.elements.findIndex(element => element.id === uid);
             return index;
         } else {
             return -1;
@@ -92,6 +92,8 @@ export default class UIManager {
                 align: $(this).attr("ms-ui-element-align") || "",
                 keepInViewPortX: $(this).attr("ms-uielement-keepinviewport-x") || false,
                 keepInViewPortY: $(this).attr("ms-uielement-keepinviewport-y") || false,
+                ownXPosition: $(this).attr("ms-uielement-own-x-pos") || "",
+                openIndicator: $(this).attr("ms-uielement-open-indicator") || false
             };
 
             new UIFactory(options);
