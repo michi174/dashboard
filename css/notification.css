@@ -21,25 +21,29 @@
     z-index: 1000;
     max-width: 80%;
     min-width: 100px;
-    border-top-left-radius: 1rem;
-    border-top-right-radius: 1rem;
-    border-bottom-left-radius: 1rem;
-    border-bottom-right-radius: 1rem;
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+    border-bottom-left-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
     overflow: hidden;
     padding: 1rem;
-    box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.45);
+    padding-top: 2rem;
+    padding-bottom: 2rem;
     background-color: var(--main-color-transparent);
+    -webkit-backdrop-filter: var(--strong-blur);
     backdrop-filter: var(--strong-blur);
     overscroll-behavior: contain;
     margin: auto;
     margin-bottom: 6rem;
     opacity: 0;
     color: var(--text-color);
+    max-height: 160px;
+    overflow-y: auto;
 }
 @media screen and (min-width: 768px) {
     .ms-notification {
         margin-bottom: 1rem;
-        max-width: 584px;
+        max-width: 708px;
     }
 }
 

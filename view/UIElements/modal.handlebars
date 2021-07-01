@@ -1,10 +1,11 @@
+<!--<div class="ms-modal-wrapper"></div>-->
 <div class="ms-modal-wrapper" id="{{id}}">
-    <div class="ms-modal">
-        <div class="ms-modal-content">
+    <div class="ms-modal shadow">
+        <div class="ms-modal-content scrollbar">
             {{#if content}}
-            {{content}}
+                {{content}}
             {{else}}
-            {{LoadTemplate template "param"}}
+                {{LoadTemplate template "param"}}
             {{/if}}
         </div>
         <div class="ms-ui-close-btn" ms-ui-referer="{{id}}"><i class="far fa-times extra-large"></i></div>

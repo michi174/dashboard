@@ -402,7 +402,7 @@ export default class UIElement {
                 break;
             case "down":
                 newElemX = newElemX - xOffset;
-                startY = "bot";
+                startY = "top";
                 //console.log("Opening down");
                 if (elementEndX > clientWidth) {
                     getNewElemPosX(this);
@@ -678,6 +678,23 @@ export default class UIElement {
 
         UIElement.css(startY, newElemY + "px");
         UIElement.css(startX, newElemX + "px");
+
+        if (self.openIndicator == "true") {
+            switch (self.actualPosition) {
+                case "top":
+                    UIElement.css("margin-bottom", "6px");
+                    break;
+                case "bottom":
+                    UIElement.css("margin-top", "6px");
+                    break;
+                case "left":
+                    UIElement.css("margin-right", "6px");
+                    break;
+                case "right":
+                    UIElement.css("margin-left", "6px");
+                    break;
+            }
+        }
     }
 }
 

@@ -9,7 +9,7 @@
     --accent-color-ultra-light: hsla(345, 100%, 65%, 0.6);
     --accent-color-dark: hsl(345, 100%, 55%);
     --text-color: #f4f6f7;
-    --main-text-color: #444;
+    --main-text-color: #6c757d;
     --text-color-dark: #666;
     --trasparent-bg: hsla(0, 0%, 0%, 0.5);
     --trasparent-bg-light: hsla(0, 0%, 0%, 0.25);
@@ -22,16 +22,16 @@
     --light-bg-color: #fff;
     --light-highlight: rgba(210, 210, 210, 1);
     --very-light-highlight: rgba(240, 240, 240, 1);
-    --main-bg-color: #eee;
+    --main-bg-color: #F2F3F7;
     --strong-blur: blur(12px);
     --very-light-blur: blur(3px);
     --nav-color: hsl(213, 25%, 16%);
+    --shadow-color: rgba(0, 0, 0, 0.2);
 }
 
 :root.dark {
     --main-bg-color: #111;
     --background-color: #222;
-
     --main-color: hsl(213, 25%, 16%);
     --main-color-transparent: hsla(213, 25%, 16%, 0.85);
     --main-color-light: hsl(213, 31%, 55%);
@@ -54,8 +54,8 @@
     --light-bg-color: #fff;
     --light-highlight: rgba(210, 210, 210, 1);
     --very-light-highlight: rgba(240, 240, 240, 1);
-
     --strong-blur: blur(12px);
     --very-light-blur: blur(3px);
     --nav-color: hsl(0deg 0% 8%);
+    --shadow-color: rgba(0, 0, 0, 0.2);
 }

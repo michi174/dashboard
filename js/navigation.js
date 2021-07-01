@@ -23,7 +23,7 @@ class Navigation {
         this.viewReplacedWithCache = false;
 
         this.backBtn = new AppBarButton("back-icon", "#appbar-button-template", {
-            icon: "far fa-chevron-left",
+            icon: "fad fa-chevron-left",
             position: "left",
             order: 0
         });
@@ -112,7 +112,7 @@ class Navigation {
                             this.router.lastRouteResolved().url
                         }`
                     );
-                    console.log($(this.mainView).html());
+                    //console.log($(this.mainView).html());
                     console.log(
                         `[Navigation] updating viewcache for ${this.navHistory[this.navHistory.length - 1].url}`
                     );

@@ -66,23 +66,24 @@
         </div>
         <div id="bot-navigation-wr">
             <a id="bot-nav-home" href="#" class="tab text-center active"
-                ><i class="fas fa-home"></i>
-                <div class="small margin-t-8">Home</div>
+                ><i class="fad fa-home-alt"></i>
+                <div class="small w-600 margin-t-8">Home</div>
             </a>
             <a
                 href="javascript:void(0)"
                 class="tab text-center"
                 ms-uielement
                 ms-uielement-type="FlyOut"
-                ms-uielement-content="Simpletext..."
-                ms-uielement-tpl="defaultFlyout"
                 ms-uielement-trigger="click"
-                ms-uielement-sticky="false"
-                ms-uielement-position="right"
-                ms-uielement-animation="slide"
+                ms-uielement-animation="fadeUp"
+                ms-uielement-tpl="testviewmodel"
+                ms-uielement-content=""
+                ms-uielement-position="righttop"
+                ms-uielement-open-direction="right"
+                ms-uielement-own-x-pos="left"
                 ><div>
-                    <i class="fas fa-newspaper"></i>
-                    <div class="small margin-t-8">Blog</div>
+                    <i class="fad fa-newspaper"></i>
+                    <div class="small w-600 margin-t-8">Blog</div>
                 </div>
             </a>
             <a
@@ -95,28 +96,20 @@
                 ms-uielement-trigger="click"
                 ms-uielement-sticky="false"
                 ><div>
-                    <i class="fab fa-leanpub"></i>
-                    <div class="small margin-t-8">Guides</div>
+                    <i class="fad fa-book-open"></i>
+                    <div class="small w-600 margin-t-8">Guides</div>
                 </div>
             </a>
             <a href="#benchmarks" class="tab text-center" data-navigo
                 ><div>
-                    <i class="fas fa-tachometer-fast"></i>
-                    <div class="small margin-t-8">Benchmarks</div>
+                    <i class="fad fa-tachometer-fast"></i>
+                    <div class="small w-600 margin-t-8">Benchmarks</div>
                 </div>
             </a>
-            <a
-                id="bot-nav-tests"
-                href="javascript:void(0)"
-                class="tab text-center"
-                ms-uielement
-                ms-uielement-type="Modal"
-                ms-uielement-tpl="defaultModal"
-                ms-uielement-trigger="click"
-                ms-uielement-sticky="false"
+            <a id="bot-nav-tests" href="#uitests" class="tab text-center"
                 ><div>
-                    <i class="fas fa-vial"></i>
-                    <div class="small margin-t-8">Tests</div>
+                    <i class="fad fa-flask"></i>
+                    <div class="small w-600 margin-t-8">Tests</div>
                 </div>
             </a>
 
@@ -136,8 +129,8 @@
                 ms-uielement-animation="slide"
                 ms-uielement-keepinviewport-y="true"
                 ><div>
-                    <i class="fas fa-cog"></i>
-                    <div class="small margin-t-8">Settings</div>
+                    <i class="fad fa-cog"></i>
+                    <div class="small w-600 margin-t-8">Settings</div>
                 </div>
             </a>
         </div>

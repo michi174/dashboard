@@ -24,8 +24,20 @@
     animation: fadeIn var(--nav-animation-duration);
 }
 
-[ms-uielement-open-indicator="true"]{
+.ms-ui-element.isOpen.fadeUp {
+    animation: fadeUp var(--nav-animation-duration);
+}
+
+.ms-ui-element.isOpen.shrinkIn {
+    animation: shrinkIn var(--nav-animation-duration);
+}
+
+[ms-uielement-open-indicator="true"] {
     position: relative;
+}
+
+.ms-ui-element {
+    will-change: contents, left, top, bottom, right, transform, opacity;
 }
 
 .ms-ui-close-btn {
@@ -109,5 +121,16 @@
     }
     to {
         opacity: 1;
+    }
+}
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(3%);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }

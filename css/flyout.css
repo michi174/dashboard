@@ -1,21 +1,23 @@
 .ms-flyout {
     position: absolute;
     z-index: 1000;
-    width: auto;
     height: auto;
     min-width: 20px;
     min-height: 20px;
-    border-top-left-radius: 1rem;
-    border-top-right-radius: 1rem;
-    border-bottom-left-radius: 1rem;
-    border-bottom-right-radius: 1rem;
+    max-width: 90%;
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+    border-bottom-left-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
     padding: 1rem;
-    box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.45);
     background-color: var(--trasparent-light-bg);
+    -webkit-backdrop-filter: var(--strong-blur);
     backdrop-filter: var(--strong-blur);
+
     overscroll-behavior: contain;
     opacity: 1;
     animation-timing-function: linear;
+    overflow-y: auto;
 }
 
 /* [ms-uielement-type="FlyOut"]::after {

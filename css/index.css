@@ -60,7 +60,7 @@
 }
 
 #main-nav-search-box::placeholder{
-    color:red !important;
+    color:var(--text-color) !important;
 }
 
 #bot-navigation-wr {
@@ -177,6 +177,7 @@
 
 .page {
     background-color: var(--background-color);
+    padding: 0.5rem;
 }
 
 @media screen and (min-width: 1024px) {
@@ -558,6 +559,10 @@
     /* box-shadow: 0 -2px 2px rgba(0,0,0,0.45); */
 }
 
+.w-600{
+    font-weight: 600;
+}
+
 .tab:not(.no-hover):active {
     background-color: var(--trasparent-light-bg-light) !important;
 }
@@ -822,4 +827,25 @@ backoverlay {
 
 .article-detail-view-wrapper{
     padding: 1rem;
+}
+
+.article-detail-img-container{
+    max-height: 450px;
+    margin: 0 auto;
+    margin-bottom:2rem; 
+    border-radius:4px;
+    overflow: hidden;
+    width: 97%;
+
+    
+}
+
+.article-detail-content img{
+    border-radius:4px;
+    width: 85%;
+    box-sizing: border-box;
+    display: block;
+    margin: 0 auto;
+    margin: 1rem auto 1rem auto;
+
 }

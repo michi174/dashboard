@@ -5,6 +5,13 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Launch in Edge",
+            "request": "launch",
+            "type": "pwa-msedge",
+            "url": "http://dashboard.localhost",
+            "webRoot": "${workspaceFolder}"
+        },
+        {
             "name": "Attach to Chrome",
             "port": 9222,
             "request": "attach",
@@ -24,13 +31,6 @@
             "request": "launch",
             "name": "Localhost (Edge)",
             "url": "http://dashboard.localhost",
-            "webRoot": "${workspaceFolder}"
-        },
-        {
-            "type": "edge",
-            "request": "launch",
-            "name": "Liveserver (Edge)",
-            "url": "http://127.0.0.1:5500",
             "webRoot": "${workspaceFolder}"
         }
     ]

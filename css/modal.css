@@ -13,32 +13,34 @@
 }
 
 .ms-modal {
+    position: relative;
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+    border-bottom-left-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
     max-width: 80%;
     min-width: 100px;
-    min-height: 60px;
-    border-top-left-radius: 1rem;
-    border-top-right-radius: 1rem;
-    border-bottom-left-radius: 1rem;
-    border-bottom-right-radius: 1rem;
-    overflow: hidden;
     padding: 1rem;
-    box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.45);
-    background-color: var(--trasparent-light-bg) !important;
-    backdrop-filter: var(--strong-blur);
+    background-color: var(--background-color);
     overscroll-behavior: contain;
-    opacity: 0;
+    z-index: 1001;
+    -webkit-font-smoothing: antialiased !important;
 }
+
 @media screen and (min-width: 768px) {
     .ms-modal {
-        max-width: 584px;
+        max-width: 682px;
     }
 }
 
 .ms-modal-wrapper.isOpen > .ms-modal {
-    opacity: 1;
 }
 
 .ms-modal-content {
+    width: 100%;
     margin-top: 2rem;
+    min-height: 60px;
+    max-height: 70vh;
+    overflow-y: auto;
+    max-width: 100%;
 }
-

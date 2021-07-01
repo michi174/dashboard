@@ -13,7 +13,7 @@ export class defaultFlyout {
             setTimeout(async function () {
                 let ctx = await self._createContext();
                 resolve(ctx);
-            }, 400);
+            }, 0);
         });
     }
 }

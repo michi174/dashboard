@@ -1,6 +1,7 @@
 import ViewModel from "../../js/viewmodel/viewmodel.js";
 import Helpers from "../../js/helpers.js";
 import App from "../../js/app.js";
+import bbCodeParser from "../../libs/parser.js";
 
 export default class Benchmark extends ViewModel {
     constructor(params) {
@@ -17,6 +18,7 @@ export default class Benchmark extends ViewModel {
                 ctx = await helper.getJson(this.app.apiHost + "v1/cms/entry/" + this.id);
                 let userdata = await helper.getUserDataById(ctx.createUserId);
                 ctx.fullname = userdata.firstname + " " + userdata.lastname;
+                ctx.content = bbCodeParser.parse(ctx.content);
             } catch (e) {
                 //this.app.navigation.router.navigate("404");
                 console.error(e);
@@ -25,7 +27,6 @@ export default class Benchmark extends ViewModel {
         }
 
         this.view.setDataContext(ctx);
-        console.log("[Benchmark VM] yes, we loaded the default action");
     }
 
     async onLoad() {

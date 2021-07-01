@@ -1,10 +1,5 @@
-import { MyCache } from "./cache.js";
-
 import Template from "./template.js";
 import UIManager from "./uielements/uimanager.js";
-import AppBar from "./appbar/appbar.js";
-import AppBarButton from "./appbar/appbarbutton.js";
-import Notification from "./uielements/elements/notification.js";
 import FrontController from "./frontcontroller/frontcontroller.js";
 import App from "../js/app.js";
 import Helpers from "./helpers.js";
@@ -12,7 +7,7 @@ import Helpers from "./helpers.js";
 //import _ from 'lodash';
 
 const prodHost = "https://lolstatistics-app.herokuapp.com/";
-const devHost = "http://blogapi.localhost/";
+const devHost = "http://blogapi.localhost:8080/";
 
 document.documentElement.classList.add("light");
 
@@ -39,12 +34,12 @@ const ro = new ResizeObserver(entries => {
 
         (function setNavbar() {
             if (jQElement.outerHeight() > jQElement.outerWidth()) {
-                $("#bot-navigation-wr > [ms-uielement]").attr("ms-uielement-position", "right");
+                $("#bot-navigation-wr > [ms-uielement]").attr("ms-uielement-position", "topright");
                 $("#bot-navigation-wr > [ms-uielement]").attr("ms-uielement-open-direction", "x");
 
                 mobile = false;
             } else {
-                $("#bot-navigation-wr > [ms-uielement]").attr("ms-uielement-position", "top");
+                $("#bot-navigation-wr > [ms-uielement]").attr("ms-uielement-position", "topleft");
                 $("#bot-navigation-wr > [ms-uielement]").attr("ms-uielement-open-direction", "y");
                 mobile = true;
             }
@@ -343,12 +338,13 @@ Handlebars.registerHelper("LoadTemplate", function (template, params, customFold
     let _html = token;
 
     let _customFolder = "";
+    let version = "";
 
     if (typeof customFolder !== "object") {
         _customFolder = "/" + customFolder;
     }
 
-    let path = "../" + viewModelFolder + _customFolder + "/" + template + ".js";
+    let path = "../" + viewModelFolder + _customFolder + "/" + template + ".js?" + version;
     //console.log("/" + customFolder);
 
     //console.log(path);
@@ -424,6 +420,10 @@ Handlebars.registerHelper("limit", function (context, start, num, obj) {
 
 Handlebars.registerHelper("dateToMoment", function (date) {
     return moment(date).fromNow();
+});
+
+Handlebars.registerHelper("dateFormat", function (date, format = "LL") {
+    return moment(date).format(format);
 });
 
 Handlebars.registerHelper("UserIdToName", function (id) {

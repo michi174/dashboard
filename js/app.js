@@ -1,6 +1,7 @@
 import AppBar from "../js/appbar/appbar.js";
 import AppBarButton from "../js/appbar/appbarbutton.js";
 import { Navigation } from "./navigation.js";
+import Template from "./template.js";
 
 export default class App {
     constructor() {
@@ -25,6 +26,8 @@ export default class App {
         this.init();
 
         this.constructor.instance = this;
+        this.devVersion = "";
+        this.version = Template.getUniqueID().toString();
     }
 
     init() {
@@ -33,16 +36,21 @@ export default class App {
         this.appBar.setTitle("Dashboards");
         this.createButtons();
         this.navigation = new Navigation(true, true);
+        console.log("[APP] Version: " + this.version);
     }
 
     setTitle($title) {
         this.appBar.setTitle($title);
     }
 
+    getVersion() {
+        return this.version;
+    }
+
     createButtons() {
         //TitleBar Buttons
         let searchBtn = new AppBarButton("search-icon", "#appbar-button-template", {
-            icon: "far fa-search",
+            icon: "fad fa-search",
             position: "right",
             order: 0
         });

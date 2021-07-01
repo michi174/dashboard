@@ -78,9 +78,6 @@ export default class FrontController {
 
     async _loadViewModel() {
         let module;
-
-        console.log(FrontController.DEBUG_PREFIX);
-
         try {
             module = await import("/" + this._getViewModelPath());
 
@@ -103,7 +100,9 @@ export default class FrontController {
     _getViewModelPath() {
         let fileName = this.viewModelName.toLowerCase();
         let folder = `viewmodel/${fileName}`;
-        let path = `${folder}/${fileName}.vm.js`;
+        let version = new App().getVersion();
+        console.log(FrontController.DEBUG_PREFIX + version);
+        let path = `${folder}/${fileName}.vm.js?${version}`;
 
         return path;
     }

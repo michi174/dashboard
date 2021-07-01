@@ -1,0 +1,121 @@
+<div class="homepage-view view-container responsive">
+    <div class="page">
+        <span class="heading1">Create an UI Element</span><br /><br />
+        <p>Here is a little sandbox for playing around with the various UI Elements which are be created dynamicly</p><br
+        />
+        <pre style="border: 1px solid #6c757d; height:250px; overflow:auto;">
+            <code id="rendered-code" class="medium" style="font-family: 'Courier New', Courier, monospace;">
+            </code>
+        </pre><br /><br />
+        <div style="display: flex; width:100%; justify-content:center">
+            <div
+                style="
+    border: 1px solid #6c757d;
+    width:150px;
+    line-height:40px;
+    text-align:center;
+    border-radius:0.25rem;
+    cursor:pointer;
+    background-color:#6c757d;
+    color:white;"
+                class="medium"
+                id="uihandler"
+            >I'm the UI Handler</div>
+        </div><br /><br />
+        <span class="heading2">UI Element Type (ms-uielement-type)</span>
+        <div style="margin-top: 0.5rem; margin-bottom:3rem;">
+            <input type="radio" name="uielementtype" id="modal" value="Modal" /><label for="modal">Modal</label>
+            <input type="radio" name="uielementtype" id="flyout" value="FlyOut" checked /><label
+                for="flyout"
+            >Flyout</label>
+            <input type="radio" name="uielementtype" id="notification" value="Notification" /><label
+                for="notification"
+            >Notification</label>
+            <input type="radio" name="uielementtype" id="tooltip" value="Tooltip" /><label for="tooltip">Tooltip</label>
+        </div>
+        <span class="heading2">Options</span><br /><br />
+        <span class="heading3">Trigger (ms-uielement-trigger)</span>
+        <div style="margin-top: 0.5rem; margin-bottom:1rem;">
+            <input type="radio" name="trigger" id="hover" value="hover" /><label for="hover">hover</label>
+            <input type="radio" name="trigger" id="click" value="click" checked /><label for="click">click</label>
+        </div>
+        <span class="heading3">Animation (ms-uielement-animation)</span>
+        <div style="margin-top: 0.5rem; margin-bottom:1rem;">
+            <input type="radio" name="animation" id="fadeup" value="fadeUp" checked /><label for="fadeup">fadeUp</label>
+            <input type="radio" name="animation" id="slide" value="slide" /><label for="slide">slide</label>
+            <input type="radio" name="animation" id="fadein" value="fadeIn" /><label for="fadein">fadeIn</label>
+            <input type="radio" name="animation" id="shrinkIn" value="shrinkIn" /><label for="shrinkIn">shrinkIn</label>
+        </div>
+        <span class="heading3">Show open indicator (ms-uielement-open-indicator)</span>
+        <div style="margin-top: 0.5rem; margin-bottom:3rem;">
+            <input type="checkbox" name="openindicator" value="true" id="openindicator" /><label
+                for="openindicator"
+            >Open indicator</label>
+        </div>
+
+        <span class="heading2">Content</span><br /><br />
+        <span class="heading3">Template (ms-uielement-tpl)</span>
+        <div style="margin-top: 0.5rem; margin-bottom:1rem;">
+            <input type="radio" name="template" id="default" value="testviewmodel" checked /><label
+                for="default"
+            >default: testviewmodel</label>
+            <input type="radio" name="template" id="lotsoftesttext" value="lotsoftesttext" /><label
+                for="lotsoftesttext"
+            >lotsoftesttext</label>
+
+            <input type="radio" name="template" id="custom" /><label for="custom">custom:</label>
+            <input type="text" name="customtpl" value="" placeholder="type your custom viewmodel here..." />
+
+        </div>
+
+        <span class="heading3">Custom Text (ms-uielement-content)</span>
+        <div style="margin-top: 0.5rem; margin-bottom:3rem;">
+            <input type="radio" name="template" id="text" /><label for="text">text:</label>
+            <input
+                type="text"
+                name="customtext"
+                value=""
+                placeholder="type your text to display in the ui element..."
+            />
+        </div>
+
+        <span class="heading2">Position relative to UI Handler (ms-uielement-position)</span><br /><br />
+        <span class="heading3">X-Achsis</span>
+        <div style="margin-top: 0.5rem; margin-bottom:1rem;">
+            <input type="radio" name="uielementposx" id="left" value="left" checked /><label for="left">left</label>
+            <input type="radio" name="uielementposx" id="right" value="right" /><label for="right">right</label>
+            <input type="radio" name="uielementposx" id="center" value="center" /><label for="center">center</label>
+        </div>
+        <span class="heading3">Y-Achsis</span>
+        <div style="margin-top: 0.5rem; margin-bottom:3rem;">
+            <input type="radio" name="uielementposy" id="top" value="top" /><label for="top">top</label>
+            <input type="radio" name="uielementposy" id="bot" value="bot" checked /><label for="bot">bot</label>
+            <input type="radio" name="uielementposy" id="middle" value="middle" /><label for="middle">middle</label>
+        </div>
+        <input type="hidden" name="uielementpos" value="leftbot" />
+
+        <span class="heading2">Open direction (ms-uielement-open-direction)</span>
+        <div style="margin-top: 0.5rem; margin-bottom:3rem;">
+            <input type="radio" name="opendirection" id="up" value="up" /><label for="up">up</label>
+            <input type="radio" name="opendirection" id="down" value="down" /><label for="down">down</label>
+            <input type="radio" name="opendirection" id="openleft" value="left" /><label for="openleft">left</label>
+            <input type="radio" name="opendirection" id="openright" value="right" /><label for="openright">right</label>
+            <input type="radio" name="opendirection" id="x" value="x" /><label for="x">x</label>
+            <input type="radio" name="opendirection" id="y" value="y" checked /><label for="y">y</label>
+        </div>
+
+        <span class="heading2">Element self alignment (ms-uielement-own-x-pos)</span><br /><br />
+        <span class="heading3">X-Achsis</span>
+        <div style="margin-top: 0.5rem; margin-bottom:1rem;">
+            <input type="radio" name="uielementalignx" id="alignleft" value="left" checked /><label
+                for="alignleft"
+            >left</label>
+            <input type="radio" name="uielementalignx" id="alignright" value="right" /><label
+                for="alignright"
+            >right</label>
+            <input type="radio" name="uielementalignx" id="aligncenter" value="center" /><label
+                for="aligncenter"
+            >center</label>
+        </div>
+    </div>
+</div>
