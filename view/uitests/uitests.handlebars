@@ -3,24 +3,15 @@
         <span class="heading1">Create an UI Element</span><br /><br />
         <p>Here is a little sandbox for playing around with the various UI Elements which are be created dynamicly</p><br
         />
-        <pre style="border: 1px solid #6c757d; height:250px; overflow:auto;">
-            <code id="rendered-code" class="medium" style="font-family: 'Courier New', Courier, monospace;">
-            </code>
-        </pre><br /><br />
+        <pre
+            style="border: 1px solid #6c757d; border-radius: 4px; height:250px; padding-left: 8px; overflow:auto;  position:relative"
+        ><code id="rendered-code" class="medium" style="font-family: 'Courier New', Courier, monospace;"></code><div
+                class="ui-handler"
+                id="clip-copy"
+                style="position: absolute; right:10px; bottom:10px"
+            ><i class="fad fa-copy"></i></div></pre><br /><br />
         <div style="display: flex; width:100%; justify-content:center">
-            <div
-                style="
-    border: 1px solid #6c757d;
-    width:150px;
-    line-height:40px;
-    text-align:center;
-    border-radius:0.25rem;
-    cursor:pointer;
-    background-color:#6c757d;
-    color:white;"
-                class="medium"
-                id="uihandler"
-            >I'm the UI Handler</div>
+            <div class="medium2 shadow ui-handler" id="uihandler"><i class="fad fa-mouse-alt"></i>&nbsp;&nbsp;Click here</div>
         </div><br /><br />
         <span class="heading2">UI Element Type (ms-uielement-type)</span>
         <div style="margin-top: 0.5rem; margin-bottom:3rem;">
@@ -51,6 +42,12 @@
             <input type="checkbox" name="openindicator" value="true" id="openindicator" /><label
                 for="openindicator"
             >Open indicator</label>
+        </div>
+
+        <span class="heading3">AutoClose (ms-uielement-autoclose)</span>
+        <div style="margin-top: 0.5rem; margin-bottom:3rem;">
+            <input type="text" name="timeout" value="" placeholder="timeout (ms)" />
+            <label for="timeout">timeout (ms)</label>
         </div>
 
         <span class="heading2">Content</span><br /><br />
@@ -94,19 +91,9 @@
         </div>
         <input type="hidden" name="uielementpos" value="leftbot" />
 
-        <span class="heading2">Open direction (ms-uielement-open-direction)</span>
-        <div style="margin-top: 0.5rem; margin-bottom:3rem;">
-            <input type="radio" name="opendirection" id="up" value="up" /><label for="up">up</label>
-            <input type="radio" name="opendirection" id="down" value="down" /><label for="down">down</label>
-            <input type="radio" name="opendirection" id="openleft" value="left" /><label for="openleft">left</label>
-            <input type="radio" name="opendirection" id="openright" value="right" /><label for="openright">right</label>
-            <input type="radio" name="opendirection" id="x" value="x" /><label for="x">x</label>
-            <input type="radio" name="opendirection" id="y" value="y" checked /><label for="y">y</label>
-        </div>
-
         <span class="heading2">Element self alignment (ms-uielement-own-x-pos)</span><br /><br />
         <span class="heading3">X-Achsis</span>
-        <div style="margin-top: 0.5rem; margin-bottom:1rem;">
+        <div style="margin-top: 0.5rem; margin-bottom:3rem;">
             <input type="radio" name="uielementalignx" id="alignleft" value="left" checked /><label
                 for="alignleft"
             >left</label>
@@ -116,6 +103,16 @@
             <input type="radio" name="uielementalignx" id="aligncenter" value="center" /><label
                 for="aligncenter"
             >center</label>
+        </div>
+
+        <span class="heading2">Open direction (ms-uielement-open-direction)</span>
+        <div style="margin-top: 0.5rem; margin-bottom:3rem;">
+            <input type="radio" name="opendirection" id="up" value="up" /><label for="up">up</label>
+            <input type="radio" name="opendirection" id="down" value="down" /><label for="down">down</label>
+            <input type="radio" name="opendirection" id="openleft" value="left" /><label for="openleft">left</label>
+            <input type="radio" name="opendirection" id="openright" value="right" /><label for="openright">right</label>
+            <input type="radio" name="opendirection" id="x" value="x" /><label for="x">x</label>
+            <input type="radio" name="opendirection" id="y" value="y" checked /><label for="y">y</label>
         </div>
     </div>
 </div>

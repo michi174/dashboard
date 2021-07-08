@@ -18,8 +18,6 @@ export default class Tools {
 
             let missingFigures = bits / 4 - length;
 
-            console.log(missingFigures);
-
             if (missingFigures > 0) {
                 for (let i = 0; i < missingFigures; i++) {
                     hexString = "0" + hexString;

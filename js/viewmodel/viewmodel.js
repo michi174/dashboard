@@ -39,6 +39,7 @@ export default class ViewModel {
         this.view = new HTML();
         this.view.setTemplateFile(this.viewModel);
         this.view.setTemplatePath(`${BaseView.DEFAULT_VIEW_PATH}/${this.viewModel}`);
+
         return this.view;
     }
 

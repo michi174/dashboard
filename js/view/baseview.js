@@ -98,6 +98,19 @@ export default class BaseView {
     }
 
     /**
+     * Asks the renderer if the content is already visible in the DOM tree and returns the result.
+     *
+     * @returns bool
+     */
+    async existsInDOM(timeout = 3000) {
+        try {
+            return this.renderer.isReady(timeout);
+        } catch (e) {
+            console.error("never run await existsInDOM() in the default() method of the ViewModel!");
+        }
+    }
+
+    /**
      * returns the rendered content.
      */
     getContent() {

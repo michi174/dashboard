@@ -177,7 +177,21 @@
 
 .page {
     background-color: var(--background-color);
-    padding: 0.5rem;
+    padding: 1rem;
+}
+
+
+.ui-handler{ 
+    padding: 1rem;
+    text-align:center; 
+    border-radius:0.25rem; 
+    cursor:pointer;
+    background-color: var(--text-accent-color); 
+    color:white; 
+    user-select: none;
+}
+.ui-handler:hover {
+    opacity: 0.9;
 }
 
 @media screen and (min-width: 1024px) {
@@ -702,11 +716,24 @@ backoverlay {
     overscroll-behavior: contain;
 }
 
+@media print
+{    
+    .no-print, .no-print *
+    {
+        display: none !important;
+    }
+}
+
 
 
 .article-wrapper{
     display:flex;
     flex-direction: column;
+}
+
+.article-wrapper > *{
+    flex-basis: 50%;
+    flex-grow: 0;
 }
 
 @media screen and (min-width: 768px) {

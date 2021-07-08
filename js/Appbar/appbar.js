@@ -69,14 +69,12 @@ export default class AppBar {
 
             if (button.position === "right") {
                 for (let btn of this.rightButtons) {
-                    console.log(btn.id);
                     $(".appbar-" + button.position + "-btns").prepend(btn.button);
                 }
             }
 
             if (button.position === "left") {
                 for (let btn of this.leftButtons) {
-                    console.log(btn.id);
                     $(".appbar-" + button.position + "-btns").prepend(btn.button);
                 }
             }

@@ -18,6 +18,13 @@
     opacity: 1;
     animation-timing-function: linear;
     overflow-y: auto;
+    max-height: 600px;
+}
+
+@media screen and (min-width: 768px) {
+    .ms-flyout{
+        max-width: 682px;
+    }
 }
 
 /* [ms-uielement-type="FlyOut"]::after {

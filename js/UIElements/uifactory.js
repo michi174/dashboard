@@ -1,3 +1,4 @@
+import App from "../app.js";
 import UIManager from "./uimanager.js";
 
 export default class UIFactory {
@@ -17,6 +18,7 @@ export default class UIFactory {
         this.keepInViewPortX = false;
         this.ownXPosition = "left";
         this.openIndicator = false;
+        this.autoClose = false;
 
         this.options = options;
 
@@ -32,8 +34,9 @@ export default class UIFactory {
     }
 
     async build() {
+        let version = new App().getVersion();
         if (this.type !== null && (this.template !== null || this.content !== null)) {
-            let mod = import("./elements/" + this.type.toLowerCase() + ".js");
+            let mod = import("./elements/" + this.type.toLowerCase() + ".js?" + version);
 
             let state = "";
             let element = null;
@@ -60,7 +63,8 @@ export default class UIFactory {
                         keepInViewPortY: self.keepInViewPortY,
                         keepInViewPortX: self.keepInViewPortX,
                         ownXPosition: self.ownXPosition,
-                        openIndicator: self.openIndicator
+                        openIndicator: self.openIndicator,
+                        autoClose: self.autoClose
                     });
                 } else {
                     console.log(

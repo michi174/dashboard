@@ -1,5 +1,5 @@
 import ViewModel from "../../js/viewmodel/viewmodel.js";
-import Helpers from "../../js/helpers.js";
+import Notification from "../../js/uielements/elements/notification.js";
 
 class Attribute {
     constructor(name, formname = "", value = "") {
@@ -31,6 +31,22 @@ export default class UITests extends ViewModel {
         this.options.push(new Attribute("ms-uielement-position", "uielementpos"));
         this.options.push(new Attribute("ms-uielement-open-direction", "opendirection"));
         this.options.push(new Attribute("ms-uielement-own-x-pos", "uielementalignx"));
+        this.options.push(new Attribute("ms-uielement-autoclose", "timeout"));
+
+        this.view.existsInDOM().then(() => {
+            this.setString();
+
+            $("#clip-copy").click(() => {
+                navigator.clipboard
+                    .writeText(encodeURI(document.querySelector("#rendered-code").innerHTML))
+                    .then(() => {
+                        new Notification({
+                            data: { content: "code copied successfully to your clipboard!" },
+                            autoClose: 3000
+                        });
+                    });
+            });
+        });
 
         $("body").on("change", '.page input[name="uielementposx"], input[name="uielementposy"] ', () => {
             $('input[name="uielementpos"]').val(
@@ -48,10 +64,22 @@ export default class UITests extends ViewModel {
             $('.page input[id="text"]').val($('input[name="customtext"]').val());
         });
 
-        $("body").on("change", ".page input", () => {
-            let code = this.createString();
-            $("#rendered-code").text("\n<div\n  ms-uielement\n" + code + ">UI Handler</div>");
+        $("body").on("keyup", '.page input[name="timeout"]', () => {
+            $('.page input[id="timeout"]').val($('input[name="timeout"]').val());
         });
+
+        $("body").on("change", ".page input", () => {
+            this.setString();
+        });
+
+        $("body").on("click", ".page #uihandler", () => {
+            this.setString();
+        });
+    }
+
+    setString() {
+        let code = this.createString();
+        $("#rendered-code").text("<div\n  ms-uielement\n" + code + ">UI Handler</div>");
     }
 
     findOption(name) {
@@ -75,22 +103,21 @@ export default class UITests extends ViewModel {
                     val = $('input[name="' + attr.formname + '"]').val();
             }
 
-            console.log(`${attr.name} ${attr.formname} ${val}`);
-
-            $("#uihandler").attr(attr.name, val);
             $("#uihandler").attr("ms-uielement", "");
 
-            if (attr.name === "ms-uielement-tpl") {
-                if ($('input[id="text"]').is(":checked")) {
-                    $("#uihandler").attr(attr.name, "");
+            if (val !== "") {
+                $("#uihandler").attr(attr.name, val);
+                if (attr.name === "ms-uielement-tpl") {
+                    if ($('input[id="text"]').is(":checked")) {
+                        $("#uihandler").attr(attr.name, "");
+                    } else {
+                        str += `  ${attr.name}="${val}"\n`;
+                    }
                 } else {
                     str += `  ${attr.name}="${val}"\n`;
                 }
-            } else {
-                str += `  ${attr.name}="${val}"\n`;
             }
         }
-        console.log(str);
 
         return str;
     }

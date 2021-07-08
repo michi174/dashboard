@@ -1,6 +1,8 @@
+import Tools from "./tools.js";
+
 export default class Template {
     constructor(options, retObj = false) {
-        this.guid = "";
+        this.guid = this.uniqueID();
         this.path = "";
         this.file = "";
         this.extension = "handlebars";
@@ -18,8 +20,6 @@ export default class Template {
                 }
             }
         }
-
-        this.guid = this.uniqueID();
 
         console.log("[TEMPLATE] Initialising template: " + this.file);
 
@@ -54,7 +54,7 @@ export default class Template {
             compiledHTML = content;
         }
 
-        compiledHTML = '<span tpl-guid="' + this.guid + '">' + compiledHTML + "</span>";
+        compiledHTML = '<ms-ui-element tpl-guid="' + this.guid + '">' + compiledHTML + "</ms-ui-element>";
 
         if (this.target !== null) {
             let target = $(this.target);
@@ -91,6 +91,8 @@ export default class Template {
 
         this.renderedHTML = compiledHTML;
 
+        this.isReady();
+
         return compiledHTML;
     }
 
@@ -103,15 +105,22 @@ export default class Template {
         return guid;
     }
 
-    static DOMReady(guid) {
+    static DOMReady(guid, timeout = 3000, uielement = false) {
         return new Promise(function (resolve, reject) {
             let timer = 0;
             let interval = 10;
-            let timeout = 3000;
 
-            if ($("[tpl-guid='" + guid + "']").length === 0) {
+            let searchStr = "";
+
+            if (uielement) {
+                searchStr = "#" + guid;
+            } else {
+                searchStr = "[tpl-guid='" + guid + "']";
+            }
+
+            if ($(searchStr).length === 0) {
                 let int = setInterval(function () {
-                    if ($("[tpl-guid='" + guid + "']").length === 0) {
+                    if ($(searchStr).length === 0) {
                         timer = timer + interval;
                         if (timer >= timeout) {
                             clearInterval(int);
@@ -133,50 +142,54 @@ export default class Template {
         });
     }
 
-    isReady() {
+    isReady(timeout = 3000) {
         let self = this;
 
-        return new Promise(function (resolve, reject) {
+        return new Promise((resolve, reject) => {
             let timer = 0;
             let interval = 10;
-            let timeout = 3000;
 
-            if ($("[tpl-guid='" + self.guid + "']").length === 0) {
-                let int = setInterval(function () {
-                    if ($("[tpl-guid='" + self.guid + "']").length === 0) {
+            if ($("[tpl-guid='" + this.guid + "']").length === 0) {
+                let int = setInterval(() => {
+                    if ($("[tpl-guid='" + this.guid + "']").length === 0) {
                         timer = timer + interval;
                         if (timer >= timeout) {
                             clearInterval(int);
                             console.error("[TEMPLATE] REJECTING! Not found after time: " + timer);
-                            reject("[TEMPLATE] Element " + self.guid + " not found.");
+                            reject("[TEMPLATE] Element " + this.guid + " not found.");
                         } else {
                             //console.log("[TEMPLATE] "+self.guid+" not found after "+timer+"ms. Trying again");
                         }
                     } else {
-                        console.log("[TEMPLATE] " + self.file + " was added to DOM after " + timer + "ms");
+                        console.log("[TEMPLATE] " + this.file + " was added to DOM after " + timer + "ms");
                         clearInterval(int);
-                        resolve();
+                        resolve(true);
                     }
                 }, interval);
             } else {
-                console.log("[TEMPLATE] " + self.file + " was added to DOM instantly");
-                resolve();
+                console.log("[TEMPLATE] " + this.file + " was added to DOM instantly");
+                resolve(true);
             }
         });
     }
 
+    _triggerDomReady(jQElement) {
+        jQElement.trigger("tpl-dom-inserted", [jQElement.attr("tpl-guid")]);
+        console.log("[TEMPLATE] event: tpl-dom-inserted");
+    }
+
     static getUniqueID() {
-        let uid = (Math.random() * Math.floor(1000000000000000000000)).toFixed(0).toString(16);
+        let uid = Tools.GUID();
 
         if ($("[tpl-guid='" + uid + "']").length > 0) {
-            Template.getUniqueID();
+            Tools.GUID();
         } else {
             return uid;
         }
     }
 
     uniqueID() {
-        let uid = (Math.random() * Math.floor(1000000000000000000000)).toFixed(0).toString(16);
+        let uid = Tools.GUID();
 
         if ($("[tpl-guid='" + uid + "']").length > 0) {
             this.uniqueID();
@@ -186,7 +199,7 @@ export default class Template {
     }
 
     _generateRandom() {
-        return (Math.random() * Math.floor(1000000000000000000000)).toFixed(0).toString(16);
+        return Tools.GUID();
     }
 
     _loadFile() {

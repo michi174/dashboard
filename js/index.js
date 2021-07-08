@@ -3,6 +3,7 @@ import UIManager from "./uielements/uimanager.js";
 import FrontController from "./frontcontroller/frontcontroller.js";
 import App from "../js/app.js";
 import Helpers from "./helpers.js";
+import Route from "./route/route.js";
 
 //import _ from 'lodash';
 
@@ -111,15 +112,12 @@ function startApp() {
         let params = navigation.getParams();
         let action = navigation.getAction();
 
+        //app.setRoute(new Route("uitests", "cms", "article", "article", "cms"));
+        //                      name,       target,     viewmodel, view,        folder
+        app.setRoute(new Route("newarticle", "newarticle", "article", "article", "cms"));
+
         new FrontController(viewName, action, app.navigation.viewReplacedWithCache, params);
-
-        //titleBar.reset();
-        //titleBar.addButton(searchBtn);
-        //titleBar.addTheme("dark");
-        //titleBar.setTitle("Dashboard");
         switchActiveCSS($("#bot-navigation-wr > .tab"), $("#bot-nav-home"), "active");
-        // titleBar.addButton(backBtn);
-
         $(window).trigger("viewReady");
     });
 

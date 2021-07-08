@@ -17,4 +17,8 @@ export default class BaseRenderer {
     async render(template, context = {}) {
         throw new Error("Can't call an abstract method. Overriding is required.");
     }
+
+    async isReady(timeout = 3000) {
+        throw new Error("Can't call an abstract method. Overriding is required.");
+    }
 }

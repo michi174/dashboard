@@ -28,7 +28,31 @@ export default class FrontController {
             __param: []
         } = {})
     ) {
-        this.viewModelName = viewModelName || FrontController.HOMEPAGE;
+        this.app = new App();
+        this.manualRoute = false;
+        this.route;
+
+        let vmName = null;
+
+        if (viewModelName) {
+            vmName = this.app.getRoute(viewModelName);
+        }
+        //console.error("vmR: " + vmName.target);
+        //console.error("vmN: " + viewModelName);
+
+        if (vmName !== null && typeof vmName != "undefined") {
+            this.route = vmName;
+            this.viewModelName = vmName.viewmodel;
+            console.log(
+                "[FrontController] manual routing from " + viewModelName + " to " + this.viewModelName + " initiated"
+            );
+            this.manualRoute = true;
+        } else {
+            this.viewModelName = viewModelName || FrontController.HOMEPAGE;
+            console.log("[FrontController] no manual routes found");
+            this.manualRoute = false;
+        }
+
         this.action = action || FrontController.DEFAULT_ACTION;
         this.params = params;
         this.onlyViewModel = onlyViewModel;
@@ -51,8 +75,6 @@ export default class FrontController {
         } catch (e) {
             console.error(e);
         }
-
-        this.app = new App();
     }
 
     async run() {
@@ -71,6 +93,7 @@ export default class FrontController {
                     FrontController.DEBUG_PREFIX + "invalid action. running the default action for this viewmodel"
                 );
             }
+
             await viewModel[this.action]();
             await viewModel.ready();
         }
@@ -78,16 +101,21 @@ export default class FrontController {
 
     async _loadViewModel() {
         let module;
-        try {
-            module = await import("/" + this._getViewModelPath());
+        module = await import("/" + this._getViewModelPath());
 
-            if (typeof module["default"]) return new module.default(this.params);
-            if (typeof module[this.viewModelName]) return new module[this.viewModelName](this.params);
-        } catch (e) {
-            console.error(FrontController.DEBUG_PREFIX + FrontController.NOT_FOUND);
-            console.error(e);
-            this.app.navigation.router.navigate("#");
-        }
+        if (typeof module["default"]) return new module.default(this.params);
+        if (typeof module[this.viewModelName]) return new module[this.viewModelName](this.params);
+
+        // try {
+        //     module = await import("/" + this._getViewModelPath());
+
+        //     if (typeof module["default"]) return new module.default(this.params);
+        //     if (typeof module[this.viewModelName]) return new module[this.viewModelName](this.params);
+        // } catch (e) {
+        //     console.error(FrontController.DEBUG_PREFIX + FrontController.NOT_FOUND);
+        //     console.error(e);
+        //     this.app.navigation.router.navigate("#");
+        // }
 
         console.error(
             `[Frontcontroller] Can't load module "${this.viewModelName}". Either it doesn't provide a default export or the name is misspelled.
@@ -98,12 +126,22 @@ export default class FrontController {
     }
 
     _getViewModelPath() {
-        let fileName = this.viewModelName.toLowerCase();
-        let folder = `viewmodel/${fileName}`;
-        let version = new App().getVersion();
-        console.log(FrontController.DEBUG_PREFIX + version);
-        let path = `${folder}/${fileName}.vm.js?${version}`;
+        let path, fileName, folder, version;
 
+        version = new App().getVersion();
+
+        if (!this.manualRoute) {
+            fileName = this.viewModelName.toLowerCase();
+            folder = `viewmodel/${fileName}`;
+            console.log(FrontController.DEBUG_PREFIX + version);
+            path = `${folder}/${fileName}.vm.js?${version}`;
+        } else {
+            let routeObj = this.route;
+            fileName = routeObj.viewmodel.toLowerCase();
+            folder = `viewmodel/${routeObj.folderPath}`;
+            path = `${folder}/${fileName}.vm.js?${version}`;
+        }
+        console.log(path);
         return path;
     }
 }

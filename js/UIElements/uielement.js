@@ -27,6 +27,7 @@ export default class UIElement {
         this.animationDirection = this.openDirection;
         this.actualPosition = this.openDirection;
         this.openIndicator = false;
+        this.autoClose = false;
 
         if (typeof options === "object") {
             for (let [prop, value] of Object.entries(options)) {

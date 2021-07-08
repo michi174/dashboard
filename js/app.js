@@ -17,17 +17,17 @@ export default class App {
         this.cache;
         this.navigation;
         this.apiHost;
-
+        this.routes = new Array();
         this.appName = "Dashboard";
         this.title = "Dashboard";
 
         this.appBar = new AppBar("#appbar-template");
 
-        this.init();
-
         this.constructor.instance = this;
         this.devVersion = "";
         this.version = Template.getUniqueID().toString();
+
+        this.init();
     }
 
     init() {
@@ -45,6 +45,16 @@ export default class App {
 
     getVersion() {
         return this.version;
+    }
+
+    setRoute(route) {
+        this.routes.push(route);
+    }
+
+    getRoute(name) {
+        let route = this.routes.find(obj => obj.name === name);
+        console.log(`[APP] looking for route "${name}"`);
+        return route;
     }
 
     createButtons() {
